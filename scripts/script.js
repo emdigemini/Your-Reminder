@@ -110,149 +110,175 @@ cards.reminder.addEventListener('click', () => {
   window.location.href = 'apps/reminder.html';
 })
 
-/**For NOTES */
-const yourNotesList = [];
-const notesElement = {
-  addNotes:     document.getElementById('add'),
-  searchNotes:  document.getElementById('search-notes'),
-  yourNotes:    document.querySelectorAll('.your-notes'),
-  overlay:      document.querySelector('.overlay'),
-  container:    document.querySelector('.notes-container')
-};
+  /**For NOTES */
+  const yourNotesList = [];
 
-// main overlay
-cards.notes.addEventListener('click', () => {
-
-  openOverlay(notesElement.overlay, notesElement.container);
-
-  notesElement.container.addEventListener('animationend', () => {
-    const bodyClick = (e) => {
-      if (!notesElement.container.contains(e.target) && e.target !== cards.notes) {
-        closeOverlay(notesElement.overlay, notesElement.container, bodyClick);
-      }
-    };
-
-    document.body.addEventListener('click', bodyClick);
-
-    notesElement.addNotes.addEventListener('click', () => {
-      if(!document.querySelector('.overlay-box ')) {
-        document.body.removeEventListener('click', bodyClick);
-        createAddNoteBox(bodyClick);
-      }
-    });
-  }, { once: true });
-});
-
-// listeners for each overlay
-function openOverlay(overlay, container) {
-  overlay.classList.remove('close');
-  overlay.classList.add('open');
-  container.classList.remove('close');
-  container.classList.add('open');
-}
-
-function closeOverlay(overlay, container, bodyClick) {
-  container.classList.remove('open');
-  container.classList.add('close');
-  overlay.classList.remove('open');
-  overlay.classList.add('close');
-  document.body.removeEventListener('click', bodyClick);
-}
-
-function createAddNoteBox(bodyClick) {
-  document.body.insertAdjacentHTML("beforeend", `
-    <div class="overlay-box">
-      <div class="create-notes">
-        <div class="add-title">
-          <label for="title">Title:</label>
-          <input type="text" id="title" spellcheck="false" placeholder="Title">
-        </div>
-        <div class="add-description">
-          <label for="description">Description:</label>
-          <textarea id="description" spellcheck="false" placeholder="Description"></textarea>
-        </div>
-        <button class="add-btn" id="addBtn" >Add</button>
-      </div>
-    </div>
-  `);
-
-  document.body.removeEventListener('click', bodyClick);
-  
-  const inputTitle = document.getElementById('title');
-  const inputDescription = document.getElementById('description');
-
-  document.getElementById('addBtn').addEventListener('click', () => {
-    if(inputTitle.value !== '') getYourNotes();
-  })
-
-  const overlayBox = document.querySelector('.overlay-box');
-  const createNotesBox = document.querySelector('.create-notes');
-
-  overlayBox.classList.remove('close');
-  overlayBox.classList.add('show');
-
-  overlayBox.addEventListener('animationend', () => {
-    const outsideOverlay = (e) => {
-      if (!createNotesBox.contains(e.target)) {
-        overlayBox.classList.remove('show');
-        overlayBox.classList.add('close');
-        document.body.removeEventListener('click', outsideOverlay);
-        document.body.addEventListener('click', bodyClick)
-        overlayBox.remove();
-      }
-    };
-    document.body.addEventListener('click', outsideOverlay);
+  // main overlay
+  cards.notes.addEventListener('click', () => {
+    if(!document.querySelector('.overlay')){
+      const notesElement = showMainOverlay();
+      openOverlay(notesElement.overlay, notesElement.container);
+      notesElement.container.addEventListener('animationend', () => {
+        const bodyClick = (e) => {
+          if (!notesElement.container.contains(e.target) && e.target !== cards.notes) {
+            closeOverlay(notesElement.overlay, notesElement.container, bodyClick);
+          }
+        };
+        document.body.addEventListener('click', bodyClick);
+        
+        notesElement.addNotes.addEventListener('click', () => {
+          if(!document.querySelector('.overlay-box')) {
+            document.body.removeEventListener('click', bodyClick);
+            createAddNoteBox(bodyClick);
+          }
+        });
+      }, { once: true });
+    }
   });
-}
 
+  // listeners for each overlay
+  function openOverlay(overlay, container) {
+    overlay.classList.remove('close');
+    overlay.classList.add('open');
+    container.classList.remove('close');
+    container.classList.add('open');
+  }
 
-// create notes
-function getYourNotes(){
-  const title = inputTitle.value;
-  const description = inputDescription.value;
-  const date = dayjs().format('MMM D, YYYY');
-  function generateId(length = 5) {
-    return `${title}-` + Math.random().toString(36).substr(2, length);
-  };
-  const id = generateId().replace(/\s+/g, '#');
-  yourNotesList.push({
-    id,
-    title,
-    description,
-    date
-  })
-  inputTitle.value = '';
-  inputDescription.value = '';
-  renderYourNotes();
-}
+  function closeOverlay(overlay, container, bodyClick) {
+    container.classList.remove('open');
+    container.classList.add('close');
+    overlay.classList.remove('open');
+    overlay.classList.add('close');
+    setTimeout(() => {
+      overlay.remove();
+    }, 500)
+    document.body.removeEventListener('click', bodyClick);
+  }
 
-function renderYourNotes(){
+  function showMainOverlay(){
 
-  const toHTML = yourNotesList.map(note => {
-    return `
-      <div class="your-notes">
-        <div class="notes-title">
-            <h4>${note.title}</h4>
-            <div class="notes-action">
-              <i class="bi bi-pencil-square"></i>
-              <i class="bi bi-bookmark-plus"></i>
-              <i class="bi bi-trash"></i>
-            </div>
+    document.body.insertAdjacentHTML("beforeend", `
+      <div class="overlay">
+        <div class="notes-container">
+          <div class="add-notes">
+            <input id="search-notes" type="text" placeholder="Search for your notes...">
+            <i id="add" class="bi bi-plus-lg"></i>
+          </div>
+
+          <div class="notes-list">
+
+            <!--Generate Notes Here-->
+
+          </div>
+            
         </div>
-        <textarea class="description" disabled>${note.description}</textarea>
-        <div class="date-created">${note.date}</div>
       </div>
-    `
-  }).join('');
-  document.querySelector('.notes-list').innerHTML = toHTML;
+    `);
 
-  document.querySelectorAll('.bi-trash').forEach((trashBtn, id) => {
-    trashBtn.addEventListener('click', function(){
-      yourNotesList.splice(id, 1);
-      createNotesOverlay(toHTML);
+    return {
+      addNotes:     document.getElementById('add'),
+      searchNotes:  document.getElementById('search-notes'),
+      yourNotes:    document.querySelectorAll('.your-notes'),
+      overlay:      document.querySelector('.overlay'),
+      container:    document.querySelector('.notes-container')
+    }
+  }
+
+  function createAddNoteBox(bodyClick, overlay, container) {
+    document.body.insertAdjacentHTML("beforeend", `
+      <div class="overlay-box">
+        <div class="create-notes">
+          <div class="add-title">
+            <label for="title">Title:</label>
+            <input type="text" id="title" spellcheck="false" placeholder="Title">
+          </div>
+          <div class="add-description">
+            <label for="description">Description:</label>
+            <textarea id="description" spellcheck="false" placeholder="Description"></textarea>
+          </div>
+          <button class="add-btn" id="addBtn" >Add</button>
+        </div>
+      </div>
+    `);
+
+    document.body.removeEventListener('click', bodyClick);
+    
+    const inputTitle = document.getElementById('title');
+    const inputDescription = document.getElementById('description');
+
+    document.getElementById('addBtn').addEventListener('click', () => {
+      if(inputTitle.value !== '') getYourNotes();
     })
-  })
-}
+
+    const overlayBox = document.querySelector('.overlay-box');
+    const createNotesBox = document.querySelector('.create-notes');
+
+    overlayBox.classList.remove('close');
+    overlayBox.classList.add('show');
+
+    overlayBox.addEventListener('animationend', () => {
+      const outsideOverlay = (e) => {
+        if (!createNotesBox.contains(e.target)) {
+          overlayBox.classList.remove('show');
+          overlayBox.classList.add('close');
+          document.body.removeEventListener('click', outsideOverlay);
+          document.body.addEventListener('click', bodyClick);
+          overlayBox.remove();
+        }
+      };
+      document.body.addEventListener('click', outsideOverlay);
+    }, {once: true});
+
+  }
+
+
+  // create notes
+  function getYourNotes(){
+    const title = inputTitle.value;
+    const description = inputDescription.value;
+    const date = dayjs().format('MMM D, YYYY');
+    function generateId(length = 5) {
+      return `${title}-` + Math.random().toString(36).substr(2, length);
+    };
+    const id = generateId().replace(/\s+/g, '#');
+    yourNotesList.push({
+      id,
+      title,
+      description,
+      date
+    })
+    inputTitle.value = '';
+    inputDescription.value = '';
+    renderYourNotes();
+  }
+
+  function renderYourNotes(){
+
+    const toHTML = yourNotesList.map(note => {
+      return `
+        <div class="your-notes">
+          <div class="notes-title">
+              <h4>${note.title}</h4>
+              <div class="notes-action">
+                <i class="bi bi-pencil-square"></i>
+                <i class="bi bi-bookmark-plus"></i>
+                <i class="bi bi-trash"></i>
+              </div>
+          </div>
+          <textarea class="description" disabled>${note.description}</textarea>
+          <div class="date-created">${note.date}</div>
+        </div>
+      `
+    }).join('');
+    document.querySelector('.notes-list').innerHTML = toHTML;
+
+    document.querySelectorAll('.bi-trash').forEach((trashBtn, id) => {
+      trashBtn.addEventListener('click', function(){
+        yourNotesList.splice(id, 1);
+        createNotesOverlay(toHTML);
+      })
+    })
+  }
 
 // goals
 cards.goals.addEventListener('click', () => {

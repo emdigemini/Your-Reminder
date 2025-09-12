@@ -468,7 +468,7 @@
 /*CREATE BOX FOR NOTES*/
 .overlay-box.show {
   display: flex;
-  animation: showCreateBox 0.5s ease forwards;
+  animation: showCreateBox 0.2s ease forwards;
 }
 
 @keyframes showCreateBox {
@@ -482,14 +482,4 @@
 
 .overlay-box.close {
   display: none;
-  animation: showCreateBox 0.5s ease forwards;
-}
-
-@keyframes closeCreateBox {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
 }
