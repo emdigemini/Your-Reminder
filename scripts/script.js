@@ -166,7 +166,7 @@ cards.reminder.addEventListener('click', () => {
           </div>
 
           <div class="notes-list">
-
+            ${yourNotesList.length ? getYourNotes() : 'No notes yet.'}
             <!--Generate Notes Here-->
 
           </div>
@@ -174,6 +174,15 @@ cards.reminder.addEventListener('click', () => {
         </div>
       </div>
     `);
+
+    document.querySelector('.notes-list').addEventListener('click', (e) => {
+      if (e.target.classList.contains('bi-trash')) {
+        e.stopPropagation();
+        const index = [...document.querySelectorAll('.bi-trash')].indexOf(e.target);
+        yourNotesList.splice(index, 1);
+        renderYourNotes();
+      }
+    });
 
     return {
       addNotes:     document.getElementById('add'),
@@ -184,7 +193,7 @@ cards.reminder.addEventListener('click', () => {
     }
   }
 
-  function createAddNoteBox(bodyClick, overlay, container) {
+  function createAddNoteBox(bodyClick) {
     document.body.insertAdjacentHTML("beforeend", `
       <div class="overlay-box">
         <div class="create-notes">
@@ -202,12 +211,12 @@ cards.reminder.addEventListener('click', () => {
     `);
 
     document.body.removeEventListener('click', bodyClick);
-    
+
     const inputTitle = document.getElementById('title');
     const inputDescription = document.getElementById('description');
 
     document.getElementById('addBtn').addEventListener('click', () => {
-      if(inputTitle.value !== '') getYourNotes();
+      if(inputTitle.value !== '') saveYourNotes(inputTitle, inputDescription);
     })
 
     const overlayBox = document.querySelector('.overlay-box');
@@ -231,9 +240,8 @@ cards.reminder.addEventListener('click', () => {
 
   }
 
-
-  // create notes
-  function getYourNotes(){
+  // create notes and save to storage
+  function saveYourNotes(inputTitle, inputDescription){
     const title = inputTitle.value;
     const description = inputDescription.value;
     const date = dayjs().format('MMM D, YYYY');
@@ -245,24 +253,25 @@ cards.reminder.addEventListener('click', () => {
       id,
       title,
       description,
-      date
+      date,
+      bookmark: false,
     })
     inputTitle.value = '';
     inputDescription.value = '';
     renderYourNotes();
   }
 
-  function renderYourNotes(){
-
+  // generate your notes from storage into HTML
+  function getYourNotes(){
     const toHTML = yourNotesList.map(note => {
       return `
         <div class="your-notes">
           <div class="notes-title">
               <h4>${note.title}</h4>
               <div class="notes-action">
-                <i class="bi bi-pencil-square"></i>
-                <i class="bi bi-bookmark-plus"></i>
-                <i class="bi bi-trash"></i>
+                <i class="edit bi-pencil-square"></i>
+                <i data-bookmark-id="${note.id}" class="save bi-bookmark-plus"></i>
+                <i class="trash bi-trash"></i>
               </div>
           </div>
           <textarea class="description" disabled>${note.description}</textarea>
@@ -270,14 +279,36 @@ cards.reminder.addEventListener('click', () => {
         </div>
       `
     }).join('');
-    document.querySelector('.notes-list').innerHTML = toHTML;
+    return toHTML;
+  }
+  // render all your notes into the HTML
+  function renderYourNotes(){
 
-    document.querySelectorAll('.bi-trash').forEach((trashBtn, id) => {
-      trashBtn.addEventListener('click', function(){
+    document.querySelector('.notes-list').innerHTML = `${!getYourNotes() ? 'No notes yet.' : getYourNotes()}`;
+
+    const edit = document.querySelectorAll('.bi-pencil-square');
+    const bookmarkBtn = document.querySelectorAll('.bi-bookmark-plus');
+    const trashBtn = document.querySelectorAll('.bi-trash');
+
+    const notBookmark = yourNotesList.filter(notes => !notes.bookmark);
+    console.log(notBookmark);
+
+    trashBtn.forEach((trash, id) => {
+      trash.addEventListener('click', (e) => {
+        e.stopPropagation();
         yourNotesList.splice(id, 1);
-        createNotesOverlay(toHTML);
+        renderYourNotes();
+      })
+    });
+
+    bookmarkBtn.forEach(bookmark => {
+      bookmark.addEventListener('click', function(){
+        const bookmarkId = this.dataset.bookmarkId
+        const updateNotes = yourNotesList.filter(note => note.id === bookmarkId);
+        console.log(updateNotes);
       })
     })
+
   }
 
 // goals
