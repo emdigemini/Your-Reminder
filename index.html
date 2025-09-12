@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!--Manifest & Theme Color-->
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#000000">
+
+  <!--Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Cagliostro&family=Changa+One:ital@0;1&family=Montserrat:ital,wght@0,100..900;1,100..900&family=Saira:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+  <!--External CSS-->
+  <link rel="stylesheet" href="styles/style.css">
+  <link rel="stylesheet" href="styles/notes.css">
+  <link rel="stylesheet" href="styles/animation.css">
+  <title>Your Reminder</title>
+</head>
+<body>
+  <div class="app-header">
+      <div class="your-profile">
+        You
+      </div>
+      <h1 class="app-name">
+        APP NAME
+      </h1>
+      <i class="bi bi-x-square"></i>
+    </div>
+  <div class="container">
+    <div class="start-up-menu">
+      <div class="datetime">
+        <div class="date">
+          <div class="date-name">
+            <p>Sep 8, 2025</p>
+          </div>
+          <div class="quotes">
+            <p class="quote-line">Every second wasted</p>
+            <p class="quote-line">is a chance that never returns,</p>
+            <p class="quote-line">spend your time building</p>
+            <p class="quote-line">the life you dream of.</p>
+          </div>
+        </div>
+        <div class="your-clock">
+          <div class="time">
+            <div id="hr">00:</div>
+            <div>:</div>
+            <div id="mn">00:</div>
+            <div>:</div>
+            <div id="ss">00</div>
+          </div>
+        </div>
+      </div>
+      
+      <ul class="menu">
+        <li><button id="start">Start</button></li>
+        <li><button id="settings">Settings</button></li>
+        <li><button id="contact">Contact Us</button> </li>
+        <li><button id="about">About</button></li>
+      </ul>
+    </div>
+
+    <div class="dashboard">
+      <div class="tab">
+        <div class="card" id="reminder">
+          <div class="card-icon">
+            <h3>Your Reminder</h3>
+            <div>🔔</div>
+          </div>
+          <p>Create reminders that notify you at the right time.</p>
+        </div>
+        <div class="card" id="notes">
+          <div class="card-icon">
+            <h3>Your Notes</h3>
+            <div>📝</div>
+          </div>
+          <p>Keep track of notes, ideas, and reviewers for school in one place.</p>
+        </div>
+        <div class="card" id="goals">
+          <div class="card-icon">
+            <h3>Your Goals</h3>
+            <div>🎯</div>
+          </div>
+          <p>Plan and track your progress toward big milestones.</p>
+        </div>
+        <div class="card" id="tasks">
+          <div class="card-icon">
+            <h3>Your Tasks</h3>
+            <div>📚</div>
+          </div>
+          <p>Organize your daily and weekly to-do list with ease.</p>
+        </div>
+        <div class="card" id="settings2">
+          <div class="card-icon settings2">
+            <h3>Your Settings</h3>
+            <div>⚙️</div>
+          </div>
+          <p>Make it yours by tweaking notifications, switching themes, and setting your preferences your way.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="overlay">
+    <div class="notes-container">
+      <div class="add-notes">
+        <input id="search-notes" type="text" placeholder="Search for your notes...">
+        <i id="add" class="bi bi-plus-lg"></i>
+      </div>
+
+      <div class="notes-list">
+
+        <!--Generate Notes Here-->
+
+      </div>
+        
+    </div>
+  </div>
+
+
+  
+
+  
+  
+  <script type="module" src="scripts/script.js"></script>
+</body>
+</html>
