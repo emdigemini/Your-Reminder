@@ -18,6 +18,7 @@
   <link rel="stylesheet" href="styles/style.css">
   <link rel="stylesheet" href="styles/notes.css">
   <link rel="stylesheet" href="styles/animation.css">
+  <link rel="stylesheet" href="styles/settings.css">
   <title>Your Reminder</title>
 </head>
 <body>
@@ -35,7 +36,7 @@
       <div class="datetime">
         <div class="date">
           <div class="date-name">
-            <p>Sep 8, 2025</p>
+            <p class="current-date">Sep 8, 2025</p>
           </div>
           <div class="quotes">
             <p class="quote-line">Every second wasted</p>
@@ -46,9 +47,9 @@
         </div>
         <div class="your-clock">
           <div class="time">
-            <div id="hr">00:</div>
+            <div id="hr">00</div>
             <div>:</div>
-            <div id="mn">00:</div>
+            <div id="mn">00</div>
             <div>:</div>
             <div id="ss">00</div>
           </div>
@@ -103,6 +104,28 @@
       </div>
     </div>
   </div>
+  <section class="settings">
+    <h2>Appearance</h2>
+
+    <div class="dark-mode">
+      <div class="toggle-container">
+        <span class="switch-label">Light</span>
+        <div class="switch" id="mode-switch"></div>
+        <span class="switch-label">Dark</span>
+      </div>
+    </div>
+
+    <div class="theme">
+      <label for="select-theme">Theme</label>
+      <select id="select-theme">
+        <option>Default</option>
+        <option>Blue</option>
+        <option>Green</option>
+        <option>Red</option>
+      </select>
+    </div>
+  </section>
+
   <script type="module" src="scripts/script.js"></script>
 </body>
 </html>

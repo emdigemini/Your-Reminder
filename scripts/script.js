@@ -1,4 +1,5 @@
 import './animation.js';
+import './settings.js';
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -8,7 +9,6 @@ const closeBtn    = document.querySelector('.bi-x-square');
 const startUpMenu = document.querySelector('.start-up-menu');
 const dashboard     = document.querySelector('.dashboard');
 const dateTime    = document.querySelector('.datetime');
-const dateName = document.querySelector('.date-name');
 const todayQuotes = document.querySelectorAll('.quote-line');
 
 // buttons
@@ -239,6 +239,14 @@ cards.reminder.addEventListener('click', () => {
       const bookmarkBtn = document.querySelectorAll('.save');
       const trashBtn = document.querySelectorAll('.bi-trash');
 
+      document.addEventListener('click', function(e) {
+        const action = e.target.closest('.edit, .save, .trash, .notes-title, .notes-action, .description, .date-created');
+        if (!action) return;
+        const note = action.closest('.your-notes'); 
+        const noteId = note.dataset.noteId; 
+        window.location.href = `apps/notes.html?id=${encodeURIComponent(noteId)}`
+      });
+
       trashBtn.forEach((trash, id) => {
         trash.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -270,7 +278,7 @@ cards.reminder.addEventListener('click', () => {
     function generateId(length = 5) {
       return `${title}-` + Math.random().toString(36).substr(2, length);
     };
-    const id = generateId().replace(/\s+/g, '#');
+    const id = generateId().replace(/\s+/g, '%');
     yourNotesList.push({
       id,
       title,
@@ -292,9 +300,9 @@ cards.reminder.addEventListener('click', () => {
   function getYourNotes(){
     const toHTML = yourNotesList.map(note => {
       return `
-        <div class="your-notes">
+        <div data-note-id="${note.id}" class="your-notes">
           <div class="notes-title">
-              <h4>${note.title}</h4>
+            <h4>${note.title}</h4>
               <div class="notes-action">
                 <i class="edit bi-pencil-square"></i>
                 <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>

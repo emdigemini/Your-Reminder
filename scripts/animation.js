@@ -40,20 +40,14 @@ function quotesAnimation(){
 // generate time and date
 function dateAndTime(){
   const date = dayjs().format('MMM D, YYYY');
-  document.querySelector('.date-name').innerHTML = `
-    <p>${date}</p>
-  `
-
   const hr = dayjs().format('HH');
   const mm = dayjs().format('mm');
   const ss = dayjs().format('ss');
-  document.querySelector('.time').innerHTML = `
-    <div id="hr">${hr}</div>
-    <div>:</div>
-    <div id="mn">${mm}</div>
-    <div>:</div>
-    <div id="ss">${ss}</div>
-  `
+  document.querySelector('.current-date').textContent = date;
+  document.getElementById('hr').textContent = hr;
+  document.getElementById('mn').textContent = mm;
+  document.getElementById('ss').textContent = ss;
+
 }
 setInterval(dateAndTime, 1000)
 
