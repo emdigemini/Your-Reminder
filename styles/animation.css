@@ -483,3 +483,484 @@
 .overlay-box.close {
   display: none;
 }
+
+
+/*SETTINGS*/
+.settings.open,
+.settings.open.light
+{
+  display: flex;
+  animation: slideInForSettings 0.8s ease forwards;
+}
+
+.settings.close,
+.settings.close.light
+{
+  animation: slideOutForSettings 0.8s ease forwards;
+}
+
+@keyframes slideInForSettings {
+  0% {
+    transform: translateX(-400px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutForSettings {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-400px);
+  }
+    }
+@keyframes moveUp {
+  0% {
+    transform: translateY(0);
+    border-bottom: 2px solid rgba(0, 255, 128, 0); 
+  }
+  100% {
+    transform: translateY(-64px);
+    border-bottom: 2px solid var(--color-accent); 
+  }
+}
+
+@keyframes resize {
+  0% {
+    font-size: 2rem;
+  }
+  100% {
+    font-size: 17px;
+  }
+}
+
+/* OUT */
+.app-header.clickk {
+  animation: moveDown 1.3s ease forwards;
+}
+
+.app-name.resizee {
+  animation: resizee 1.3s ease forwards;
+}
+
+.your-profile.clickk {
+  animation: profileSlideOut 0.8s ease forwards;
+}
+
+.bi-x-square.clickk {
+  animation: closeSlideOut 0.8s ease forwards;
+}
+
+@keyframes profileSlideOut {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50px);
+  }
+}
+
+@keyframes closeSlideOut {
+  0% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(50px);
+    opacity: 0;
+  }
+}
+
+@keyframes moveDown {
+  0% {
+    transform: translateY(-64px);
+    border-bottom: 2px solid var(--color-accent); 
+  }
+  100% {
+    transform: translateY(0);
+    border-bottom: 2px solid rgba(0, 255, 128, 0); 
+  }
+}
+
+@keyframes resizee {
+  0% {
+    font-size: 17px;
+  }
+  100% {
+    font-size: 2rem;
+  }
+}
+
+/* DATE */
+.date-name {
+  position: absolute;
+  width: 100%;
+  display: flex;
+}
+
+.date-name.anim {
+  animation: liftedPageOut 2s ease forwards;
+}
+
+.date-name.stopAnim {
+  animation: liftedPageIn 2s ease forwards;
+}
+
+.datetime.popOut {
+  animation: popOut 0.8s ease forwards;
+}
+
+@keyframes popOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    display: none;
+  }
+}
+
+.datetime.popIn {
+  animation: popIn 0.8s ease forwards;
+}
+
+@keyframes popIn {
+  0% {
+    opacity: 0;
+    display: none;
+  }
+  100% {
+    opacity: 1;
+    display: flex;
+  }
+}
+
+/* QUOTES LINE */
+.quote-line.oneIn {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageIn 2s ease forwards;
+}
+
+.quote-line.twoIn {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageIn 2s ease forwards;
+}
+
+.quote-line.threeIn {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageIn 2s ease forwards;
+}
+
+.quote-line.fourIn {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageIn 2s ease forwards;
+}
+
+.quote-line.oneOut {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageOut 2s ease forwards;
+}
+
+.quote-line.twoOut {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageOut 2s ease forwards;
+}
+
+.quote-line.threeOut {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageOut 2s ease forwards;
+}
+
+.quote-line.fourOut {
+  display: flex;
+  transform: translateY(0px) rotateX(0);
+  animation: liftedPageOut 2s ease forwards;
+}
+
+@keyframes liftedPageIn {
+  0% {
+    display: flex;
+    transform: translateY(12px) rotateX(-80deg);
+    opacity: 0;
+  }
+  100% {
+    transform: translateY(0) rotateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes liftedPageOut {
+  0% {
+    transform: translateY(0) rotateX(0);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(-12px) rotateX(80deg);
+    opacity: 0;
+  }
+}
+
+/* MENU */
+
+#start.slideLeft,
+#contact.slideLeft {
+  animation: slideLeft 0.8s ease forwards;
+}
+
+#settings.slideRight,
+#about.slideRight {
+  animation: slideRight 0.8s ease forwards;
+}
+
+@keyframes slideLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideRight {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(300px);
+    opacity: 0;
+  }
+}
+
+#start.slideInLeft,
+#contact.slideInLeft {
+  animation: slideInLeft 0.8s ease forwards;
+}
+
+#settings.slideInRight,
+#about.slideInRight {
+  animation: slideInRight 0.8s ease forwards;
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(-300px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(300px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+
+/* CARD */
+/* SLIDE IN */
+#reminder, #goals {
+  transform: translateX(-250px);
+}
+
+#notes, #tasks {
+  transform: translateX(250px);
+}
+
+#reminder.slideRight,
+#goals.slideRight {
+  animation: slideInRight 0.8s ease forwards;
+}
+
+#notes.slideLeft,
+#tasks.slideLeft {
+  animation: slideInLeft 0.8s ease forwards;
+}
+
+#settings2.slideUp {
+  animation: slideInUp 0.8s ease forwards;
+}
+
+@keyframes slideInRight {
+  0% {
+    transform: translateX(-250px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInLeft {
+  0% {
+    transform: translateX(250px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInUp {
+  0% {
+    transform: translateY(250px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* SLIDE OUT */
+
+#reminder, #goals {
+  transform: translateX(-250px);
+}
+
+#notes, #tasks {
+  transform: translateX(250px);
+}
+
+#reminder.slideOutRight,
+#goals.slideOutRight {
+  animation: slideOutRight 0.8s ease forwards;
+}
+
+#notes.slideOutLeft,
+#tasks.slideOutLeft {
+  animation: slideOutLeft 0.8s ease forwards;
+}
+
+#settings2.slideDown {
+  animation: slideOutDown 0.8s ease forwards;
+}
+
+
+@keyframes slideOutRight {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-250px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutLeft {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(250px);
+    opacity: 0;
+  }
+}
+
+@keyframes slideOutDown {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(250px);
+    opacity: 0;
+  }
+}
+
+
+/* NOTES */
+/*SLIDE OPEN*/
+.overlay.open {
+  display: flex;
+  animation: openOverlay 0.8s ease forwards;
+}
+
+@keyframes openOverlay {
+  0% {
+    display: none;
+  }
+  100% {
+    display: flex;
+  }
+}
+
+.notes-container.open {
+  display: flex;
+  animation: open-notes 0.8s ease forwards;  
+}
+
+@keyframes open-notes {
+  0% {
+    transform: translateX(350px);
+    opacity: 0;
+  }
+  100% {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/*SLIDE OUT*/
+.overlay.close {
+  display: none;
+  animation: closeOverlay 0.5s ease forwards;
+}
+
+@keyframes closeOverlay {
+  0% {
+    display: flex;
+  }
+  100% {
+    display: none;
+  }
+}
+
+.notes-container.close {
+  display: flex;
+  animation: close-notes 0.8s ease forwards;  
+}
+
+@keyframes close-notes {
+  0% {
+    transform: translateX(0);
+    display: flex;
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(350px);
+    display: none;
+    opacity: 0;
+  }
+}
+
+/*CREATE BOX FOR NOTES*/
+.overlay-box.show {
+  display: flex;
+  animation: showCreateBox 0.2s ease forwards;
+}
+
+@keyframes showCreateBox {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.overlay-box.close {
+  display: none;
+}
