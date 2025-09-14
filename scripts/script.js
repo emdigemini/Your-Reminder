@@ -1,6 +1,8 @@
+import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 import './animation.js';
 import './settings.js';
-import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
+import { darkMode } from './settings.js';
+
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
 const appName     = document.querySelector('.app-name');
@@ -10,7 +12,7 @@ const startUpMenu = document.querySelector('.start-up-menu');
 const dashboard     = document.querySelector('.dashboard');
 const dateTime    = document.querySelector('.datetime');
 const todayQuotes = document.querySelectorAll('.quote-line');
-
+const settings = document.querySelector('.settings');
 // buttons
 const buttons = {
   start:    document.getElementById('start'),
@@ -18,8 +20,6 @@ const buttons = {
   contact:  document.getElementById('contact'),
   about:    document.getElementById('about'),
 };
-
-
 
 // card sections
 const cards = {
@@ -158,14 +158,14 @@ cards.reminder.addEventListener('click', () => {
   function createAddNoteBox(bodyClick) {
     document.body.insertAdjacentHTML("beforeend", `
       <div class="overlay-box">
-        <div class="create-notes">
+        <div class="create-notes ${!darkMode ? 'light' : ''}">
           <div class="add-title">
             <label for="title">Title:</label>
             <input type="text" id="title" spellcheck="false" placeholder="Title">
           </div>
           <div class="add-description">
             <label for="description">Description:</label>
-            <textarea id="description" spellcheck="false" placeholder="Description"></textarea>
+            <textarea id="description" class="description-box ${!darkMode ? 'light' : ''}" spellcheck="false" placeholder="Description"></textarea>
           </div>
           <button class="add-btn" id="addBtn" >Add</button>
         </div>
@@ -206,8 +206,8 @@ cards.reminder.addEventListener('click', () => {
 
     document.body.insertAdjacentHTML("beforeend", `
       <div class="overlay">
-        <div class="notes-container">
-          <div class="add-notes">
+        <div class="notes-container ${!darkMode ? 'light' : ''}">
+          <div class="add-notes ${!darkMode ? 'light' : ''}">
             <input id="search-notes" type="text" placeholder="Search for your notes...">
             <i id="add" class="bi bi-plus-lg"></i>
           </div>
@@ -300,10 +300,10 @@ cards.reminder.addEventListener('click', () => {
   function getYourNotes(){
     const toHTML = yourNotesList.map(note => {
       return `
-        <div data-note-id="${note.id}" class="your-notes">
+        <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
           <div class="notes-title">
             <h4>${note.title}</h4>
-              <div class="notes-action">
+              <div class="notes-action ${!darkMode ? 'light' : ''}">
                 <i class="edit bi-pencil-square"></i>
                 <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
                 <i class="trash bi-trash"></i>
@@ -331,6 +331,18 @@ cards.goals.addEventListener('click', () => {
 cards.tasks.addEventListener('click', () => {
   window.location.href = 'apps/tasks.html';
 })
+
+//settings
+buttons.settings.addEventListener('click', () => {
+  openSettings();
+})
+cards.settings.addEventListener('click', () => {
+  openSettings();
+})
+function openSettings(){
+  settings.classList.remove('close')
+  settings.classList.add('open');
+}
 
 start();
 close();

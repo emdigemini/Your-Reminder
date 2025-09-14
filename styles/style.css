@@ -5,6 +5,8 @@
   --low-accent: rgba(0, 255, 128, 0.5);     /* low accent color (buttons, underline) */
   --color-button-text: #000; /* text inside buttons */
   --background-2: #22222279;
+  --light-mode: #fff8e7;
+  --light-mode-card: #faf8f6;
 }
 
 * {
@@ -18,6 +20,66 @@
 body {
   height: 100vh;
   width: 100vw;
+}
+
+/* ---------------- LIGHT MODE ---------------- */
+body.light {
+  background-color: #faf8f6;
+  color: #262626;
+}
+
+/* Header / App name */
+body.light .app-name {
+  color: #007BFF;
+}
+
+body.light .bi-x-square {
+  color: #262626;
+}
+body.light .bi-x-square:hover {
+  color: #007BFF;
+}
+
+/* Date & Time */
+body.light .datetime {
+  color: #007BFF;
+}
+
+/* Menu buttons */
+body.light .menu li button {
+  background: #007BFF;
+  color: #ffffff;
+}
+
+body.light .menu li button:hover {
+  background: #0069d9;
+  color: #ffffff;
+}
+
+/* Cards */
+body.light .card {
+  background: #fff8e7;
+  border: 1px solid #ccc;
+}
+
+body.light .card-icon h3 {
+  color: #007BFF;
+}
+
+body.light .card:hover {
+  border-color: #007BFF;
+}
+
+body.light .card:hover .card-icon h3 {
+  color: #262626;
+}
+
+body.light .card p {
+  color: #666;
+}
+
+body.light .card:hover p {
+  color: #007BFF;
 }
 
 @media (max-width: 768px) {
@@ -243,68 +305,4 @@ body {
   color: var(--color-accent); 
 }
 
-/* ---------------- LIGHT MODE ---------------- */
-body.light {
-  background-color: #f9f9f9;
-  color: #262626;
 }
-
-/* Header / App name */
-body.light .app-name {
-  color: #007BFF;
-}
-
-body.light .bi-x-square {
-  color: #262626;
-}
-body.light .bi-x-square:hover {
-  color: #007BFF;
-}
-
-/* Date & Time */
-body.light .datetime {
-  color: #007BFF;
-}
-
-/* Menu buttons */
-body.light .menu li button {
-  background: #007BFF;
-  color: #ffffff;
-}
-
-body.light .menu li button:hover {
-  background: #0069d9;
-  color: #ffffff;
-}
-
-/* Cards */
-body.light .card {
-  background: #ffffff;
-  border: 1px solid #ccc;
-}
-
-body.light .card-icon h3 {
-  color: #007BFF;
-}
-
-body.light .card:hover {
-  border-color: #007BFF;
-}
-
-body.light .card:hover .card-icon h3 {
-  color: #262626;
-}
-
-body.light .card p {
-  color: #666;
-}
-
-body.light .card:hover p {
-  color: #007BFF;
-}
-}
-
-
-
-
-

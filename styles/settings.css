@@ -1,18 +1,52 @@
 .settings {
-  display: flex;
+  display: none;
   flex-direction: column;
-  background: transparent;
+  background: #262626;
   position: fixed;
-  height: 10vh;
-  width: 100vw;
+  height: 100vh;
+  width: 80vw;
   padding: 20px 30px;
+  border-right: 2px solid gray;
   top: 0;
   left: 0;
   z-index: 20;
   gap: 12px;
+  overflow-y: auto;
 }
 
-.settings h2 {
+
+.settings::-webkit-scrollbar {
+  width: 4px; 
+}
+
+.settings::-webkit-scrollbar-track {
+  background: gray;
+  border-radius: 4px;
+}
+
+.settings::-webkit-scrollbar-thumb {
+  background: var(--color-accent); 
+  border-radius: 4px;
+}
+
+.settings::-webkit-scrollbar-thumb:hover {
+  background: var(--color-accent);
+}
+
+.back-to-menu {
+  position: absolute;
+  cursor: pointer;
+  right: 4px;
+}
+
+.back-to-menu i {
+  font-size: 20px;
+}
+.back-to-menu i:hover {
+  color: var(--color-accent);
+}
+
+.settings h3 {
   padding-bottom: 12px;
   border-bottom: 1px solid #2b2b2b;
 }
@@ -62,8 +96,24 @@
   padding: 0px 8px;
 }
 
-#select-theme {
+.select-theme {
   color: #fff;
   background: transparent;
   padding: 8px 24px;
+}
+
+
+/*-----LIGHT MODE-----*/
+.settings.light {
+  display: none;
+  background: #fff8e7;
+  color: #262626;
+}
+
+.settings.open.light {
+  display: flex;
+}
+
+.select-theme.light {
+  color: #262626;
 }

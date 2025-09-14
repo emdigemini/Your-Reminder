@@ -1,3 +1,42 @@
+/*--------LIGHT MODE--------*/
+.notes-container.light {
+      background: #ede0d4;
+    }
+    .your-notes.light, .add-notes.light {
+      background-color: #fff1e6;
+      border: 1px solid #6d6875;
+      caret-color: #555555;
+    }
+    .your-notes.light h4, .notes-action.light i {
+      color: #2b2d42;
+    }
+    .your-notes.light:hover {
+      background-color: #fffafae8;
+      border: 1px solid #6d6875a6;
+    }
+    .add-notes.light input, .add-notes.light i {
+      color: #262626;
+}
+
+.create-notes.light {
+      background: #eeeeee;
+    }
+    .create-notes.light label {
+      color: #262626;
+    }
+    .create-notes.light input, .description-box.light {
+      background: #fff;
+      border: 1px solid #fff;
+      color: #262626;
+    }
+    .create-notes.light input:focus, .description-box.light:focus {
+      border: 1px solid gray;
+    }
+    .create-notes.light button {
+      background: #ffd51c;
+      color: #2d2d2e;
+}
+
 /* overlay background */
 .overlay {
   position: fixed;
@@ -197,7 +236,7 @@
   flex-direction: column;
 }
 
-#description {
+.description-box {
   height: 120px;
   background: #2a2a2a;
   border: 1px solid #444;
@@ -207,7 +246,7 @@
   outline: none;
 }
 
-#description:focus {
+.description-box:focus {
   border-color: #4ade80; 
 }
 

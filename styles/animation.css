@@ -483,3 +483,36 @@
 .overlay-box.close {
   display: none;
 }
+
+
+/*SETTINGS*/
+.settings.open,
+.settings.open.light
+{
+  display: flex;
+  animation: slideInForSettings 0.8s ease forwards;
+}
+
+.settings.close,
+.settings.close.light
+{
+  animation: slideOutForSettings 0.8s ease forwards;
+}
+
+@keyframes slideInForSettings {
+  0% {
+    transform: translateX(-700px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideOutForSettings {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-700px);
+  }
+}
