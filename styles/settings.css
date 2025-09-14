@@ -14,7 +14,6 @@
   overflow-y: auto;
 }
 
-<<<<<<< HEAD
 
 .settings::-webkit-scrollbar {
   width: 4px; 
@@ -37,10 +36,6 @@
 .back-to-menu {
   position: absolute;
   cursor: pointer;
-=======
-.back-to-menu {
-  position: absolute;
->>>>>>> e67aef8eeceb288e737af47705cde676d942a408
   right: 4px;
 }
 
@@ -121,8 +116,4 @@
 
 .select-theme.light {
   color: #262626;
-<<<<<<< HEAD
 }
-=======
-}
->>>>>>> e67aef8eeceb288e737af47705cde676d942a408
