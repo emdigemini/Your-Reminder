@@ -21,6 +21,8 @@ const buttons = {
   about:    document.getElementById('about'),
 };
 
+
+
 // card sections
 const cards = {
   reminder: document.getElementById('reminder'),

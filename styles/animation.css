@@ -501,7 +501,11 @@
 
 @keyframes slideInForSettings {
   0% {
+<<<<<<< HEAD
     transform: translateX(-700px);
+=======
+    transform: translateX(-400px);
+>>>>>>> e67aef8eeceb288e737af47705cde676d942a408
   }
   100% {
     transform: translateX(0);
@@ -513,6 +517,12 @@
     transform: translateX(0);
   }
   100% {
+<<<<<<< HEAD
     transform: translateX(-700px);
   }
 }
+=======
+    transform: translateX(-400px);
+  }
+}
+>>>>>>> e67aef8eeceb288e737af47705cde676d942a408
