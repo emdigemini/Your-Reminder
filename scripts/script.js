@@ -219,7 +219,6 @@ cards.reminder.addEventListener('click', () => {
             <!--Generate Notes Here-->
 
           </div>
-            
         </div>
       </div>
     `);
