@@ -21,3 +21,7 @@ function switchMode(){
   document.body.classList.toggle('light', !darkMode);
 }
 
+function theme(){
+  
+}
+

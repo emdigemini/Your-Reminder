@@ -245,7 +245,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-300px);
+    transform: translateX(-200%);
     opacity: 0;
   }
 }
@@ -255,7 +255,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(300px);
+    transform: translateX(200%);
     opacity: 0;
   }
 }
@@ -272,7 +272,7 @@
 
 @keyframes slideInLeft {
   0% {
-    transform: translateX(-300px);
+    transform: translateX(-200%);
     opacity: 0;
   }
   100% {
@@ -283,7 +283,7 @@
 
 @keyframes slideInRight {
   0% {
-    transform: translateX(300px);
+    transform: translateX(200%);
     opacity: 0;
   }
   100% {
@@ -347,11 +347,11 @@
 /* SLIDE OUT */
 
 #reminder, #goals {
-  transform: translateX(-250px);
+  transform: translateX(-200%);
 }
 
 #notes, #tasks {
-  transform: translateX(250px);
+  transform: translateX(200%);
 }
 
 #reminder.slideOutRight,
@@ -374,7 +374,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-250px);
+    transform: translateX(-200%);
     opacity: 0;
   }
 }
@@ -384,7 +384,7 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(250px);
+    transform: translateX(200%);
     opacity: 0;
   }
 }
@@ -394,7 +394,7 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(250px);
+    transform: translateY(200%);
     opacity: 0;
   }
 }
@@ -501,7 +501,7 @@
 
 @keyframes slideInForSettings {
   0% {
-    transform: translateX(-700px);
+    transform: translateX(-100%);
   }
   100% {
     transform: translateX(0);
@@ -513,6 +513,6 @@
     transform: translateX(0);
   }
   100% {
-    transform: translateX(-700px);
+    transform: translateX(-100%);
   }
 }

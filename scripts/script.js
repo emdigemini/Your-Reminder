@@ -13,7 +13,7 @@ const startUpMenu = document.querySelector('.start-up-menu');
 const dashboard     = document.querySelector('.dashboard');
 const dateTime    = document.querySelector('.datetime');
 const todayQuotes = document.querySelectorAll('.quote-line');
-const settings = document.querySelector('.settings');
+
 // buttons
 const buttons = {
   start:    document.getElementById('start'),
@@ -345,12 +345,17 @@ cards.settings.addEventListener('click', () => {
 })
 
 function openSettings(){
+  const settings = document.querySelector('.settings');
+  const settingsOverlay = document.querySelector('.settings-overlay');
+
   settings.classList.remove('close');
   settings.classList.add('open');
+  settingsOverlay.classList.add('open');
   settings.addEventListener('animationend', () => {
     const closeSettings = (e) => {
       if(!settings.contains(e.target)){
         settings.classList.add('close');
+        settingsOverlay.classList.remove('open');
         document.body.removeEventListener('click', closeSettings);
       }
     }

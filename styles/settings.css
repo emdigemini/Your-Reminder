@@ -1,3 +1,10 @@
+.settings-overlay.open {
+  height: 100vh;
+  width: 100vw;
+  background: #00000015;
+  z-index: 19;
+}
+
 .settings {
   display: none;
   flex-direction: column;

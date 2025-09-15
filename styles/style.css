@@ -248,6 +248,14 @@
   color: var(--color-accent); 
 }
 
+/*changes*/
+
+/*---------------- LIGHT MODE ----------------*/
+body.light {
+  background-color: #fff8f0;
+  color: #262626;
+}
+
 /* Header / App name */
 body.light .app-name {
   color: #5c3a21;
@@ -257,7 +265,7 @@ body.light .bi-x-square {
   color: #a67c52;
 }
 body.light .bi-x-square:hover {
-  color: #007BFF;
+  color: #b18b66;
 }
 
 /* Date & Time */
@@ -269,17 +277,19 @@ body.light .datetime {
 body.light .menu li button {
   background: #a67c52;
   color: #ffffff;
+  transition: all 0.3s ease;
 }
 
 body.light .menu li button:hover {
-  background: #a67c52;
-  color: #ffffff;
+  background: #b18b66;  
+  color: #fff;
 }
 
 /* Cards */
 body.light .card {
   background: #d9b99b;
   border: 1px solid #ccc;
+  transition: all 0.3s ease;
 }
 
 body.light .card-icon h3 {
@@ -287,23 +297,20 @@ body.light .card-icon h3 {
 }
 
 body.light .card:hover {
-  border-color: #007BFF;
+  border-color: #b18b66;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
 }
 
 body.light .card:hover .card-icon h3 {
-  color: #262626;
+  color: #e4dfdf;
 }
 
 body.light .card p {
   color: #666;
+  transition: color 0.3s ease;
 }
 
 body.light .card:hover p {
-  color: #007BFF;
+  color: #b18b66;
 }
 
-body.light .card p {
-  color: #666;
-}
-
-/*changes2*/
