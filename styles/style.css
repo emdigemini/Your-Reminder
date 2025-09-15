@@ -248,4 +248,66 @@
   color: var(--color-accent); 
 }
 
+/*---------------- LIGHT MODE ----------------*/
+body.light {
+  background-color: #fff8f0;
+  color: #262626;
+}
 
+/* Header / App name */
+body.light .app-name {
+  color: #5c3a21;
+}
+
+body.light .bi-x-square {
+  color: #a67c52;
+}
+body.light .bi-x-square:hover {
+  color: #007BFF;
+}
+
+/* Date & Time */
+body.light .datetime {
+  color: #5c3a21;
+}
+
+/* Menu buttons */
+body.light .menu li button {
+  background: #a67c52;
+  color: #ffffff;
+}
+
+body.light .menu li button:hover {
+  background: #a67c52;
+  color: #ffffff;
+}
+
+/* Cards */
+body.light .card {
+  background: #d9b99b;
+  border: 1px solid #ccc;
+}
+
+body.light .card-icon h3 {
+  color: #fff;
+}
+
+body.light .card:hover {
+  border-color: #007BFF;
+}
+
+body.light .card:hover .card-icon h3 {
+  color: #262626;
+}
+
+body.light .card p {
+  color: #666;
+}
+
+body.light .card:hover p {
+  color: #007BFF;
+}
+
+body.light .card p {
+  color: #666;
+}
