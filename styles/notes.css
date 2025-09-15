@@ -76,17 +76,21 @@
 }
 
 .add-notes {
+  position: sticky;
+  top: 0;
   display: flex;
   align-items: center;
   gap: 10px;
-  background: #0f0f0f;
   padding: 10px 15px;
+  border: 1px solid #666;
   border-radius: 8px;
-  border: 1px solid #fff;
+  width: 100%;
+  background: #1a1a1a;
 }
 
 .add-notes input {
   flex: 1;
+  position: relative;
   background: transparent;
   border: none;
   outline: none;
