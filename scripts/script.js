@@ -2,6 +2,7 @@ import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 import './animation.js';
 import './settings.js';
 import { darkMode } from './settings.js';
+import { quotesAnimation, randomQuotes } from './animation.js'
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -93,7 +94,6 @@ function close(){
     appName.classList.add('resizee');
     dateTime.classList.remove('popOut');
     dateTime.classList.add('popIn');
-
     cards.reminder.addEventListener('animationend', () => {
       dashboard.style.display = 'none';
       startUpMenu.style.display = 'flex';
@@ -103,6 +103,7 @@ function close(){
       [buttons.settings, buttons.about].forEach(el => el.classList.remove('slideRight'));
       [buttons.start, buttons.contact].forEach(el => el.classList.add('slideInLeft'));
       [buttons.settings, buttons.about].forEach(el => el.classList.add('slideInRight'));
+      randomQuotes();
     }, { once: true });
   })
 }
@@ -174,7 +175,7 @@ cards.reminder.addEventListener('click', () => {
       </div>
     `);
 
-    document.body.removeEventListener('click', bodyClick);
+   // document.body.removeEventListener('click', bodyClick);
 
     const inputTitle = document.getElementById('title');
     const inputDescription = document.getElementById('description');
@@ -253,6 +254,7 @@ cards.reminder.addEventListener('click', () => {
         trash.addEventListener('click', (e) => {
           e.stopPropagation();
           yourNotesList.splice(id, 1);
+          saveToStorage();
           renderYourNotes();
         })
       });
@@ -338,13 +340,26 @@ cards.tasks.addEventListener('click', () => {
 buttons.settings.addEventListener('click', () => {
   openSettings();
 })
+
 cards.settings.addEventListener('click', () => {
   openSettings();
 })
+
 function openSettings(){
-  settings.classList.remove('close')
+  settings.classList.remove('close');
   settings.classList.add('open');
+  settings.addEventListener('animationend', () => {
+    const closeSettings = (e) => {
+      if(!settings.contains(e.target)){
+        settings.classList.add('close');
+        document.body.removeEventListener('click', closeSettings);
+      }
+    }
+    document.body.addEventListener('click', closeSettings)
+  }, {once: true});
 }
+
+
 
 start();
 close();
