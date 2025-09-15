@@ -248,8 +248,6 @@
   color: var(--color-accent); 
 }
 
-/*changes*/
-
 /* Header / App name */
 body.light .app-name {
   color: #5c3a21;
@@ -307,3 +305,5 @@ body.light .card:hover p {
 body.light .card p {
   color: #666;
 }
+
+/*changes2*/
