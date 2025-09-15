@@ -5,8 +5,6 @@
   --low-accent: rgba(0, 255, 128, 0.5);     /* low accent color (buttons, underline) */
   --color-button-text: #000; /* text inside buttons */
   --background-2: #22222279;
-  --light-mode: #fff8e7;
-  --light-mode-card: #faf8f6;
 }
 
 * {
@@ -17,72 +15,6 @@
   -webkit-touch-callout: none;    
 }
 
-body {
-  height: 100vh;
-  width: 100vw;
-}
-
-/* ---------------- LIGHT MODE ---------------- */
-body.light {
-  background-color: #faf8f6;
-  color: #262626;
-}
-
-/* Header / App name */
-body.light .app-name {
-  color: #007BFF;
-}
-
-body.light .bi-x-square {
-  color: #262626;
-}
-body.light .bi-x-square:hover {
-  color: #007BFF;
-}
-
-/* Date & Time */
-body.light .datetime {
-  color: #007BFF;
-}
-
-/* Menu buttons */
-body.light .menu li button {
-  background: #007BFF;
-  color: #ffffff;
-}
-
-body.light .menu li button:hover {
-  background: #0069d9;
-  color: #ffffff;
-}
-
-/* Cards */
-body.light .card {
-  background: #fff8e7;
-  border: 1px solid #ccc;
-}
-
-body.light .card-icon h3 {
-  color: #007BFF;
-}
-
-body.light .card:hover {
-  border-color: #007BFF;
-}
-
-body.light .card:hover .card-icon h3 {
-  color: #262626;
-}
-
-body.light .card p {
-  color: #666;
-}
-
-body.light .card:hover p {
-  color: #007BFF;
-}
-
-@media (max-width: 768px) {
   html, body {
   height: 100vh;
   width: 100vw;
@@ -94,6 +26,7 @@ body.light .card:hover p {
   color: #fff; 
   scrollbar-width: none;
   touch-action: none;
+  overflow: hidden;
 }
 
 
@@ -140,6 +73,16 @@ body.light .card:hover p {
   z-index: 5;
   font-size: 2rem;
   user-select: none;  
+  letter-spacing: 0.8px;
+}
+
+.app-name::after {
+  content: '';
+  background: var(--color-accent);
+  display: block;
+  margin-left: 2%;
+  width: 43%;
+  height: 1px;
 }
 
 .your-profile {
@@ -291,7 +234,7 @@ body.light .card:hover p {
 .card-icon div {
   font-size: 24px;
   margin-bottom: 10px;
-  border-bottom: 1px solid #666;
+  border-bottom: 1px solid white;
 }
 
 .card p {
@@ -305,4 +248,4 @@ body.light .card:hover p {
   color: var(--color-accent); 
 }
 
-}
+

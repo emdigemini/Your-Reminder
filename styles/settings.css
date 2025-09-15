@@ -11,39 +11,6 @@
   left: 0;
   z-index: 20;
   gap: 12px;
-  overflow-y: auto;
-}
-
-
-.settings::-webkit-scrollbar {
-  width: 4px; 
-}
-
-.settings::-webkit-scrollbar-track {
-  background: gray;
-  border-radius: 4px;
-}
-
-.settings::-webkit-scrollbar-thumb {
-  background: var(--color-accent); 
-  border-radius: 4px;
-}
-
-.settings::-webkit-scrollbar-thumb:hover {
-  background: var(--color-accent);
-}
-
-.back-to-menu {
-  position: absolute;
-  cursor: pointer;
-  right: 4px;
-}
-
-.back-to-menu i {
-  font-size: 20px;
-}
-.back-to-menu i:hover {
-  color: var(--color-accent);
 }
 
 .settings h3 {
@@ -100,6 +67,7 @@
   color: #fff;
   background: transparent;
   padding: 8px 24px;
+  border-radius: 8px;
 }
 
 
@@ -107,7 +75,7 @@
 .settings.light {
   display: none;
   background: #fff8e7;
-  color: #262626;
+  color: #5c3a21;
 }
 
 .settings.open.light {

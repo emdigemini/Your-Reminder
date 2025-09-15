@@ -4,11 +4,14 @@
     }
     .your-notes.light, .add-notes.light {
       background-color: #fff1e6;
-      border: 1px solid #6d6875;
+      border: none ;
       caret-color: #555555;
     }
     .your-notes.light h4, .notes-action.light i {
-      color: #2b2d42;
+      color: #8c5e4f;
+    }
+    .your-notes.light textarea {
+      color: #5c3a21;
     }
     .your-notes.light:hover {
       background-color: #fffafae8;
@@ -22,19 +25,19 @@
       background: #eeeeee;
     }
     .create-notes.light label {
-      color: #262626;
+      color: #5c3a21;
     }
     .create-notes.light input, .description-box.light {
       background: #fff;
       border: 1px solid #fff;
-      color: #262626;
+      color: #5c3a21;
     }
     .create-notes.light input:focus, .description-box.light:focus {
       border: 1px solid gray;
     }
     .create-notes.light button {
       background: #ffd51c;
-      color: #2d2d2e;
+      color: #5c3a21;
 }
 
 /* overlay background */
@@ -123,6 +126,9 @@
   padding: 12px 15px;
   transition: 0.2s;
   cursor: pointer;
+  min-height: 100px;
+  max-height: 350px;
+  height: auto;
 }
 
 .your-notes:hover {
@@ -138,6 +144,7 @@
 .notes-title h4 {
   color: #fdfdfd;
   font-size: 16px;
+  max-width: 130px;
 }
 
 .notes-title i {
@@ -158,6 +165,9 @@
   background: none;
   font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   color: #949494;
+  min-height: 35px;
+  max-height: 150px;
+  height: auto;
   padding-left: 6px;
   font-size: 13px;
   border: none;
@@ -182,6 +192,9 @@
 .notes-container::-webkit-scrollbar-track {
   background: transparent;
 }
+
+/*NOTES ACTION*/
+
 
 /*CREATE NOTES BOX*/
 .overlay-box {

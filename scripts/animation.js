@@ -2,18 +2,23 @@ import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 import { quotes } from '../quotes generator/quotes.js';
 
 // generate random quotes
-const randomNum = Math.floor(Math.random() * quotes.length);
-document.querySelector('.quotes').innerHTML = quotes[randomNum]
+
+export function randomQuotes(){
+  const randomNum = Math.floor(Math.random() * quotes.length);
+  return randomNum;
+}
+
+document.querySelector('.quotes').innerHTML = quotes[randomQuotes()];
 
 const dateName = document.querySelector('.date-name');
-const todayQuotes = document.querySelectorAll('.quote-line');
+let todayQuotes = document.querySelectorAll('.quote-line');
 
 const id = ['one', 'two', 'three', 'four']
 let i = 0;
 let k = 0;
 
 // quotes animation logic
-function quotesAnimation(){
+export function quotesAnimation(){
 
   setTimeout(() => {
     dateName.classList.add('anim');
@@ -49,12 +54,11 @@ function dateAndTime(){
   document.getElementById('ss').textContent = ss;
 
 }
-setInterval(dateAndTime, 1000)
 
-
+randomQuotes();
 quotesAnimation();
 dateAndTime();
-
+setInterval(dateAndTime, 1000);
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('/sw.js')
