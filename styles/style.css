@@ -250,6 +250,12 @@
 
 /*changes*/
 
+/*---------------- LIGHT MODE ----------------*/
+body.light {
+  background-color: #fff8f0;
+  color: #262626;
+}
+
 /* Header / App name */
 body.light .app-name {
   color: #5c3a21;
