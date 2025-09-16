@@ -1,5 +1,5 @@
 .settings-overlay.open {
-  height: 100vh;
+  height: 100dvh;
   width: 100vw;
   background: #00000015;
   z-index: 19;
