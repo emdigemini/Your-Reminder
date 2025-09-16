@@ -4,7 +4,7 @@ import './settings.js';
 import { darkMode } from './settings.js';
 import { quotesAnimation, randomQuotes } from './animation.js'
 import { openYourNote } from './Notes/notes.js';
-import { yourNotesList } from './data/yourData.js';
+import { yourNotesList, saveToStorage } from './data/yourData.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -294,10 +294,6 @@ cards.reminder.addEventListener('click', () => {
     inputDescription.value = '';
     saveToStorage();
     renderYourNotes();
-  }
-
-  function saveToStorage(){
-    localStorage.setItem('yourNotesList', JSON.stringify(yourNotesList));
   }
 
   // generate your notes from storage into HTML

@@ -1,9 +1,9 @@
-import { yourNotesList } from "../data/yourData.js";
+import { yourNotesList, saveToStorage } from "../data/yourData.js";
 
 export function openYourNote(noteId){
+  const yourNote = yourNotesList.find(note => note.id === noteId);
   const noteEl = notepad();
   function notepad(){
-    const yourNote = yourNotesList.find(note => note.id === noteId);
     document.body.insertAdjacentHTML("beforeend", `
         <div class="your-note-tab-overlay">
           <div class="your-note-tab">
@@ -43,20 +43,14 @@ export function openYourNote(noteId){
         closeNoteTab();
         noteEl.yourNoteTab.addEventListener('animationend', () => {
           noteEl.yourNoteOverlay.remove();
-        })
+        }, {once: true})
       }
     })
 
     noteEl.textpad.addEventListener('input', () => {
       const getText = noteEl.textpad.value;
       yourNote.textarea = getText;
-      autosave();
+      saveToStorage();
     })
-
-    function autosave(){
-      localStorage.setItem('yourNotesList', JSON.stringify(yourNotesList));
-    }
     
-    
-
 }
