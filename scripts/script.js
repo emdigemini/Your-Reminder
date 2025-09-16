@@ -4,6 +4,7 @@ import './settings.js';
 import { darkMode } from './settings.js';
 import { quotesAnimation, randomQuotes } from './animation.js'
 import { openYourNote } from './Notes/notes.js';
+import { yourNotesList } from './data/yourData.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -115,7 +116,6 @@ cards.reminder.addEventListener('click', () => {
 })
 
   /**For NOTES */
-  const yourNotesList = JSON.parse(localStorage.getItem('yourNotesList')) || [];
 
   // main overlay
   cards.notes.addEventListener('click', () => {
@@ -155,7 +155,7 @@ cards.reminder.addEventListener('click', () => {
     overlay.classList.add('close');
     setTimeout(() => {
       overlay.remove();
-    }, 500)
+    }, 700)
     document.body.removeEventListener('click', bodyClick);
   }
 
@@ -175,8 +175,6 @@ cards.reminder.addEventListener('click', () => {
         </div>
       </div>
     `);
-
-   // document.body.removeEventListener('click', bodyClick);
 
     const inputTitle = document.getElementById('title');
     const inputDescription = document.getElementById('description');
@@ -247,6 +245,7 @@ cards.reminder.addEventListener('click', () => {
         if (!action) return;
         const note = action.closest('.your-notes'); 
         const noteId = note.dataset.noteId; 
+        if (document.querySelector('.your-note-tab-overlay')) return;
         openYourNote(noteId);
       });
 
@@ -289,6 +288,7 @@ cards.reminder.addEventListener('click', () => {
       description,
       date,
       bookmark: false,
+      textarea: 'Add your notes here...'
     })
     inputTitle.value = '';
     inputDescription.value = '';

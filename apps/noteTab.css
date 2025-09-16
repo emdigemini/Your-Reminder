@@ -33,7 +33,7 @@
 .your-note-page textarea {
   font-family: "Montserrat", sans-serif;
   font-weight: 500;
-  font-size: 15px;
+  font-size: 17px;
   resize: none;
   height: 100vh;
   width: 100vw;
@@ -41,6 +41,7 @@
   border: none;
   padding: 0 20px;
   color: #262626;
+  line-height: 23px;
 }
 
 .your-note-page textarea:focus {
