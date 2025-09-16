@@ -112,7 +112,7 @@ function close(){
 
 //reminder
 cards.reminder.addEventListener('click', () => {
-  window.location.href = 'apps/reminder.html';
+  alert('Still a work in progress.');
 })
 
   /**For NOTES */
@@ -324,12 +324,12 @@ cards.reminder.addEventListener('click', () => {
 
 // goals
 cards.goals.addEventListener('click', () => {
-  window.location.href = 'apps/goals.html';
+  alert('Still a work in progress.');
 })
 
 //tasks
 cards.tasks.addEventListener('click', () => {
-  window.location.href = 'apps/tasks.html';
+  alert('Still a work in progress.');
 })
 
 //settings
