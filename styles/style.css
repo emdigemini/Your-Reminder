@@ -1,11 +1,11 @@
 :root {
-  --color-background: #000;  /* main background */
-  --color-text: #fff;        /* main text */
-  --color-accent: #00FF80;      /* accent color (buttons, underline) */
-  --low-accent: rgba(0, 255, 128, 0.5);     /* low accent color (buttons, underline) */
+  --color-background: #000;  /* default background color */
+  --color-text: #fff;        /* default text color */
+  --color-accent: #00FF80;      /* accent color for buttons, underline and title */
+  --low-accent: rgba(0, 255, 128, 0.5); 
   --color-button-text: #000; /* text inside buttons */
   --background-2: #22222279;
-  --device-height: 100dvh; /* fix height for any devices */
+  --error: #e63946;
 }
 
 * {
@@ -17,13 +17,13 @@
 }
 
   html, body {
-  height: var(--device-height);
+  height: 100dvh;
   width: 100vw;
   font-family: "Cagliostro", serif;
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000; 
+  background-color: var(--color-background); 
   color: #fff; 
   scrollbar-width: none;
   touch-action: none;
@@ -37,7 +37,7 @@
   align-items: center;
   justify-content: center;
   flex-direction: column;
-  height: max-content;
+  height: 100dvh;
   width: 100%;
 }
 
@@ -253,7 +253,7 @@
 
 /*---------------- LIGHT MODE ----------------*/
 body.light {
-  background-color: #fff8f0;
+  background-color: var(--color-background);
   color: #262626;
 }
 

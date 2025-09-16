@@ -179,7 +179,20 @@ cards.reminder.addEventListener('click', () => {
     const inputTitle = document.getElementById('title');
     const inputDescription = document.getElementById('description');
 
+    inputTitle.addEventListener('input', function(){
+      if(this.value.length > 44){
+        this.classList.add('error');
+        this.value = this.value.slice(0, 45);
+      } else {
+        this.classList.remove('error');
+      }
+    })
+
     document.getElementById('addBtn').addEventListener('click', () => {
+      if(inputTitle.value.length > 44){
+        inputTitle.focus();
+        return;
+      }
       if(inputTitle.value !== '') saveYourNotes(inputTitle, inputDescription);
     })
 
@@ -249,6 +262,7 @@ cards.reminder.addEventListener('click', () => {
         openYourNote(noteId);
       });
 
+
       trashBtn.forEach((trash, id) => {
         trash.addEventListener('click', (e) => {
           e.stopPropagation();
@@ -269,7 +283,7 @@ cards.reminder.addEventListener('click', () => {
             console.log(yourNotesList);
             renderYourNotes();
           })
-      })
+      });
 
     }
 
@@ -301,15 +315,17 @@ cards.reminder.addEventListener('click', () => {
     const toHTML = yourNotesList.map(note => {
       return `
         <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
-          <div class="notes-title">
-            <h4>${note.title}</h4>
-              <div class="notes-action ${!darkMode ? 'light' : ''}">
-                <i class="edit bi-pencil-square"></i>
-                <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
-                <i class="trash bi-trash"></i>
-              </div>
+          <div class="notes-action-bar">
+            <div class="notes-title">
+              <h4>${note.title}</h4>
+            </div>
+            <div class="notes-action ${!darkMode ? 'light' : ''}">
+              <i class="edit bi-pencil-square"></i>
+              <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
+              <i class="trash bi-trash"></i>
+            </div>
           </div>
-          <textarea class="description" disabled>${note.description}</textarea>
+          <div class="description"><textarea class="description-box" readonly>${note.description}</textarea></div>
           <div class="date-created">${note.date}</div>
         </div>
       `
@@ -364,10 +380,3 @@ function openSettings(){
 
 start();
 close();
-
-
-function setAppHeight() {
-  document.documentElement.style.setProperty('--device-height', `${window.innerHeight}px`);
-}
-window.addEventListener('resize', setAppHeight);
-setAppHeight();

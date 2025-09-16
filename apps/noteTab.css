@@ -2,7 +2,7 @@
   position: absolute;
   top: 0;
   background: transparent;
-  height: var(--device-height);
+  height: 100dvh;
   width: 100vw;
   z-index: 5;
   display: none;
@@ -12,7 +12,7 @@
   background: #131313;
   position: relative;
   top: 80px;
-  height: var(--device-height);
+  height: 100dvh;
   width: 100vw;
   border-radius: 30px 30px 0 0;
   border: 2px solid #c4c4c4;
@@ -20,9 +20,6 @@
   flex-direction: column;
   align-items: center;
   gap: 15px;
-  overflow-y: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
 }
 
 .your-note-tab::-webkit-scrollbar {
@@ -31,9 +28,16 @@
 
 .your-note-title {
   width: 100%;
+  height: max-content;
   color: var(--color-accent);
   padding: 8px 16px;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+}
+
+.your-note-page {
+  overflow-y: scroll;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
 }
 
 .your-note-page textarea {
@@ -42,7 +46,7 @@
   font-size: 17px;
   resize: none;
   margin: 10px 0;
-  height: var(--device-height);
+  height: 100dvh;
   width: 100vw;
   background: none;
   border: none;
@@ -61,7 +65,7 @@
 
 /*--------LIGHT MODE--------*/
 body.light .your-note-tab {
-  background: #D2A679;
+  background: var(--color-background);
   border: 2px solid gray;
 }
 

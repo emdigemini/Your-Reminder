@@ -14,6 +14,10 @@ toggleMode.addEventListener('click', () => {
 });
 
 function switchMode(){
+  // for background
+  !darkMode ? root.style.setProperty("--color-background", "#fff8f0") : root.style.setProperty("--color-background", "#000");
+  
+  // for text color
   !darkMode ? root.style.setProperty("--color-accent", "#8c5e4f") : root.style.setProperty("--color-accent", "#00FF80");
   
   toggleMode.classList.toggle('dark', darkMode);
