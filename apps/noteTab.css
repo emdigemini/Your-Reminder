@@ -1,0 +1,50 @@
+.your-note-tab-overlay {
+  position: absolute;
+  top: 0;
+  background: transparent;
+  height: 100vh;
+  width: 100vw;
+  z-index: 5;
+  display: none;
+}
+
+.your-note-tab {
+  background: #D2A679;
+  position: relative;
+  top: 50px;
+  height: 100vh;
+  border-radius: 30px 30px 0 0;
+  border: 2px solid gray;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+}
+
+.your-note-title {
+  padding: 8px 16px;
+}
+
+.your-note-title {
+  width: 100%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+}
+
+.your-note-page textarea {
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  font-size: 15px;
+  resize: none;
+  height: 100vh;
+  width: 100vw;
+  background: none;
+  border: none;
+  padding: 0 20px;
+  color: #262626;
+}
+
+.your-note-page textarea:focus {
+  border: none;
+  outline: none;
+}
+

@@ -3,6 +3,7 @@ import './animation.js';
 import './settings.js';
 import { darkMode } from './settings.js';
 import { quotesAnimation, randomQuotes } from './animation.js'
+import { openYourNote } from './Notes/notes.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -246,7 +247,7 @@ cards.reminder.addEventListener('click', () => {
         if (!action) return;
         const note = action.closest('.your-notes'); 
         const noteId = note.dataset.noteId; 
-        window.location.href = `apps/notes.html?id=${encodeURIComponent(noteId)}`
+        openYourNote(noteId);
       });
 
       trashBtn.forEach((trash, id) => {
