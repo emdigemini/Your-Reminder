@@ -364,3 +364,10 @@ function openSettings(){
 
 start();
 close();
+
+
+function setAppHeight() {
+  document.documentElement.style.setProperty('--device-height', `${window.innerHeight}px`);
+}
+window.addEventListener('resize', setAppHeight);
+setAppHeight();

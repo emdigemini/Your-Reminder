@@ -1,5 +1,5 @@
 .settings-overlay.open {
-  height: 100dvh;
+  height: var(--device-height);
   width: 100vw;
   background: #00000015;
   z-index: 19;
@@ -10,7 +10,7 @@
   flex-direction: column;
   background: #262626;
   position: fixed;
-  height: 100vh;
+  height: var(--device-height);
   width: 80vw;
   padding: 20px 30px;
   border-right: 2px solid gray;

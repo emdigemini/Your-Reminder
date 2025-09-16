@@ -5,6 +5,7 @@
   --low-accent: rgba(0, 255, 128, 0.5);     /* low accent color (buttons, underline) */
   --color-button-text: #000; /* text inside buttons */
   --background-2: #22222279;
+  --device-height: 100dvh; /* fix height for any devices */
 }
 
 * {
@@ -16,7 +17,7 @@
 }
 
   html, body {
-  height: 100dvh;
+  height: var(--device-height);
   width: 100vw;
   font-family: "Cagliostro", serif;
   display: flex;

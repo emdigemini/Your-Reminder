@@ -46,7 +46,7 @@
   top: 0;
   left: 0;
   width: 100vw;
-  height: 100dvh;
+  height: var(--device-height);
   background: rgba(0, 0, 0, 0.7); 
   display: flex;
   justify-content: center;
@@ -200,7 +200,7 @@
   background: rgba(0, 0, 0, 0.2);
   top: 0;
   left: 0;
-  height: 100vh;
+  height: var(--device-height);
   width: 100vw;
   justify-content: center;
   align-items: center;
