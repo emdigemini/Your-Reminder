@@ -65,8 +65,8 @@
   width: 100vw;
   background: none;
   border: none;
+  color: #fff;
   padding: 0 20px;
-  color: #ffffff;
   line-height: 24px;
   background-image: linear-gradient(to bottom, #e0e0e034 1px, transparent 1px);
   background-size: 100% 24px; 
@@ -90,5 +90,5 @@ body.light .your-note-title {
 
 body.light .your-note-page textarea {
   color: #262626;
-  background-image: linear-gradient(to bottom, #e0e0e034 1px, transparent 1px);
+  background-image: linear-gradient(to bottom, #d9b99b75 1px, transparent 1px);
 }
