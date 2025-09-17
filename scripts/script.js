@@ -381,3 +381,10 @@ function openSettings(){
 
 start();
 close();
+
+function setHeight() {
+  document.querySelector(".container").style.height = window.innerHeight + "px";
+}
+window.addEventListener("resize", setHeight);
+window.addEventListener("orientationchange", setHeight);
+setHeight(); // initial
