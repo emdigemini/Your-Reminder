@@ -7,6 +7,7 @@ export function openYourNote(noteId){
     document.body.insertAdjacentHTML("beforeend", `
         <div class="your-note-tab-overlay">
           <div class="your-note-tab">
+            <div class="drag-btn"></div>
             <div class="your-note-title">
               <h1>${yourNote.title}</h1>
             </div>
@@ -24,7 +25,9 @@ export function openYourNote(noteId){
         textpad :         document.querySelector('.textpad'),
       }
   }
-  
+
+    const root = document.documentElement;
+
     openNoteTab();
     function openNoteTab(){
       noteEl.mainOverlay.remove();
@@ -32,10 +35,17 @@ export function openYourNote(noteId){
       noteEl.noteListBox.classList.add('close');
       noteEl.yourNoteOverlay.classList.add('open');
       noteEl.yourNoteTab.classList.add('open');
+      dragYourNoteTab(noteEl.yourNoteTab);
     }
-    function closeNoteTab(){
-      noteEl.yourNoteOverlay.classList.add('close');
-      noteEl.yourNoteTab.classList.add('close');
+    function closeNoteTab(offsetY){
+      if(offsetY){
+        root.style.setProperty('--offset-y', `${offsetY}px`);
+        noteEl.yourNoteOverlay.classList.add('close');
+        noteEl.yourNoteTab.classList.add('close');
+      }else{
+        noteEl.yourNoteOverlay.classList.add('close');
+        noteEl.yourNoteTab.classList.add('close');
+      }
     }
     
     document.addEventListener('click', (e) => {
@@ -52,5 +62,35 @@ export function openYourNote(noteId){
       yourNote.textarea = getText;
       saveToStorage();
     })
+
+    function dragYourNoteTab(noteTab){
+      let offsetY = 0;
+      document.querySelector('.drag-btn').addEventListener('mousedown', (e) => {
+        let startY = e.clientY;
+
+        function onMouseMove(e){
+          offsetY = e.clientY - startY;
+          noteTab.style.top = `${offsetY}px`;
+        }
+
+        function onMouseUp(){
+          noteTab.style.top = "";
+          if(offsetY > 300){
+            closeNoteTab(offsetY);
+            noteEl.yourNoteTab.addEventListener('animationend', () => {
+              noteEl.yourNoteOverlay.remove();
+            }, {once: true})
+          }
+          document.removeEventListener("mousemove", onMouseMove);
+          document.removeEventListener('mouseup', onMouseUp);
+        }
+
+        document.addEventListener("mousemove", onMouseMove);
+        document.addEventListener('mouseup', onMouseUp);
+      })
+    }
     
 }
+
+
+
