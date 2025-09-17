@@ -78,6 +78,7 @@ function start(){
 
 function close(){
   closeBtn.addEventListener('click', () => {
+    console.log('working');
     // profile + close button
     [yourProfile, closeBtn].forEach(el => el.classList.remove('click'));
     [yourProfile, closeBtn].forEach(el => el.classList.add('clickk'));
