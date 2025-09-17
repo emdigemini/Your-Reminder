@@ -64,30 +64,49 @@ export function openYourNote(noteId){
     })
 
     function dragYourNoteTab(noteTab){
-      let offsetY = 0;
-      document.querySelector('.drag-btn').addEventListener('mousedown', (e) => {
-        let startY = e.clientY;
+      const dragBtn = document.querySelector('.drag-btn');
 
-        function onMouseMove(e){
-          offsetY = e.clientY - startY;
+        let offsetY = 0;
+        let startY = 0;
+
+        function dragStart(e){
+          startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+          if(e.type === 'mousedown'){
+            document.addEventListener("mousemove", dragging);
+            document.addEventListener('mouseup', dragEnd);
+          }else {
+            document.addEventListener("touchmove", dragging);
+            document.addEventListener('touchend', dragEnd);
+          }
+        }
+
+        function dragging(e){
+          const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+          offsetY = currentY - startY;
           noteTab.style.top = `${offsetY}px`;
         }
 
-        function onMouseUp(){
+        function dragEnd(){
           noteTab.style.top = "";
+
           if(offsetY > 300){
             closeNoteTab(offsetY);
             noteEl.yourNoteTab.addEventListener('animationend', () => {
               noteEl.yourNoteOverlay.remove();
             }, {once: true})
           }
-          document.removeEventListener("mousemove", onMouseMove);
-          document.removeEventListener('mouseup', onMouseUp);
+
+          document.removeEventListener("mousemove", dragging);
+          document.removeEventListener('mouseup', dragEnd);
+
+          document.removeEventListener("touchmove", dragging);
+          document.removeEventListener("touchend", dragEnd);
         }
 
-        document.addEventListener("mousemove", onMouseMove);
-        document.addEventListener('mouseup', onMouseUp);
-      })
+        dragBtn.addEventListener("mousedown", dragStart);
+        dragBtn.addEventListener("touchstart", dragStart, {passive: false});
+        
     }
     
 }
