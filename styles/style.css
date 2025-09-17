@@ -30,6 +30,24 @@
   overflow: hidden;
 }
 
+.startup {
+  position: absolute;
+  height: 100dvh;
+  width: 100vw;
+  background: #000;
+  z-index: 2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.startup-quote-line {
+  position: absolute;
+  justify-self: center;
+  font-size: 21px;
+  opacity: 0;
+}
+
 
 .container {
   position: fixed;

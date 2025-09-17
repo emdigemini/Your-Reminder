@@ -6,6 +6,7 @@ import { quotesAnimation, randomQuotes } from './animation.js'
 import { openYourNote } from './Notes/notes.js';
 import { yourNotesList, saveToStorage } from './data/yourData.js';
 
+
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
 const appName     = document.querySelector('.app-name');
@@ -24,8 +25,6 @@ const buttons = {
   about:    document.getElementById('about'),
 };
 
-
-
 // card sections
 const cards = {
   reminder: document.getElementById('reminder'),
@@ -36,9 +35,10 @@ const cards = {
 };
 
 
-
 function start(){
   buttons.start.addEventListener('click', () => {
+    history.pushState({ startClicked: true }, ""); 
+    
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -78,7 +78,6 @@ function start(){
 
 function close(){
   closeBtn.addEventListener('click', () => {
-    console.log('working');
     // profile + close button
     [yourProfile, closeBtn].forEach(el => el.classList.remove('click'));
     [yourProfile, closeBtn].forEach(el => el.classList.add('clickk'));
@@ -88,25 +87,29 @@ function close(){
     [cards.reminder, cards.goals].forEach(el => el.classList.add('slideOutRight'));
     [cards.notes, cards.tasks].forEach(el => el.classList.add('slideOutLeft'));
 
+    // settings animation out
     cards.settings.classList.remove('slideUp');
     cards.settings.classList.add('slideDown');
     
+    // time and header name animation out
     appHeader.classList.remove('click');
     appHeader.classList.add('clickk');
     appName.classList.remove('resize');
     appName.classList.add('resizee');
     dateTime.classList.remove('popOut');
     dateTime.classList.add('popIn');
+
     cards.reminder.addEventListener('animationend', () => {
       dashboard.style.display = 'none';
       startUpMenu.style.display = 'flex';
 
-      // grouped button animations
+      // remove grouped button and add in animations
       [buttons.start, buttons.contact].forEach(el => el.classList.remove('slideLeft'));
       [buttons.settings, buttons.about].forEach(el => el.classList.remove('slideRight'));
       [buttons.start, buttons.contact].forEach(el => el.classList.add('slideInLeft'));
       [buttons.settings, buttons.about].forEach(el => el.classList.add('slideInRight'));
       randomQuotes();
+      history.back(); 
     }, { once: true });
   })
 }
@@ -116,228 +119,258 @@ cards.reminder.addEventListener('click', () => {
   alert('Still a work in progress.');
 })
 
-  /**For NOTES */
+/**----------For NOTES----------**/
 
-  // main overlay
-  cards.notes.addEventListener('click', () => {
-    if(!document.querySelector('.overlay')){
-      const notesElement = showMainOverlay();
-      openOverlay(notesElement.overlay, notesElement.container);
-      notesElement.container.addEventListener('animationend', () => {
-        const bodyClick = (e) => {
-          if (!notesElement.container.contains(e.target) && e.target !== cards.notes) {
-            closeOverlay(notesElement.overlay, notesElement.container, bodyClick);
-          }
-        };
-        document.body.addEventListener('click', bodyClick);
-        
-        notesElement.addNotes.addEventListener('click', () => {
-          if(!document.querySelector('.overlay-box')) {
-            document.body.removeEventListener('click', bodyClick);
-            createAddNoteBox(bodyClick);
-          }
-        });
-      }, { once: true });
-    }
-  });
+//--open notes feature
+cards.notes.addEventListener('click', () => {
+  if(!document.querySelector('.overlay')){
+    const noteEl = showMainOverlay();
+    openOverlay(noteEl.overlay, noteEl.container);
 
-  // listeners for each overlay
-  function openOverlay(overlay, container) {
-    overlay.classList.remove('close');
-    overlay.classList.add('open');
-    container.classList.remove('close');
-    container.classList.add('open');
-  }
-
-  function closeOverlay(overlay, container, bodyClick) {
-    container.classList.remove('open');
-    container.classList.add('close');
-    overlay.classList.remove('open');
-    overlay.classList.add('close');
-    setTimeout(() => {
-      overlay.remove();
-    }, 700)
-    document.body.removeEventListener('click', bodyClick);
-  }
-
-  function createAddNoteBox(bodyClick) {
-    document.body.insertAdjacentHTML("beforeend", `
-      <div class="overlay-box">
-        <div class="create-notes ${!darkMode ? 'light' : ''}">
-          <div class="add-title">
-            <label for="title">Title:</label>
-            <input type="text" id="title" spellcheck="false" placeholder="Title">
-          </div>
-          <div class="add-description">
-            <label for="description">Description:</label>
-            <textarea id="description" class="description-box ${!darkMode ? 'light' : ''}" spellcheck="false" placeholder="Description"></textarea>
-          </div>
-          <button class="add-btn" id="addBtn" >Add</button>
-        </div>
-      </div>
-    `);
-
-    const inputTitle = document.getElementById('title');
-    const inputDescription = document.getElementById('description');
-
-    inputTitle.addEventListener('input', function(){
-      if(this.value.length > 44){
-        this.classList.add('error');
-        this.value = this.value.slice(0, 45);
-      } else {
-        this.classList.remove('error');
-      }
-    })
-
-    document.getElementById('addBtn').addEventListener('click', () => {
-      if(inputTitle.value.length > 44){
-        inputTitle.focus();
-        return;
-      }
-      if(inputTitle.value !== '') saveYourNotes(inputTitle, inputDescription);
-    })
-
-    const overlayBox = document.querySelector('.overlay-box');
-    const createNotesBox = document.querySelector('.create-notes');
-
-    overlayBox.classList.remove('close');
-    overlayBox.classList.add('show');
-
-    overlayBox.addEventListener('animationend', () => {
-      const outsideOverlay = (e) => {
-        if (!createNotesBox.contains(e.target)) {
-          overlayBox.classList.remove('show');
-          overlayBox.classList.add('close');
-          document.body.removeEventListener('click', outsideOverlay);
-          document.body.addEventListener('click', bodyClick);
-          overlayBox.remove();
+    noteEl.container.addEventListener('animationend', () => {
+      const bodyClick = (e) => {
+        if(!noteEl.container.contains(e.target) && e.target !== cards.notes) {
+        closeOverlay(noteEl.overlay, noteEl.container, bodyClick);  
         }
       };
-      document.body.addEventListener('click', outsideOverlay);
-    }, {once: true});
+
+      //--close note overlay when clicking outside
+      document.body.addEventListener('click', bodyClick);
+
+      //--open add note container
+      noteEl.addNotes.addEventListener('click', () => {
+        if(!document.querySelector('.overlay-box')) {
+        document.body.removeEventListener('click', bodyClick);
+        createAddNoteBox(bodyClick);  
+        }
+      });
+    }, { once: true });
 
   }
+});
 
-  function showMainOverlay(){
+//--listeners for opening and closing overlay
+function openOverlay(overlay, container) {
+  overlay.classList.remove('close');
+  overlay.classList.add('open');
+  container.classList.remove('close');
+  container.classList.add('open');
+}
 
-    document.body.insertAdjacentHTML("beforeend", `
-      <div class="overlay">
-        <div class="notes-container ${!darkMode ? 'light' : ''}">
-          <div class="add-notes ${!darkMode ? 'light' : ''}">
-            <input id="search-notes" type="text" placeholder="Search for your notes...">
-            <i id="add" class="bi bi-plus-lg"></i>
-          </div>
+function closeOverlay(overlay, container, bodyClick) {
+  container.classList.remove('open');
+  container.classList.add('close');
+  overlay.classList.remove('open');
+  overlay.classList.add('close');
 
-          <div class="notes-list">
-            ${yourNotesList.length ? getYourNotes() : 'No notes yet.'}
-            <!--Generate Notes Here-->
+  document.body.removeEventListener('click', bodyClick);
 
-          </div>
+  setTimeout(() => {
+    overlay.remove();
+  }, 700)
+}
+
+
+//--show all listed notes
+function showMainOverlay(){
+
+  document.body.insertAdjacentHTML("beforeend", `
+    <div class="overlay">
+      <div class="notes-container ${!darkMode ? 'light' : ''}">
+        <div class="add-notes ${!darkMode ? 'light' : ''}">
+          <input id="search-notes" type="text" placeholder="Search for your notes...">
+          <i id="add" class="bi bi-plus-lg"></i>
+        </div>
+
+        <div class="notes-list">
+          ${yourNotesList.length ? getYourNotes() : 'No notes yet.'}
+          <!--Generate Notes Here-->
         </div>
       </div>
-    `);
+    </div>
+  `);
 
-    yourNotesListener();
+  yourNotesListener();
 
-    return {
-      addNotes:     document.getElementById('add'),
-      searchNotes:  document.getElementById('search-notes'),
-      yourNotes:    document.querySelectorAll('.your-notes'),
-      overlay:      document.querySelector('.overlay'),
-      container:    document.querySelector('.notes-container')
-    }
+  return {
+    addNotes:     document.getElementById('add'),
+    searchNotes:  document.getElementById('search-notes'),
+    yourNotes:    document.querySelectorAll('.your-notes'),
+    overlay:      document.querySelector('.overlay'),
+    container:    document.querySelector('.notes-container')
   }
+}
 
-    function yourNotesListener(){
+//--create notes and save to local storage
+function saveYourNotes(inputTitle, inputDescription){
+  const title = inputTitle.value;
+  const description = inputDescription.value.trim().length > 1
+  ? inputDescription.value
+  : 'No description provided.';
+  console.log(description.length);
 
-      const edit = document.querySelectorAll('.bi-pencil-square');
-      const bookmarkBtn = document.querySelectorAll('.save');
-      const trashBtn = document.querySelectorAll('.bi-trash');
+  const date = dayjs().format('MMM D, YYYY');
+  function generateId(length = 5) {
+    return `${title}-` + Math.random().toString(36).substr(2, length);
+  };
+  const id = generateId().replace(/\s+/g, '%');
+  yourNotesList.push({
+    id,
+    title,
+    description,
+    date,
+    bookmark: false,
+    textarea: 'Add your notes here...'
+  })
+  inputTitle.value = '';
+  inputDescription.value = '';
+  saveToStorage();
+  renderYourNotes();
+}
 
-      document.addEventListener('click', function(e) {
-        const action = e.target.closest('.edit, .save, .trash, .notes-title, .notes-action, .description, .date-created');
-        if (!action) return;
-        const note = action.closest('.your-notes'); 
-        const noteId = note.dataset.noteId; 
-        if (document.querySelector('.your-note-tab-overlay')) return;
-        openYourNote(noteId);
-      });
-
-
-      trashBtn.forEach((trash, id) => {
-        trash.addEventListener('click', (e) => {
-          e.stopPropagation();
-          yourNotesList.splice(id, 1);
-          saveToStorage();
-          renderYourNotes();
-        })
-      });
-
-
-      bookmarkBtn.forEach(bookmark => {
-        bookmark.addEventListener('click', (e) => {
-          e.stopPropagation();
-          const bookmarkId = e.target.dataset.bookmarkId;
-          const updateNotes = yourNotesList.find(note => note.id === bookmarkId);
-          if(updateNotes) updateNotes.bookmark = !updateNotes.bookmark;
-            saveToStorage();
-            console.log(yourNotesList);
-            renderYourNotes();
-          })
-      });
-
-    }
-
-  // create notes and save to storage
-  function saveYourNotes(inputTitle, inputDescription){
-    const title = inputTitle.value;
-    const description = inputDescription.value;
-    const date = dayjs().format('MMM D, YYYY');
-    function generateId(length = 5) {
-      return `${title}-` + Math.random().toString(36).substr(2, length);
-    };
-    const id = generateId().replace(/\s+/g, '%');
-    yourNotesList.push({
-      id,
-      title,
-      description,
-      date,
-      bookmark: false,
-      textarea: 'Add your notes here...'
-    })
-    inputTitle.value = '';
-    inputDescription.value = '';
-    saveToStorage();
-    renderYourNotes();
-  }
-
-  // generate your notes from storage into HTML
-  function getYourNotes(){
-    const toHTML = yourNotesList.map(note => {
-      return `
-        <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
-          <div class="notes-action-bar">
-            <div class="notes-title">
-              <h4>${note.title}</h4>
-            </div>
-            <div class="notes-action ${!darkMode ? 'light' : ''}">
-              <i class="edit bi-pencil-square"></i>
-              <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
-              <i class="trash bi-trash"></i>
-            </div>
+//--generate your notes from storage into HTML
+function getYourNotes(){
+  const noteHTML = yourNotesList.map(note => {
+    return `
+      <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
+        <div class="notes-action-bar">
+          <div class="notes-title">
+            <h4>${note.title}</h4>
           </div>
-          <div class="description"><textarea class="description-box" readonly>${note.description}</textarea></div>
-          <div class="date-created">${note.date}</div>
+          <div class="notes-action ${!darkMode ? 'light' : ''}">
+            <i class="edit bi-pencil-square"></i>
+            <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
+            <i class="trash bi-trash"></i>
+          </div>
         </div>
-      `
-    }).join('');
-    return toHTML;
-  }
-  // render all your notes into the HTML
-  function renderYourNotes(){
-    document.querySelector('.notes-list').innerHTML = `${!getYourNotes() ? 'No notes yet.' : getYourNotes()}`;
-    yourNotesListener();
-  }
+        <div class="description"><textarea class="description-box" readonly>${note.description}</textarea></div>
+        <div class="date-created">${note.date}</div>
+      </div>
+    `
+  }).join('');
+  return noteHTML;
+}
+
+
+//--render all your notes into the HTML
+function renderYourNotes(){
+  const notesHTML = getYourNotes();
+  document.querySelector('.notes-list').innerHTML = notesHTML || 'No notes yet.';
+  yourNotesListener();
+}
+
+
+//--show create notes container
+function createAddNoteBox(bodyClick) {
+  document.body.insertAdjacentHTML("beforeend", `
+    <div class="overlay-box">
+      <div class="create-notes ${!darkMode ? 'light' : ''}">
+
+        <!---CREATE TITLE--->
+        <div class="add-title">
+          <label for="title">Title:</label>
+          <input type="text" id="title" spellcheck="false" placeholder="Title">
+        </div>
+
+        <!---CREATE DESCRIPTION--->
+        <div class="add-description">
+          <label for="description">Description:</label>
+          <textarea id="description" class="description-box ${!darkMode ? 'light' : ''}" spellcheck="false" placeholder="Description"></textarea>
+        </div>
+
+        <button class="add-btn" id="addBtn" >Add</button>
+      </div>
+    </div>
+  `);
+
+  //--all elements of create notes container
+  const inputDescription = document.getElementById('description');
+  const overlayBox = document.querySelector('.overlay-box');
+  const inputTitle = document.getElementById('title');
+  const createNotesBox = document.querySelector('.create-notes');
+  
+  //--add animation when opening create notes container
+  overlayBox.classList.remove('close');
+  overlayBox.classList.add('show');
+
+  //--this is for closing animation of create notes container
+  overlayBox.addEventListener('animationend', () => {
+    const outsideOverlayBox = (e) => {
+      if (!createNotesBox.contains(e.target)) {
+        overlayBox.classList.remove('show');
+        overlayBox.classList.add('close');
+        document.body.removeEventListener('click', outsideOverlayBox);
+        document.body.addEventListener('click', bodyClick);
+        overlayBox.remove();
+      }
+    };
+    document.body.addEventListener('click', outsideOverlayBox);
+  }, {once: true});
+  
+  //--add title for your notes
+  inputTitle.addEventListener('input', function(){
+    if(this.value.trim().length > 44){
+      this.classList.add('error');
+      this.value = this.value.slice(0, 45);
+    } else {
+      this.classList.remove('error');
+    }
+  })
+
+  //--listener for add button
+  document.getElementById('addBtn').addEventListener('click', () => {
+    if(inputTitle.value.length > 44){
+      inputTitle.focus();
+      return;
+    }
+    if(inputTitle.value !== '')
+      saveYourNotes(inputTitle, inputDescription);
+  })
+}
+
+/*---------listener to open, edit, save or delete your notes---------*/
+function yourNotesListener(){
+
+  //--element for notes actions
+  const edit = document.querySelectorAll('.bi-pencil-square');
+  const bookmarkBtn = document.querySelectorAll('.save');
+  const trashBtn = document.querySelectorAll('.bi-trash');
+
+  //--listener to open notes
+  document.addEventListener('click', function(e) {
+    const open = e.target.closest('.edit, .save, .trash, .notes-title, .notes-action, .description, .date-created');
+    if (!open) return;
+    const note = open.closest('.your-notes'); 
+    const noteId = note.dataset.noteId; 
+    if (document.querySelector('.your-note-tab-overlay')) return;
+    openYourNote(noteId);
+  });
+
+  //--listener to delete notes
+  trashBtn.forEach((trash, id) => {
+    trash.addEventListener('click', (e) => {
+      e.stopPropagation();
+      yourNotesList.splice(id, 1);
+      saveToStorage();
+      renderYourNotes();
+    })
+  });
+
+  //--listener to save notes
+  bookmarkBtn.forEach(bookmark => {
+    bookmark.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const bookmarkId = e.target.dataset.bookmarkId;
+      const updateNotes = yourNotesList.find(note => note.id === bookmarkId);
+      if(updateNotes) updateNotes.bookmark = !updateNotes.bookmark;
+        saveToStorage();
+        renderYourNotes();
+      })
+  });
+
+}
+/* ------------ End of Notes Feature Section ------------ */
+
 
 // goals
 cards.goals.addEventListener('click', () => {
@@ -388,3 +421,14 @@ function setHeight() {
 window.addEventListener("resize", setHeight);
 window.addEventListener("orientationchange", setHeight);
 setHeight(); // initial
+
+window.addEventListener('popstate', (e) => {
+  if(!e.state) return;
+
+  switch(true) {
+    case e.state.startClicked:
+      close();
+      break;
+  }
+    
+})

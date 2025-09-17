@@ -1,5 +1,4 @@
 import { yourNotesList, saveToStorage } from "../data/yourData.js";
-
 export function openYourNote(noteId){
   const yourNote = yourNotesList.find(note => note.id === noteId);
   const noteEl = notepad();
@@ -36,15 +35,18 @@ export function openYourNote(noteId){
       noteEl.yourNoteOverlay.classList.add('open');
       noteEl.yourNoteTab.classList.add('open');
       dragYourNoteTab(noteEl.yourNoteTab);
+      history.pushState({ noteTabOpen: true }, ""); 
     }
     function closeNoteTab(offsetY){
       if(offsetY){
         root.style.setProperty('--offset-y', `${offsetY}px`);
         noteEl.yourNoteOverlay.classList.add('close');
         noteEl.yourNoteTab.classList.add('close');
+        history.back(); 
       }else{
         noteEl.yourNoteOverlay.classList.add('close');
         noteEl.yourNoteTab.classList.add('close');
+        history.back(); 
       }
     }
     
@@ -82,7 +84,7 @@ export function openYourNote(noteId){
         function touchEnd(){
           noteTab.style.top = "";
 
-          if(offsetY > 250){
+          if(offsetY > 100){
             closeNoteTab(offsetY);
             noteTab.addEventListener('animationend', () => {
               noteEl.yourNoteOverlay.remove();
@@ -94,6 +96,16 @@ export function openYourNote(noteId){
         document.addEventListener('touchmove', touchMove);
         document.addEventListener('touchend', touchEnd);
       });
+
+      window.addEventListener('popstate', (e) => {
+        if(!e.state) return;
+
+        switch(true) {
+          case e.state.noteTabOpen:
+            closeNoteTab();
+            break;
+        }
+      })
 
       /*------------will use this later for desktop use and mobile------------*/
 
