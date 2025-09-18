@@ -1,4 +1,5 @@
 import { yourNotesList, saveToStorage } from "../data/yourData.js";
+import { closeOverlay } from "../script.js";
 export function openYourNote(noteId){
   const yourNote = yourNotesList.find(note => note.id === noteId);
   const noteEl = notepad();
@@ -97,15 +98,15 @@ export function openYourNote(noteId){
         document.addEventListener('touchend', touchEnd);
       });
 
-      window.addEventListener('popstate', (e) => {
-        if(!e.state) return;
-
-        switch(true) {
-          case e.state.noteTabOpen:
-            closeNoteTab();
-            break;
+      window.addEventListener('popstate', e => {
+        if(!e.state)  
+          console.log('page closed');;
+        if(history.state && history.state.yourHub){
+          console.log('your note has closed');
+          closeNoteTab();
         }
       })
+          
 
       /*------------will use this later for desktop use and mobile------------*/
 
@@ -155,6 +156,4 @@ export function openYourNote(noteId){
     }
     
 }
-
-
 

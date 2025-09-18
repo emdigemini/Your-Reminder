@@ -37,8 +37,8 @@ const cards = {
 
 function start(){
   buttons.start.addEventListener('click', () => {
-    history.pushState({ startClicked: true }, ""); 
-    
+    history.pushState({ yourHub: true }, "Your Hub", "Your Hub"); 
+    console.log(history.state.yourHub);
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -114,6 +114,10 @@ function close(){
   })
 }
 
+
+
+// history.replaceState({startup: true }, '', 'Startup Menu')
+
 //reminder
 cards.reminder.addEventListener('click', () => {
   alert('Still a work in progress.');
@@ -155,14 +159,15 @@ function openOverlay(overlay, container) {
   overlay.classList.add('open');
   container.classList.remove('close');
   container.classList.add('open');
+  history.pushState({noteFeature: true}, "", "Notes Feature")
 }
 
-function closeOverlay(overlay, container, bodyClick) {
+export function closeOverlay(overlay, container, bodyClick) {
   container.classList.remove('open');
   container.classList.add('close');
   overlay.classList.remove('open');
   overlay.classList.add('close');
-
+  history.back();
   document.body.removeEventListener('click', bodyClick);
 
   setTimeout(() => {
