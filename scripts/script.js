@@ -145,8 +145,10 @@ cards.notes.addEventListener('click', () => {
       //--open add note container
       noteEl.addNotes.addEventListener('click', () => {
         if(!document.querySelector('.overlay-box')) {
+        history.pushState({createYourNotes: true}, '', 'createYourNotes');
         document.body.removeEventListener('click', bodyClick);
-        createAddNoteBox(bodyClick);  
+        createAddNoteBox(noteEl.overlay, noteEl.container, bodyClick);  
+        console.log(history.state);
         }
       });
     }, { once: true });
@@ -266,7 +268,7 @@ function renderYourNotes(){
 
 
 //--show create notes container
-function createAddNoteBox(bodyClick) {
+function createAddNoteBox(overlay, container, bodyClick) {
   document.body.insertAdjacentHTML("beforeend", `
     <div class="overlay-box">
       <div class="create-notes ${!darkMode ? 'light' : ''}">
@@ -302,15 +304,28 @@ function createAddNoteBox(bodyClick) {
   overlayBox.addEventListener('animationend', () => {
     const outsideOverlayBox = (e) => {
       if (!createNotesBox.contains(e.target)) {
-        overlayBox.classList.remove('show');
-        overlayBox.classList.add('close');
-        document.body.removeEventListener('click', outsideOverlayBox);
-        document.body.addEventListener('click', bodyClick);
-        overlayBox.remove();
+        removeCreateNotesBox(outsideOverlayBox);
       }
     };
     document.body.addEventListener('click', outsideOverlayBox);
+    window.addEventListener('popstate', e => {
+      if(e.state && e.state.yourNotes){
+        removeCreateNotesBox(outsideOverlayBox);
+      }
+    })
   }, {once: true});
+
+  function removeCreateNotesBox(outsideOverlayBox){
+    overlayBox.classList.remove('show');
+    overlayBox.classList.add('close');
+    document.body.removeEventListener('click', outsideOverlayBox);
+    document.body.addEventListener('click', bodyClick);
+    overlayBox.remove();
+    window.addEventListener('popstate', e => {
+        if(e.state && e.state.yourHub)
+          closeOverlay(overlay, container, bodyClick);  
+      }, {once: true})
+  }
   
   //--add title for your notes
   inputTitle.addEventListener('input', function(){
@@ -397,22 +412,34 @@ cards.settings.addEventListener('click', () => {
 })
 
 function openSettings(){
+  history.pushState({settings: true}, '', 'settings');
+  console.log(history.state);
   const settings = document.querySelector('.settings');
   const settingsOverlay = document.querySelector('.settings-overlay');
 
   settings.classList.remove('close');
   settings.classList.add('open');
   settingsOverlay.classList.add('open');
+
   settings.addEventListener('animationend', () => {
-    const closeSettings = (e) => {
+    const settingsBox = (e) => {
       if(!settings.contains(e.target)){
-        settings.classList.add('close');
-        settingsOverlay.classList.remove('open');
-        document.body.removeEventListener('click', closeSettings);
+        closeSettings(settingsBox);
       }
     }
-    document.body.addEventListener('click', closeSettings)
+    document.body.addEventListener('click', settingsBox);
+    window.addEventListener('popstate', e => {
+    if(e.state === null || e.state.yourHub){
+      closeSettings(settingsBox);
+    }
+  })
   }, {once: true});
+
+  function closeSettings(settingsBox){
+    settings.classList.add('close');
+    settingsOverlay.classList.remove('open');
+    document.body.removeEventListener('click', settingsBox);
+  }
 }
 
 
