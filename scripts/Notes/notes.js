@@ -32,13 +32,12 @@ export function openYourNote(noteId){
     openNoteTab();
     function openNoteTab(){
       history.replaceState({ yourNoteTab: true }, ""); 
-      console.log(history.state);
       noteEl.mainOverlay.remove();
       noteEl.noteListBox.classList.remove('open');
       noteEl.noteListBox.classList.add('close');
       noteEl.yourNoteOverlay.classList.add('open');
       noteEl.yourNoteTab.classList.add('open');
-      dragYourNoteTab(noteEl.yourNoteTab);
+      // dragYourNoteTab(noteEl.yourNoteTab);
     }
     function closeNoteTab(offsetY){
       if(offsetY){
@@ -72,34 +71,42 @@ export function openYourNote(noteId){
       saveToStorage();
     })
 
-    function dragYourNoteTab(noteTab){
-      let offsetY = 0;
-      document.querySelector('.drag-btn').addEventListener('touchstart', (e) => {
-        let startY = e.touches[0].clientY;
+    let offsetY = 0;
+    let startY = 0;
+    function dragStart(e){
+      startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
 
-        function touchMove(e){
-          offsetY = e.touches[0].clientY - startY;
-          if(offsetY < 0){
-            offsetY = 0;
-            noteTab.style.top = `${offsetY}px`;
-          }else {
-            noteTab.style.top = `${offsetY}px`;
-          }
-          
-        }
+      if(e.type === 'mousedown'){
+        document.addEventListener('mousemove', dragging);
+        document.addEventListener('mouseup', dragEnd);
+      } else {
+        document.addEventListener('touchmove', dragging);
+        document.addEventListener('touchend', dragEnd);
+      }
+    }
 
-        function touchEnd(){
-          noteTab.style.top = "";
+    function dragging(e){
+      const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+      offsetY = currentY - startY;
+      
+      if(offsetY < 2){
+        offsetY = 2;
+        noteEl.yourNoteTab.style.top = `${offsetY}px`;
+      } else if(offsetY > 3){
+        noteEl.yourNoteTab.style.top = `${offsetY}px`;
+      }
+    }
 
-          if(offsetY > 100){
-            closeNoteTab(offsetY);
-          }
+    function dragEnd(){
+      noteEl.yourNoteTab.style.top = '';
 
-        }
+      if(offsetY > 150){
+        closeNoteTab(offsetY);
+      }
 
-        document.addEventListener('touchmove', touchMove);
-        document.addEventListener('touchend', touchEnd);
-      });
+      document.removeEventListener('mousemove', dragging);
+      document.removeEventListener('mouseup', dragEnd);
+    }
 
       window.addEventListener('popstate', e => {
         if(e.state !== null && e.state.yourHub){
@@ -107,55 +114,10 @@ export function openYourNote(noteId){
         }  
       }, {once: true})
 
-      
-          
+    const dragBtn = document.querySelector('.drag-btn')
+    dragBtn.addEventListener('mousedown', dragStart);
+    dragBtn.addEventListener('touchstart', dragStart, {once: false});
 
-      /*------------will use this later for desktop use and mobile------------*/
-
-      // const dragBtn = document.querySelector('.drag-btn');
-
-      //   let offsetY = 0;
-      //   let startY = 0;
-
-      //   function dragStart(e){
-      //     startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-
-      //     if(e.type === 'mousedown'){
-      //       document.addEventListener("mousemove", dragging);
-      //       document.addEventListener('mouseup', dragEnd);
-      //     }else {
-      //       document.addEventListener("touchmove", dragging);
-      //       document.addEventListener('touchend', dragEnd);
-      //     }
-      //   }
-
-      //   function dragging(e){
-      //     const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      //     offsetY = currentY - startY;
-      //     noteTab.style.top = `${offsetY}px`;
-      //   }
-
-      //   function dragEnd(){
-      //     noteTab.style.top = "";
-
-      //     if(offsetY > 300){
-      //       closeNoteTab(offsetY);
-      //       noteEl.yourNoteTab.addEventListener('animationend', () => {
-      //         noteEl.yourNoteOverlay.remove();
-      //       }, {once: true})
-      //     }
-
-      //     document.removeEventListener("mousemove", dragging);
-      //     document.removeEventListener('mouseup', dragEnd);
-
-      //     document.removeEventListener("touchmove", dragging);
-      //     document.removeEventListener("touchend", dragEnd);
-      //   }
-
-      //   dragBtn.addEventListener("mousedown", dragStart);
-      //   dragBtn.addEventListener("touchstart", dragStart, {passive: false});
-        
-    }
-    
 }
+    
 

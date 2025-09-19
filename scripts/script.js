@@ -34,10 +34,11 @@ const cards = {
   settings: document.getElementById('settings2'),
 };
 
+closeBtn.addEventListener('click', closeDashboard)
+
 function start(){
   buttons.start.addEventListener('click', () => {
-    history.pushState({ yourHub: true }, '', "yourHub"); 
-    console.log(history.state);
+    history.pushState({ yourHub: true }, ''); 
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -74,8 +75,6 @@ function start(){
     }, { once: true });
   });
 }
-
-closeBtn.addEventListener('click', closeDashboard)
 
 function closeDashboard(){
     // profile + close button
@@ -144,10 +143,9 @@ cards.notes.addEventListener('click', () => {
       //--open add note container
       noteEl.addNotes.addEventListener('click', () => {
         if(!document.querySelector('.overlay-box')) {
-        history.pushState({createYourNotes: true}, '', 'createYourNotes');
+        history.pushState({createYourNotes: true}, '');
         document.body.removeEventListener('click', bodyClick);
         createAddNoteBox(noteEl.overlay, noteEl.container, bodyClick);  
-        console.log(history.state);
         }
       });
     }, { once: true });
@@ -157,8 +155,7 @@ cards.notes.addEventListener('click', () => {
 
 //--listeners for opening and closing overlay
 function openOverlay(overlay, container) {
-  history.pushState({yourNotes: true}, '', 'yourNotes');
-  console.log(history.state);
+  history.pushState({yourNotes: true}, '');
   overlay.classList.remove('close');
   overlay.classList.add('open');
   container.classList.remove('close');
@@ -445,4 +442,4 @@ window.addEventListener('popstate', e => {
     closeDashboard();
   }
 })
-history.replaceState(null, '', '');
+history.replaceState(null, '');
