@@ -34,7 +34,6 @@ const cards = {
   settings: document.getElementById('settings2'),
 };
 
-
 function start(){
   buttons.start.addEventListener('click', () => {
     history.pushState({ yourHub: true }, '', "yourHub"); 
@@ -403,17 +402,10 @@ cards.tasks.addEventListener('click', () => {
 })
 
 //settings
-buttons.settings.addEventListener('click', () => {
-  openSettings();
-})
-
-cards.settings.addEventListener('click', () => {
-  openSettings();
-})
+buttons.settings.addEventListener('click', openSettings);
+cards.settings.addEventListener('click', openSettings);
 
 function openSettings(){
-  history.pushState({settings: true}, '', 'settings');
-  console.log(history.state);
   const settings = document.querySelector('.settings');
   const settingsOverlay = document.querySelector('.settings-overlay');
 
@@ -428,11 +420,6 @@ function openSettings(){
       }
     }
     document.body.addEventListener('click', settingsBox);
-    window.addEventListener('popstate', e => {
-    if(e.state === null || e.state.yourHub){
-      closeSettings(settingsBox);
-    }
-  })
   }, {once: true});
 
   function closeSettings(settingsBox){
@@ -454,8 +441,7 @@ window.addEventListener("orientationchange", setHeight);
 setHeight(); // initial
 
 window.addEventListener('popstate', e => {
-    console.log(e.state);
-  if(e.state === null){
+  if(!e.state){
     closeDashboard();
   }
 })
