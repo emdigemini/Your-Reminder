@@ -1,4 +1,5 @@
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
+import './clock.js';
 import { quotes } from '../quotes generator/quotes.js';
 
 // generate random quotes

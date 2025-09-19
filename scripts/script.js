@@ -37,8 +37,8 @@ const cards = {
 
 function start(){
   buttons.start.addEventListener('click', () => {
-    history.pushState({ yourHub: true }, "Your Hub", "Your Hub"); 
-    console.log(history.state.yourHub);
+    history.pushState({ yourHub: true }, '', "yourHub"); 
+    console.log(history.state);
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -76,8 +76,9 @@ function start(){
   });
 }
 
-function close(){
-  closeBtn.addEventListener('click', () => {
+closeBtn.addEventListener('click', closeDashboard)
+
+function closeDashboard(){
     // profile + close button
     [yourProfile, closeBtn].forEach(el => el.classList.remove('click'));
     [yourProfile, closeBtn].forEach(el => el.classList.add('clickk'));
@@ -109,12 +110,8 @@ function close(){
       [buttons.start, buttons.contact].forEach(el => el.classList.add('slideInLeft'));
       [buttons.settings, buttons.about].forEach(el => el.classList.add('slideInRight'));
       randomQuotes();
-      history.back(); 
     }, { once: true });
-  })
 }
-
-
 
 // history.replaceState({startup: true }, '', 'Startup Menu')
 
@@ -127,7 +124,7 @@ cards.reminder.addEventListener('click', () => {
 
 //--open notes feature
 cards.notes.addEventListener('click', () => {
-  if(!document.querySelector('.overlay')){
+  if(!document.querySelector('.overlay')){    
     const noteEl = showMainOverlay();
     openOverlay(noteEl.overlay, noteEl.container);
 
@@ -140,7 +137,11 @@ cards.notes.addEventListener('click', () => {
 
       //--close note overlay when clicking outside
       document.body.addEventListener('click', bodyClick);
-
+      window.addEventListener('popstate', e => {
+        if(e.state && e.state.yourHub)
+          closeOverlay(noteEl.overlay, noteEl.container, bodyClick);  
+      }, {once: true})
+      
       //--open add note container
       noteEl.addNotes.addEventListener('click', () => {
         if(!document.querySelector('.overlay-box')) {
@@ -155,21 +156,20 @@ cards.notes.addEventListener('click', () => {
 
 //--listeners for opening and closing overlay
 function openOverlay(overlay, container) {
+  history.pushState({yourNotes: true}, '', 'yourNotes');
+  console.log(history.state);
   overlay.classList.remove('close');
   overlay.classList.add('open');
   container.classList.remove('close');
   container.classList.add('open');
-  history.pushState({noteFeature: true}, "", "Notes Feature")
 }
 
-export function closeOverlay(overlay, container, bodyClick) {
+function closeOverlay(overlay, container, bodyClick) {
   container.classList.remove('open');
   container.classList.add('close');
   overlay.classList.remove('open');
   overlay.classList.add('close');
-  history.back();
   document.body.removeEventListener('click', bodyClick);
-
   setTimeout(() => {
     overlay.remove();
   }, 700)
@@ -418,7 +418,6 @@ function openSettings(){
 
 
 start();
-close();
 
 function setHeight() {
   document.querySelector(".container").style.height = window.innerHeight + "px";
@@ -427,13 +426,10 @@ window.addEventListener("resize", setHeight);
 window.addEventListener("orientationchange", setHeight);
 setHeight(); // initial
 
-window.addEventListener('popstate', (e) => {
-  if(!e.state) return;
-
-  switch(true) {
-    case e.state.startClicked:
-      close();
-      break;
+window.addEventListener('popstate', e => {
+    console.log(e.state);
+  if(e.state === null){
+    closeDashboard();
   }
-    
 })
+history.replaceState(null, '', '');

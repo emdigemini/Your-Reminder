@@ -1,8 +1,9 @@
 import { yourNotesList, saveToStorage } from "../data/yourData.js";
-import { closeOverlay } from "../script.js";
+
 export function openYourNote(noteId){
   const yourNote = yourNotesList.find(note => note.id === noteId);
   const noteEl = notepad();
+
   function notepad(){
     document.body.insertAdjacentHTML("beforeend", `
         <div class="your-note-tab-overlay">
@@ -30,24 +31,29 @@ export function openYourNote(noteId){
 
     openNoteTab();
     function openNoteTab(){
+      history.replaceState({ yourNoteTab: true }, ""); 
+      console.log(history.state);
       noteEl.mainOverlay.remove();
       noteEl.noteListBox.classList.remove('open');
       noteEl.noteListBox.classList.add('close');
       noteEl.yourNoteOverlay.classList.add('open');
       noteEl.yourNoteTab.classList.add('open');
       dragYourNoteTab(noteEl.yourNoteTab);
-      history.pushState({ noteTabOpen: true }, ""); 
     }
     function closeNoteTab(offsetY){
       if(offsetY){
         root.style.setProperty('--offset-y', `${offsetY}px`);
         noteEl.yourNoteOverlay.classList.add('close');
         noteEl.yourNoteTab.classList.add('close');
-        history.back(); 
+        noteEl.yourNoteTab.addEventListener('animationend', () => {
+          noteEl.yourNoteOverlay.remove();
+        }, {once: true})
       }else{
         noteEl.yourNoteOverlay.classList.add('close');
         noteEl.yourNoteTab.classList.add('close');
-        history.back(); 
+        noteEl.yourNoteTab.addEventListener('animationend', () => {
+          noteEl.yourNoteOverlay.remove();
+        }, {once: true})
       }
     }
     
@@ -87,9 +93,6 @@ export function openYourNote(noteId){
 
           if(offsetY > 100){
             closeNoteTab(offsetY);
-            noteTab.addEventListener('animationend', () => {
-              noteEl.yourNoteOverlay.remove();
-            }, {once: true})
           }
 
         }
@@ -99,13 +102,12 @@ export function openYourNote(noteId){
       });
 
       window.addEventListener('popstate', e => {
-        if(!e.state)  
-          console.log('page closed');;
-        if(history.state && history.state.yourHub){
-          console.log('your note has closed');
+        if(e.state !== null && e.state.yourHub){
           closeNoteTab();
-        }
-      })
+        }  
+      }, {once: true})
+
+      
           
 
       /*------------will use this later for desktop use and mobile------------*/
