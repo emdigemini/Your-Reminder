@@ -303,25 +303,17 @@
 
 /* CARD */
 /* SLIDE IN */
-#reminder, #goals {
-  transform: translateX(-250px);
-}
-
-#notes, #tasks {
-  transform: translateX(250px);
-}
-
-#reminder.slideRight,
-#goals.slideRight {
+#notes.slideRight,
+#tasks.slideRight {
   animation: slideInRight 0.8s ease forwards;
 }
 
-#notes.slideLeft,
-#tasks.slideLeft {
+#goals.slideLeft,
+#settings2.slideLeft {
   animation: slideInLeft 0.8s ease forwards;
 }
 
-#settings2.slideUp {
+#reminder.slideUp {
   animation: slideInUp 0.8s ease forwards;
 }
 
@@ -345,7 +337,7 @@
 
 @keyframes slideInUp {
   0% {
-    transform: translateY(250px);
+    transform: translateY(250px) scaleX(0.1) rotateY(90deg);
   }
   100% {
     transform: translateY(0);
@@ -362,17 +354,17 @@
   transform: translateX(200%);
 }
 
-#reminder.slideOutRight,
-#goals.slideOutRight {
+#notes.slideOutRight,
+#tasks.slideOutRight {
   animation: slideOutRight 0.8s ease forwards;
 }
 
-#notes.slideOutLeft,
-#tasks.slideOutLeft {
+#goals.slideOutLeft,
+#settings2.slideOutLeft {
   animation: slideOutLeft 0.8s ease forwards;
 }
 
-#settings2.slideDown {
+#reminder.slideDown {
   animation: slideOutDown 0.8s ease forwards;
 }
 
@@ -402,7 +394,7 @@
     transform: translateY(0);
   }
   100% {
-    transform: translateY(200%);
+    transform: translateY(250px) scaleX(0.1) rotateY(90deg);
     opacity: 0;
   }
 }
@@ -431,7 +423,7 @@
 
 @keyframes openNotes {
   0% {
-    transform: translateX(700px);
+    transform: translateX(-700px);
     opacity: 0;
   }
   100% {
