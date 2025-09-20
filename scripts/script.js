@@ -115,7 +115,17 @@ function closeDashboard(){
 
 //reminder
 cards.reminder.addEventListener('click', () => {
-  alert('Still a work in progress.');
+  const tabReminder = document.querySelector('.reminder-tab');
+  const closeTab = document.querySelector('.toggle-tab');
+  tabReminder.classList.remove('close')
+  tabReminder.classList.add('open');
+  tabReminder.addEventListener('animationend', () => {
+    closeTab.addEventListener('click', () => {
+      tabReminder.classList.add('close')
+      tabReminder.classList.remove('open')
+    })
+  })
+
 })
 
 /**----------For NOTES----------**/

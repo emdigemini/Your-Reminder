@@ -268,6 +268,19 @@
   color: var(--color-accent); 
 }
 
+#reminder {
+  width: 320px;
+  padding: 15px;
+}
+
+#reminder .card-icon {
+  justify-content: space-between;
+}
+
+#reminder h3 {
+  width: max-content;
+}
+
 /*changes*/
 
 /*---------------- LIGHT MODE ----------------*/
@@ -326,11 +339,11 @@ body.light .card:hover .card-icon h3 {
 }
 
 body.light .card p {
-  color: #666;
+  color: #313131;
   transition: color 0.3s ease;
 }
 
 body.light .card:hover p {
-  color: #b18b66;
+  color: #8a837c;
 }
 

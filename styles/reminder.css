@@ -1,0 +1,146 @@
+.reminder-tab {
+  font-family: "Montserrat", sans-serif;
+  position: absolute;
+  background: #fff;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  z-index: 3;
+  display: none;
+  flex-direction: column;
+}
+
+.toggle-tab {
+  position: absolute;
+  align-self: center;
+  border-radius: 20px;
+  cursor: pointer;
+  text-align: center;
+  width: 80px;
+  height: 4px;
+  border-radius: 6px;
+  background: #6e6e6e3f;
+}
+
+.toggle-tab i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -40%);
+  font-size: 24px;
+  top: 0;
+  color: #969696;
+}
+
+.reminder-header {
+  font-family: "Cagliostro", serif;
+  border-bottom: 1px solid #8888884d;
+  padding: 20px;
+}
+
+.reminder-actions {
+  display: flex;
+  justify-content: center;
+  border-bottom: 1px solid #8888884d;
+  padding: 20px 0;
+  gap: 10px;
+}
+
+.reminder-actions input {
+  width: 350px;
+  padding: 8px 20px;
+  border-radius: 8px;
+  border: none;
+  background-color: #ebebeb;
+  font-size: 16px;
+}
+
+.reminder-actions input:focus {
+  outline: none;
+  border: 1px solid #9c9c9c; 
+  box-shadow: 0 0 6px rgba(160, 160, 160, 0.4);
+}
+
+.reminder-actions button {
+  border: none;
+  padding: 12px 15px;
+  background-color: #ebebeb;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.reminder-controls {
+  display: flex;
+  justify-content: space-evenly;
+  padding: 20px 0;
+  border-bottom: 1px solid #8888884d;
+}
+
+.reminder-controls button {
+  border: none;
+  padding: 10px 50px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+#reminder-filter.active {
+  background: #262626;
+  color: white;
+}
+
+.reminder-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  height: 100vh;
+}
+
+.your-reminder {
+  display: flex;
+  height: max-content;
+  border-bottom: 1px solid #8888884d;
+  gap: 15px;
+  width: 100%;
+  padding: 20px 15px;
+  justify-content: space-between;
+}
+
+.checkbox {
+  display: inline-block;
+  align-self: center;
+}
+
+.checkbox input {
+  transform: scale(1.3);
+}
+
+.reminder-body {
+  display: flex;
+}
+
+.reminder-box {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reminder-title {
+  font-weight: 600;
+}
+.reminder-schedule, 
+.reminder-created {
+  color: #838383;
+  margin-left: 6px;
+}
+
+.reminder-tools {
+  display: flex;
+  align-self: center;
+  gap: 8px;
+  font-size: 20px;
+}
+.edit-reminder,
+.delete-reminder {
+  cursor: pointer;
+}
