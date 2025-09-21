@@ -166,15 +166,13 @@ function allReminderTool(){
       if(e.target.checked){
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = true;
-        saveToStorage();
+        updateReminder()
         reminderAdded();
-        openReminder();
       } else {
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = false;
-        saveToStorage();
+        updateReminder()
         reminderAdded();
-        openReminder();
       }
     })
   })
@@ -186,9 +184,8 @@ function allReminderTool(){
       const reminderId = id.dataset.reminderId;
       const index = reminderList.findIndex(reminder => reminder.id === reminderId);
       reminderList.splice(index, 1);
-      saveToStorage();
+      updateReminder()
       reminderAdded();
-      openReminder();
     })
   })
 }
@@ -203,15 +200,13 @@ function activeReminderTool(){
       if(e.target.checked){
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = true;
-        saveToStorage();
+        updateReminder();
         countActiveReminder();
-        openReminder();
       } else {
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = false;
-        saveToStorage();
+        updateReminder();
         countActiveReminder();
-        openReminder();
       }
     })
   })
@@ -223,9 +218,8 @@ function activeReminderTool(){
       const reminderId = id.dataset.reminderId;
       const index = reminderList.findIndex(reminder => reminder.id === reminderId);
       reminderList.splice(index, 1);
-      saveToStorage();
+      updateReminder();
       countActiveReminder();
-      openReminder();
     })
   })
 }
@@ -240,15 +234,13 @@ function completedReminderTool(){
       if(e.target.checked){
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = true;
-        saveToStorage();
+        updateReminder();
         countCompletedReminder();
-        openReminder();
       } else {
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = false;
-        saveToStorage();
+        updateReminder();
         countCompletedReminder();
-        openReminder();
       }
     })
   })
@@ -260,11 +252,15 @@ function completedReminderTool(){
       const reminderId = id.dataset.reminderId;
       const index = reminderList.findIndex(reminder => reminder.id === reminderId);
       reminderList.splice(index, 1);
-      saveToStorage();
+      updateReminder()
       countCompletedReminder();
-      openReminder();
     })
   })
+}
+
+function updateReminder(){
+  saveToStorage();
+  openReminder();
 }
 
 function addYourReminder(inputBar, setDate, startTime, endTime, 
@@ -309,8 +305,8 @@ function reminderAdded(){
   const html = reminderList.length > 0 
   ? renderReminder().reminderHTML
   : "You don't have any reminders yet — why not add one to get started?";
-  document.querySelector('.reminder-list').innerHTML = html || "You don't have any reminders yet — why not add one to get started?";
-
+  document.querySelector('.reminder-list').innerHTML = html || 
+  "You don't have any reminders yet — why not add one to get started?";
   allReminderTool();
 }
 
@@ -354,17 +350,6 @@ function renderReminder(){
   const activeReminder = `${countYourReminder().active > 0 ? countYourReminder().active : 0}`;
   const completedReminder = `${countYourReminder().completed > 0 ? countYourReminder().completed : 0}`;
   return { reminderHTML, allReminder, activeReminder, completedReminder };
-}
-
-function countYourReminder(){
-  const all = reminderList.length;
-  const active = reminderList.reduce((acc, reminder) => {
-    return acc + (reminder.completed === false ? 1 : 0);
-  }, 0);
-  const completed = reminderList.reduce((acc, reminder) => {
-    return acc + (reminder.completed ? 1 : 0);
-  }, 0);
-  return { all, active, completed }
 }
 
 function countActiveReminder(){
@@ -466,3 +451,13 @@ function filterBtn(filter, reminderFilter){
   }
 }
 
+function countYourReminder(){
+  const all = reminderList.length;
+  const active = reminderList.reduce((acc, reminder) => {
+    return acc + (reminder.completed === false ? 1 : 0);
+  }, 0);
+  const completed = reminderList.reduce((acc, reminder) => {
+    return acc + (reminder.completed ? 1 : 0);
+  }, 0);
+  return { all, active, completed }
+}
