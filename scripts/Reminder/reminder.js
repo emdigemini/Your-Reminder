@@ -76,7 +76,7 @@ export function openReminder(){
     })
 
     reminderList.length > 0 
-    ? reminderControl()
+    ? allReminderTool()
     : null;
 
     toggleDateNTimeSet(el1.dateNtime, el1.dateSet, el1.timeSet);
@@ -114,8 +114,9 @@ function getElm(){
     completedFilter   :      document.getElementById('completed')
   }
   const control = {
+    checkbox          :      document.querySelectorAll('.checkbox'),
     editReminder      :      document.querySelectorAll('.edit-reminder'),
-    delReminder      :      document.querySelectorAll('.delete-reminder'),
+    delReminder       :      document.querySelectorAll('.delete-reminder'),
   }
 
   return { create, control }
@@ -149,24 +150,34 @@ function reminderListeners(inputBar, addReminder, setDate, startTime, endTime,
 
   reminderFilter.forEach(filter => {
     filter.addEventListener('click', () => {
-      switch(filter.id){
-        case 'all':
-          countReminder();
-          break;
-        case 'active':
-          countActiveReminder();
-          break;
-        case 'completed':
-          countCompletedReminder();
-          break;
-      }
+      filterBtn(filter, reminderFilter);
     })
   })
 
 }
 
-function reminderControl(){
+function allReminderTool(){
   const el2 = getElm().control;
+
+  el2.checkbox.forEach(cb => {
+    cb.addEventListener('change', e => {
+      const id = cb.closest('.your-reminder');
+      const reminderId = id.dataset.reminderId;
+      if(e.target.checked){
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = true;
+        saveToStorage();
+        reminderAdded();
+        openReminder();
+      } else {
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = false;
+        saveToStorage();
+        reminderAdded();
+        openReminder();
+      }
+    })
+  })
 
   el2.delReminder.forEach(del => {
     del.addEventListener('click', e => {
@@ -177,6 +188,80 @@ function reminderControl(){
       reminderList.splice(index, 1);
       saveToStorage();
       reminderAdded();
+      openReminder();
+    })
+  })
+}
+
+function activeReminderTool(){
+  const el2 = getElm().control;
+
+  el2.checkbox.forEach(cb => {
+    cb.addEventListener('change', e => {
+      const id = cb.closest('.your-reminder');
+      const reminderId = id.dataset.reminderId;
+      if(e.target.checked){
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = true;
+        saveToStorage();
+        countActiveReminder();
+        openReminder();
+      } else {
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = false;
+        saveToStorage();
+        countActiveReminder();
+        openReminder();
+      }
+    })
+  })
+
+  el2.delReminder.forEach(del => {
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = del.closest('.your-reminder');
+      const reminderId = id.dataset.reminderId;
+      const index = reminderList.findIndex(reminder => reminder.id === reminderId);
+      reminderList.splice(index, 1);
+      saveToStorage();
+      countActiveReminder();
+      openReminder();
+    })
+  })
+}
+
+function completedReminderTool(){
+  const el2 = getElm().control;
+
+  el2.checkbox.forEach(cb => {
+    cb.addEventListener('change', e => {
+      const id = cb.closest('.your-reminder');
+      const reminderId = id.dataset.reminderId;
+      if(e.target.checked){
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = true;
+        saveToStorage();
+        countCompletedReminder();
+        openReminder();
+      } else {
+        const reminder = reminderList.find(r => r.id === reminderId);
+        reminder.completed = false;
+        saveToStorage();
+        countCompletedReminder();
+        openReminder();
+      }
+    })
+  })
+
+  el2.delReminder.forEach(del => {
+    del.addEventListener('click', e => {
+      e.stopPropagation();
+      const id = del.closest('.your-reminder');
+      const reminderId = id.dataset.reminderId;
+      const index = reminderList.findIndex(reminder => reminder.id === reminderId);
+      reminderList.splice(index, 1);
+      saveToStorage();
+      countCompletedReminder();
       openReminder();
     })
   })
@@ -226,7 +311,7 @@ function reminderAdded(){
   : "You don't have any reminders yet — why not add one to get started?";
   document.querySelector('.reminder-list').innerHTML = html || "You don't have any reminders yet — why not add one to get started?";
 
-  reminderControl();
+  allReminderTool();
 }
 
 function renderReminder(){
@@ -234,7 +319,11 @@ function renderReminder(){
     <div data-reminder-id="${reminder.id}" class="your-reminder">
       <div class="reminder-body">
         <div class="checkbox">
-          <input type="checkbox">
+          <input type="checkbox" 
+          ${reminder.completed
+            ? 'checked'
+            : ''
+          }>
         </div>
         <div class="reminder-box">
           <div class="reminder-title">${reminder.title}</div>
@@ -261,14 +350,13 @@ function renderReminder(){
     </div>
   `).join('');
 
-  const allReminder = `${countReminder().all > 0 ? countReminder().all : 0}`;
-  const activeReminder = `${countReminder().active > 0 ? countReminder().active : 0}`;
-  const completedReminder = `${countReminder().completed > 0 ? countReminder().completed : 0}`;
-    
+  const allReminder = `${countYourReminder().all > 0 ? countYourReminder().all : 0}`;
+  const activeReminder = `${countYourReminder().active > 0 ? countYourReminder().active : 0}`;
+  const completedReminder = `${countYourReminder().completed > 0 ? countYourReminder().completed : 0}`;
   return { reminderHTML, allReminder, activeReminder, completedReminder };
 }
 
-function countReminder(){
+function countYourReminder(){
   const all = reminderList.length;
   const active = reminderList.reduce((acc, reminder) => {
     return acc + (reminder.completed === false ? 1 : 0);
@@ -280,9 +368,101 @@ function countReminder(){
 }
 
 function countActiveReminder(){
-  
+  const getActiveReminder = reminderList.filter(reminder => !reminder.completed);
+  const renderActiveReminder = getActiveReminder.map(reminder => `
+    <div data-reminder-id="${reminder.id}" class="your-reminder">
+      <div class="reminder-body">
+        <div class="checkbox">
+          <input type="checkbox"
+          ${reminder.completed
+            ? 'checked'
+            : ''
+          }>
+        </div>
+        <div class="reminder-box">
+          <div class="reminder-title">${reminder.title}</div>
+          <div class="reminder-schedule">
+            ${reminder.dateSet.length > 0 
+              ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
+              : ''
+            }
+            
+            ${reminder.timeStart} - ${reminder.timeEnd}
+          </div>
+          <div class="reminder-created">Created ${reminder.dateCreated}</div>
+        </div>
+      </div>
+
+      <div class="reminder-tools">
+        <div class="edit-reminder">
+          <i class="bi bi-pencil-square"></i>
+        </div>
+        <div class="delete-reminder">
+          <i class="bi bi-trash"></i>
+        </div>
+      </div>
+    </div>
+  `).join('');
+
+  document.querySelector('.reminder-list').innerHTML = `${renderActiveReminder.length > 0 
+    ? renderActiveReminder : "Nothing to do here! Enjoy the moment, you've been productive."}`;
+  activeReminderTool();
 }
 
 function countCompletedReminder(){
-  console.log('this is complete');
+  const getCompletedReminder = reminderList.filter(reminder => reminder.completed);
+  const renderCompletedReminder = getCompletedReminder.map(reminder => `
+    <div data-reminder-id="${reminder.id}" class="your-reminder">
+      <div class="reminder-body">
+        <div class="checkbox">
+          <input type="checkbox"
+          ${reminder.completed
+            ? 'checked'
+            : ''
+          }>
+        </div>
+        <div class="reminder-box">
+          <div class="reminder-title">${reminder.title}</div>
+          <div class="reminder-schedule">
+            ${reminder.dateSet.length > 0 
+              ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
+              : ''
+            }
+            
+            ${reminder.timeStart} - ${reminder.timeEnd}
+          </div>
+          <div class="reminder-created">Created ${reminder.dateCreated}</div>
+        </div>
+      </div>
+
+      <div class="reminder-tools">
+        <div class="edit-reminder">
+          <i class="bi bi-pencil-square"></i>
+        </div>
+        <div class="delete-reminder">
+          <i class="bi bi-trash"></i>
+        </div>
+      </div>
+    </div>
+  `).join('');
+  
+  document.querySelector('.reminder-list').innerHTML  = `${renderCompletedReminder.length > 0 
+    ? renderCompletedReminder : "Zero completed reminders. Let's make some progress today!"}`;
+  completedReminderTool();
 }
+
+function filterBtn(filter, reminderFilter){
+  reminderFilter.forEach(btn => btn.classList.remove('active'));
+  filter.classList.add('active');
+  switch(filter.id){
+    case 'active':
+      countActiveReminder();
+      break;
+    case 'completed':
+      countCompletedReminder();
+      break;
+    default:
+      reminderAdded();
+  }
+}
+
