@@ -1,6 +1,7 @@
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 
 const reminderList = JSON.parse(localStorage.getItem('reminderList')) || [];
+
 export function openReminder(){
   if(!document.querySelector('.reminder-tab')){
     document.body.insertAdjacentHTML('beforebegin', `
@@ -40,10 +41,14 @@ export function openReminder(){
           <div class="reminder-control-box">
             <div class="reminder-controls-button">
               <button id="all" class="reminder-filter active">
-              All (${renderReminder().allReminder})
+                All (${renderReminder().allReminder})
               </button>
-              <button id="active" class="reminder-filter">Active (4)</button>
-              <button id="completed" class="reminder-filter">Completed (0)</button>
+              <button id="active" class="reminder-filter">
+                Active (${renderReminder().activeReminder})
+              </button>
+              <button id="completed" class="reminder-filter">
+                Completed (${renderReminder().completedReminder})
+              </button>
             </div>
           </div>
 
@@ -80,6 +85,10 @@ export function openReminder(){
       el1.startTime, el1.endTime, el1.reminderFilter,
       el1.allFilter, el1.activeFilter, el1.completedFilter
     );
+  } else if(document.querySelector('.reminder-tab')){
+    document.getElementById('all').innerHTML = `All (${renderReminder().allReminder})`;
+    document.getElementById('active').innerHTML = `Active (${renderReminder().activeReminder})`;
+    document.getElementById('completed').innerHTML = `Completed (${renderReminder().completedReminder})`;
   } else {
     return;
   }
@@ -120,7 +129,8 @@ function toggleDateNTimeSet(dateNtime, dateSet, timeSet){
   }
 }
 
-function reminderListeners(inputBar, addReminder, setDate, startTime, endTime, reminderFilter, allFilter){
+function reminderListeners(inputBar, addReminder, setDate, startTime, endTime, 
+  reminderFilter, allFilter, activeFilter, completedFilter){
   inputBar.addEventListener('input', () => {
     const inputVal = inputBar.value.trim().length;
     if(inputVal > 0){
@@ -132,7 +142,8 @@ function reminderListeners(inputBar, addReminder, setDate, startTime, endTime, r
 
   addReminder.addEventListener('click', () => {
     if(!addReminder.disabled){
-      addYourReminder(inputBar, setDate, startTime, endTime, addReminder, allFilter);
+      addYourReminder(inputBar, setDate, startTime, endTime, addReminder, 
+        allFilter, activeFilter, completedFilter);
     }
   })
 
@@ -140,7 +151,7 @@ function reminderListeners(inputBar, addReminder, setDate, startTime, endTime, r
     filter.addEventListener('click', () => {
       switch(filter.id){
         case 'all':
-          countAllReminder();
+          countReminder();
           break;
         case 'active':
           countActiveReminder();
@@ -166,12 +177,13 @@ function reminderControl(){
       reminderList.splice(index, 1);
       saveToStorage();
       reminderAdded();
+      openReminder();
     })
   })
 }
 
 function addYourReminder(inputBar, setDate, startTime, endTime, 
-  addReminder, allFilter){
+  addReminder, allFilter, activeFilter, completedFilter){
   const reminderTitle = inputBar.value;
   const dateSet = setDate.value;
 
@@ -198,6 +210,8 @@ function addYourReminder(inputBar, setDate, startTime, endTime,
   inputBar.value = '';
   addReminder.disabled = true;
   allFilter.innerHTML = `All (${renderReminder().allReminder})`;
+  activeFilter.innerHTML = `Active (${renderReminder().activeReminder})`;
+  completedFilter.innerHTML = `Completed (${renderReminder().completedReminder})`;
   reminderAdded();
   saveToStorage();
 }
@@ -247,20 +261,26 @@ function renderReminder(){
     </div>
   `).join('');
 
-  const allReminder = `${countAllReminder() > 0 ? countAllReminder() : 0}`;
+  const allReminder = `${countReminder().all > 0 ? countReminder().all : 0}`;
+  const activeReminder = `${countReminder().active > 0 ? countReminder().active : 0}`;
+  const completedReminder = `${countReminder().completed > 0 ? countReminder().completed : 0}`;
     
-  return { reminderHTML, allReminder };
+  return { reminderHTML, allReminder, activeReminder, completedReminder };
 }
 
-function countAllReminder(){
-  const all = reminderList.reduce((acc, reminder) => {
+function countReminder(){
+  const all = reminderList.length;
+  const active = reminderList.reduce((acc, reminder) => {
     return acc + (reminder.completed === false ? 1 : 0);
-  }, 0)
-return all
+  }, 0);
+  const completed = reminderList.reduce((acc, reminder) => {
+    return acc + (reminder.completed ? 1 : 0);
+  }, 0);
+  return { all, active, completed }
 }
 
 function countActiveReminder(){
-  console.log('this is active');
+  
 }
 
 function countCompletedReminder(){

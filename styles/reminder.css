@@ -208,3 +208,8 @@
 .delete-reminder {
   cursor: pointer;
 }
+
+.edit-reminder:hover,
+.delete-reminder:hover {
+  color: #696969;
+}
