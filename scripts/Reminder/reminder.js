@@ -4,7 +4,7 @@ const reminderList = JSON.parse(localStorage.getItem('reminderList')) || [];
 
 export function openReminder(){
   if(!document.querySelector('.reminder-tab')){
-    document.body.insertAdjacentHTML('beforebegin', `
+    document.body.insertAdjacentHTML('afterbegin', `
         <div class="reminder-tab">
           <div class="toggle-tab">
             <i class="bi bi-caret-down"></i>

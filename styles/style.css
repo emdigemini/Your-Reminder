@@ -1,5 +1,6 @@
 :root {
   --color-background: #000;  /* default background color */
+  --card-color: #262626;
   --color-text: #fff;        /* default text color */
   --color-accent: #00FF80;      /* accent color for buttons, underline and title */
   --low-accent: rgba(0, 255, 128, 0.5); 
