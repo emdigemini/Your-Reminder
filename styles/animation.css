@@ -580,3 +580,31 @@
     transform: translateY(100%);
   }
 }
+
+.reminder-date-set.openDateSet {
+  display: flex;
+  animation: openDateSet 0.3s ease forwards;
+}
+
+@keyframes openDateSet {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+.reminder-time-set.openTimeSet {
+  display: flex;
+  animation: openTimeSet 0.6s ease forwards;
+}
+
+@keyframes openTimeSet {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

@@ -1,6 +1,7 @@
 import './animation.js';
 import { randomQuotes } from './animation.js'
 import { openNotesFeature } from './Notes/notes.js';
+import { openReminder } from './Reminder/reminder.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -106,21 +107,9 @@ export function closeDashboard(){
     }, { once: true });
 }
 
-// history.replaceState({startup: true }, '', 'Startup Menu')
-
-//reminder
+//  reminder
 cards.reminder.addEventListener('click', () => {
-  const tabReminder = document.querySelector('.reminder-tab');
-  const closeTab = document.querySelector('.toggle-tab');
-  tabReminder.classList.remove('close')
-  tabReminder.classList.add('open');
-  tabReminder.addEventListener('animationend', () => {
-    closeTab.addEventListener('click', () => {
-      tabReminder.classList.add('close')
-      tabReminder.classList.remove('open')
-    })
-  })
-
+  openReminder();
 })
 
 // notes

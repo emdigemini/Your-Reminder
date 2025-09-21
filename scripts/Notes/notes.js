@@ -1,9 +1,15 @@
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
-import { yourNotesList, saveToStorage } from "../data/yourData.js";
 import { darkMode } from "../settings.js";
 import { closeDashboard } from '../script.js';
 import '../settings.js'; 
 /**----------For NOTES----------**/
+const yourNotesList = JSON.parse(localStorage.getItem('yourNotesList')) || [];
+
+function saveToStorage(){
+  localStorage.setItem('yourNotesList', JSON.stringify(yourNotesList));
+}
+
+
 
 //--open notes feature
 export function openNotesFeature(){
@@ -273,15 +279,19 @@ function yourNotesListener(){
 
 }
 
+let noteEl = {};
+
 function openYourNote(noteId){
   const yourNote = yourNotesList.find(note => note.id === noteId);
-  const noteEl = notepad();
+  noteEl = notepad();
 
   function notepad(){
     document.body.insertAdjacentHTML("beforeend", `
         <div class="your-note-tab-overlay">
           <div class="your-note-tab">
-            <div class="drag-btn"></div>
+            <div class="drag-btn">
+              <i class="bi bi-arrows-expand"></i>
+            </div>
             <div class="your-note-title">
               <h1>${yourNote.title}</h1>
             </div>
@@ -300,91 +310,85 @@ function openYourNote(noteId){
       }
   }
 
-    const root = document.documentElement;
+  openNoteTab();
 
-    openNoteTab();
-    function openNoteTab(){
-      history.replaceState({ yourNoteTab: true }, ""); 
-      noteEl.mainOverlay.remove();
-      noteEl.noteListBox.classList.remove('open');
-      noteEl.noteListBox.classList.add('close');
-      noteEl.yourNoteOverlay.classList.add('open');
-      noteEl.yourNoteTab.classList.add('open');
-      // dragYourNoteTab(noteEl.yourNoteTab);
+  noteEl.textpad.addEventListener('input', () => {
+    const getText = noteEl.textpad.value;
+    yourNote.textarea = getText;
+    saveToStorage();
+  })
+
+
+  //--slide drag for note tab
+  const dragBtn = document.querySelector('.drag-btn')
+  let offsetY = 0;
+  let startY = 0;
+  function dragStart(e){
+    startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+
+    if(e.type === 'mousedown'){
+      document.addEventListener('mousemove', dragging);
+      document.addEventListener('mouseup', dragEnd);
+    } else {
+      document.addEventListener('touchmove', dragging);
+      document.addEventListener('touchend', dragEnd);
     }
-    function closeNoteTab(offsetY){
-      if(offsetY){
-        root.style.setProperty('--offset-y', `${offsetY}px`);
-        noteEl.yourNoteOverlay.classList.add('close');
-        noteEl.yourNoteTab.classList.add('close');
-        noteEl.yourNoteTab.addEventListener('animationend', () => {
-          noteEl.yourNoteOverlay.remove();
-        }, {once: true})
-      }else{
-        noteEl.yourNoteOverlay.classList.add('close');
-        noteEl.yourNoteTab.classList.add('close');
-        noteEl.yourNoteTab.addEventListener('animationend', () => {
-          noteEl.yourNoteOverlay.remove();
-        }, {once: true})
-      }
-    }
+  }
+
+  function dragging(e){
+    const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+    offsetY = currentY - startY;
     
-    document.addEventListener('click', (e) => {
-      if(!noteEl.yourNoteTab.contains(e.target)){
-        closeNoteTab();
-        noteEl.yourNoteTab.addEventListener('animationend', () => {
-          noteEl.yourNoteOverlay.remove();
-        }, {once: true})
-      }
-    })
+    if(offsetY < 2){
+      offsetY = 2;
+      noteEl.yourNoteTab.style.top = `${offsetY}px`;
+    } else if(offsetY > 3){
+      noteEl.yourNoteTab.style.top = `${offsetY}px`;
+    }
+  }
 
-    noteEl.textpad.addEventListener('input', () => {
-      const getText = noteEl.textpad.value;
-      yourNote.textarea = getText;
-      saveToStorage();
-    })
+  function dragEnd(){
+    noteEl.yourNoteTab.style.top = '';
 
-    let offsetY = 0;
-    let startY = 0;
-    function dragStart(e){
-      startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-
-      if(e.type === 'mousedown'){
-        document.addEventListener('mousemove', dragging);
-        document.addEventListener('mouseup', dragEnd);
-      } else {
-        document.addEventListener('touchmove', dragging);
-        document.addEventListener('touchend', dragEnd);
-      }
+    if(offsetY > 150){
+      closeNoteTab(offsetY);
     }
 
-    function dragging(e){
-      const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-      offsetY = currentY - startY;
-      
-      if(offsetY < 2){
-        offsetY = 2;
-        noteEl.yourNoteTab.style.top = `${offsetY}px`;
-      } else if(offsetY > 3){
-        noteEl.yourNoteTab.style.top = `${offsetY}px`;
-      }
-    }
+    document.removeEventListener('mousemove', dragging);
+    document.removeEventListener('mouseup', dragEnd);
+  }
 
-    function dragEnd(){
-      noteEl.yourNoteTab.style.top = '';
+  dragBtn.addEventListener('mousedown', dragStart);
+  dragBtn.addEventListener('touchstart', dragStart, {once: false});
+}
 
-      if(offsetY > 150){
-        closeNoteTab(offsetY);
-      }
+const root = document.documentElement;
 
-      document.removeEventListener('mousemove', dragging);
-      document.removeEventListener('mouseup', dragEnd);
-    }
-
-    const dragBtn = document.querySelector('.drag-btn')
-    dragBtn.addEventListener('mousedown', dragStart);
-    dragBtn.addEventListener('touchstart', dragStart, {once: false});
-
+function openNoteTab(){
+  history.replaceState({ yourNoteTab: true }, ""); 
+  noteEl.mainOverlay.remove();
+  noteEl.noteListBox.classList.remove('open');
+  noteEl.noteListBox.classList.add('close');
+  noteEl.yourNoteOverlay.classList.remove('close');
+  noteEl.yourNoteTab.classList.remove('close');
+  noteEl.yourNoteOverlay.classList.add('open');
+  noteEl.yourNoteTab.classList.add('open');
+}
+function closeNoteTab(offsetY){
+  if(offsetY){
+    root.style.setProperty('--offset-y', `${offsetY}px`);
+    noteEl.yourNoteOverlay.classList.add('close');
+    noteEl.yourNoteTab.classList.add('close');
+    noteEl.yourNoteTab.addEventListener('animationend', () => {
+      noteEl.yourNoteOverlay.remove();
+    }, {once: true})
+  }else{
+    noteEl.yourNoteOverlay.classList.add('close');
+    noteEl.yourNoteTab.classList.add('close');
+    noteEl.yourNoteTab.addEventListener('animationend', () => {
+      noteEl.yourNoteOverlay.remove();
+    }, {once: true})
+  }
 }
 
 window.addEventListener('popstate', e => {
@@ -394,7 +398,7 @@ window.addEventListener('popstate', e => {
         if(e.state.home){
           closeDashboard();
         } 
-      }, {once: true})
-      history.replaceState({home: true}, '');
+      })
     
+      history.replaceState({home: true}, '');
 

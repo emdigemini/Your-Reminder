@@ -32,10 +32,20 @@
   height: 7px;
   width: 100px;
   border-radius: 20px;
-  background: #666;
   position: absolute;
   top: 0;
   cursor: grab;
+  text-align: center;
+  font-size: 24px;
+}
+
+.drag-btn i {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  color: #666666a8;
+  transform: translate(-50%, -50%);
+  
 }
 
 .your-note-tab::-webkit-scrollbar {
