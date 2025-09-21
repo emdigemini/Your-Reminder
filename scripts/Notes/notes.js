@@ -125,7 +125,8 @@ function saveYourNotes(inputTitle, inputDescription){
 function getYourNotes(){
   const noteHTML = yourNotesList.map(note => {
     return `
-      <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
+      <div data-note-id="${note.id}" class="your-notes ${!darkMode 
+        ? 'light' : ''}">
         <div class="notes-action-bar">
           <div class="notes-title">
             <h4>${note.title}</h4>

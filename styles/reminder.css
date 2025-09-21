@@ -12,6 +12,7 @@
   color: #383838;
   overflow-y: scroll;
   scrollbar-width: none;
+  font-size: 15px;
 }
 
 .toggle-tab {
@@ -36,9 +37,9 @@
 
 .reminder-header {
   font-family: "Cagliostro", serif;
-  padding: 20px;
+  padding: 20px 10px;
   background: #ceb694;
-  margin: 20px 10px;
+  margin: 0px 10px 20px;
   border-radius: 12px;
 }
 
@@ -46,8 +47,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 20px 10px;
-  gap: 24px;
+  gap: 12px;
 }
 
 .reminder-actions label {
@@ -56,19 +56,18 @@
 
 .reminder-input-group {
   display: flex;
-  gap: 10px;
+  gap: 6px;
 }
 
 .reminder-input-group input,
 #setDate, #startTime, #endTime {
   width: 100%;
-  min-width: 250px;
+  min-width: 150px;
   max-width: 100vw;
-  padding: 8px 25px;
+  padding: 8px 10px;
   border-radius: 8px;
   border: none;
   background-color: var(--color-background);;
-  font-size: 16px;
 }
 
 .reminder-input-group input:focus,
@@ -103,10 +102,11 @@
 
 .reminder-time-set {
   display: none;
-  gap: 12px;
+  gap: 6px;
 }
 
 #startTime, #endTime {
+  padding: 10px;
   min-width: 100px;
 }
 
@@ -143,7 +143,7 @@
   color: white;
 }
 
-#reminder-filter.active {
+.reminder-filter.active {
   background: #5c3a21;
   color: white;
 }
