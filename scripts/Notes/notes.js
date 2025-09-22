@@ -291,7 +291,7 @@ function openYourNote(noteId){
         <div class="your-note-tab-overlay">
           <div class="your-note-tab">
             <div class="drag-btn">
-              <i class="bi bi-arrows-expand"></i>
+              <i class="bi bi-caret-down-fill"></i>
             </div>
             <div class="your-note-title">
               <h1>${yourNote.title}</h1>
@@ -320,47 +320,53 @@ function openYourNote(noteId){
   })
 
 
+  const closeBtn = document.querySelector('.drag-btn');
+
+  closeBtn.addEventListener('click', () => {
+    closeNoteTab();
+  })
+
   //--slide drag for note tab
-  const dragBtn = document.querySelector('.drag-btn')
-  let offsetY = 0;
-  let startY = 0;
-  function dragStart(e){
-    startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+  // const dragBtn = document.querySelector('.drag-btn')
+  // let offsetY = 0;
+  // let startY = 0;
+  // function dragStart(e){
+  //   startY = e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
 
-    if(e.type === 'mousedown'){
-      document.addEventListener('mousemove', dragging);
-      document.addEventListener('mouseup', dragEnd);
-    } else {
-      document.addEventListener('touchmove', dragging);
-      document.addEventListener('touchend', dragEnd);
-    }
-  }
+  //   if(e.type === 'mousedown'){
+  //     document.addEventListener('mousemove', dragging);
+  //     document.addEventListener('mouseup', dragEnd);
+  //   } else {
+  //     document.addEventListener('touchmove', dragging);
+  //     document.addEventListener('touchend', dragEnd);
+  //   }
+  // }
 
-  function dragging(e){
-    const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
-    offsetY = currentY - startY;
+  // function dragging(e){
+  //   const currentY =  e.type.includes('mouse') ? e.clientY : e.touches[0].clientY;
+  //   offsetY = currentY - startY;
     
-    if(offsetY < 2){
-      offsetY = 2;
-      noteEl.yourNoteTab.style.top = `${offsetY}px`;
-    } else if(offsetY > 3){
-      noteEl.yourNoteTab.style.top = `${offsetY}px`;
-    }
-  }
+  //   if(offsetY < 2){
+  //     offsetY = 2;
+  //     noteEl.yourNoteTab.style.top = `${offsetY}px`;
+  //   } else if(offsetY > 3){
+  //     noteEl.yourNoteTab.style.top = `${offsetY}px`;
+  //   }
+  // }
 
-  function dragEnd(){
-    noteEl.yourNoteTab.style.top = '';
+  // function dragEnd(){
+  //   noteEl.yourNoteTab.style.top = '';
 
-    if(offsetY > 150){
-      closeNoteTab(offsetY);
-    }
+  //   if(offsetY > 150){
+  //     closeNoteTab(offsetY);
+  //   }
 
-    document.removeEventListener('mousemove', dragging);
-    document.removeEventListener('mouseup', dragEnd);
-  }
+  //   document.removeEventListener('mousemove', dragging);
+  //   document.removeEventListener('mouseup', dragEnd);
+  // }
 
-  dragBtn.addEventListener('mousedown', dragStart);
-  dragBtn.addEventListener('touchstart', dragStart, {once: false});
+  // dragBtn.addEventListener('mousedown', dragStart);
+  // dragBtn.addEventListener('touchstart', dragStart, {once: false});
 }
 
 const root = document.documentElement;
@@ -375,21 +381,12 @@ function openNoteTab(){
   noteEl.yourNoteOverlay.classList.add('open');
   noteEl.yourNoteTab.classList.add('open');
 }
-function closeNoteTab(offsetY){
-  if(offsetY){
-    root.style.setProperty('--offset-y', `${offsetY}px`);
-    noteEl.yourNoteOverlay.classList.add('close');
-    noteEl.yourNoteTab.classList.add('close');
-    noteEl.yourNoteTab.addEventListener('animationend', () => {
-      noteEl.yourNoteOverlay.remove();
-    }, {once: true})
-  }else{
-    noteEl.yourNoteOverlay.classList.add('close');
-    noteEl.yourNoteTab.classList.add('close');
-    noteEl.yourNoteTab.addEventListener('animationend', () => {
-      noteEl.yourNoteOverlay.remove();
-    }, {once: true})
-  }
+function closeNoteTab(){
+  noteEl.yourNoteOverlay.classList.add('close');
+  noteEl.yourNoteTab.classList.add('close');
+  noteEl.yourNoteTab.addEventListener('animationend', () => {
+    noteEl.yourNoteOverlay.remove();
+  }, {once: true})
 }
 
 window.addEventListener('popstate', e => {

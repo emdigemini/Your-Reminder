@@ -16,8 +16,9 @@
 }
 
 .toggle-tab {
-  width: max-content;
-  margin: 10px 10px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 15px 20px;
   cursor: pointer;
 }
 
@@ -31,7 +32,6 @@
 }
 
 .reminder-header {
-  font-family: "Cagliostro", serif;
   padding: 20px 10px;
   background: var(--card-color);
   margin: 0px 10px 20px;
@@ -171,6 +171,32 @@
   justify-content: space-between;
 }
 
+.your-reminder.completed {
+  color: #00e77436;
+  text-decoration: line-through;
+  text-decoration-color: #00e774;
+  text-decoration-style: wavy;
+}
+.your-reminder.completed .edit-reminder {
+  display: none;
+}
+
+.empty-state {
+  display: flex;
+  flex-direction: column;  
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #666;
+  border-radius: 8px;
+  margin: 30px;
+  padding: 20px;
+  background: #6666662c;
+}
+
+.empty-state img {
+  height: 30px;
+}
+
 .checkbox {
   display: inline-block;
   align-self: center;
@@ -195,9 +221,10 @@
 .reminder-title {
   font-weight: 600;
 }
+
 .reminder-schedule, 
 .reminder-created {
-  color: #525252;
+  color: #e6e6e6;
   margin-left: 6px;
 }
 
@@ -278,4 +305,39 @@ body.light .reminder-input-group input,
 body.light #setDate, body.light #startTime, body.light #endTime {
   border: none;
   color: #262626;
+}
+
+body.light .edit-reminder:hover,
+body.light .delete-reminder:hover {
+  color: #44444470;
+} 
+
+body.light .your-reminder.completed {
+  color: #26262636;
+  text-decoration: line-through;
+  text-decoration-color: #262626;
+  text-decoration-style: wavy;
+}
+body.light .your-reminder.completed .edit-reminder {
+  display: none;
+}
+
+body.light .empty-state {
+  display: flex;
+  flex-direction: column;  
+  align-items: center;
+  gap: 15px;
+  border: 1px solid #666;
+  border-radius: 8px;
+  margin: 30px;
+  padding: 20px;
+  background: #ceb69457;
+}
+
+body.light .empty-state img {
+  height: 30px;
+}
+body.light .reminder-schedule,
+body.light .reminder-created {
+  color: #525252;
 }
