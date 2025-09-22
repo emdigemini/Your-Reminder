@@ -171,14 +171,15 @@
   justify-content: space-between;
 }
 
-.your-reminder.completed {
-  color: #00e77436;
+.your-reminder.completed .reminder-title {
   text-decoration: line-through;
-  text-decoration-color: #00e774;
-  text-decoration-style: wavy;
+  color: #00e77436;
 }
-.your-reminder.completed .edit-reminder {
-  display: none;
+
+.your-reminder.completed .reminder-schedule,
+.your-reminder.completed .reminder-created {
+  color: #00e77436;
+  text-decoration: none;
 }
 
 .empty-state {
@@ -188,13 +189,19 @@
   gap: 15px;
   border: 1px solid #666;
   border-radius: 8px;
-  margin: 30px;
-  padding: 20px;
+  padding: 30px 10px;
   background: #6666662c;
+  text-align: center;
 }
 
-.empty-state img {
-  height: 30px;
+.empty-state h3 {
+  width: max-content;
+  text-decoration: underline;
+  text-decoration-thickness: 0.3px;
+}
+
+.empty-state p {
+  font-size: 14px;
 }
 
 .checkbox {
@@ -312,15 +319,17 @@ body.light .delete-reminder:hover {
   color: #44444470;
 } 
 
-body.light .your-reminder.completed {
-  color: #26262636;
+body.light .your-reminder.completed .reminder-title {
   text-decoration: line-through;
-  text-decoration-color: #262626;
-  text-decoration-style: wavy;
+  color: #26262636;
 }
-body.light .your-reminder.completed .edit-reminder {
-  display: none;
+
+body.light .your-reminder.completed .reminder-schedule,
+body.light .your-reminder.completed .reminder-created {
+  color: #26262636;
+  text-decoration: none;
 }
+
 
 body.light .empty-state {
   display: flex;
@@ -332,12 +341,4 @@ body.light .empty-state {
   margin: 30px;
   padding: 20px;
   background: #ceb69457;
-}
-
-body.light .empty-state img {
-  height: 30px;
-}
-body.light .reminder-schedule,
-body.light .reminder-created {
-  color: #525252;
 }

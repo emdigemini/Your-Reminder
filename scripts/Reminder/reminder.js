@@ -116,7 +116,6 @@ function getElm(){
   const control = {
     currentTitle      :      document.querySelectorAll('.reminder-title'),
     checkbox          :      document.querySelectorAll('.checkbox'),
-    editReminder      :      document.querySelectorAll('.edit-reminder'),
     delReminder       :      document.querySelectorAll('.delete-reminder'),
   }
 
@@ -178,21 +177,12 @@ function allReminderTool(){
     })
   })
 
-  el2.editReminder.forEach(edit => {
-    edit.addEventListener('click', () => {
-      const container = edit.closest('.your-reminder');
-      const reminderId = container.dataset.reminderId;
-      const newTitle = reminderList.find(reminder => reminder.id === reminderId);
-      reminderEdit(newTitle, el2.currentTitle, edit);
-    })
-  })
-
   el2.delReminder.forEach(del => {
     del.addEventListener('click', e => {
       e.stopPropagation();
       const container = del.closest('.your-reminder');
       const reminderId = container.dataset.reminderId;
-      const index = reminderList.findIndex(reminder => reminder.id === reminderId);
+      const index = reminderList.findIndex(r => r.id === reminderId);
       reminderList.splice(index, 1);
       updateReminder()
       reminderAdded();
@@ -215,6 +205,7 @@ function activeReminderTool(){
       } else {
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = false;
+        console.log('unchecked');
         updateReminder();
         countActiveReminder();
       }
@@ -226,7 +217,7 @@ function activeReminderTool(){
       e.stopPropagation();
       const container = del.closest('.your-reminder');
       const reminderId = container.dataset.reminderId;
-      const index = reminderList.findIndex(reminder => reminder.id === reminderId);
+      const index = reminderList.findIndex(r => r.id === reminderId);
       reminderList.splice(index, 1);
       updateReminder();
       countActiveReminder();
@@ -249,6 +240,7 @@ function completedReminderTool(){
       } else {
         const reminder = reminderList.find(r => r.id === reminderId);
         reminder.completed = false;
+        console.log('unchecked');
         updateReminder();
         countCompletedReminder();
       }
@@ -260,7 +252,7 @@ function completedReminderTool(){
       e.stopPropagation();
       const container = del.closest('.your-reminder');
       const reminderId = container.dataset.reminderId;
-      const index = reminderList.findIndex(reminder => reminder.id === reminderId);
+      const index = reminderList.findIndex(r => r.id === reminderId);
       reminderList.splice(index, 1);
       updateReminder()
       countCompletedReminder();
@@ -269,6 +261,8 @@ function completedReminderTool(){
 }
 
 function updateReminder(){
+  reminderList.sort((a, b) => b.timeCreated - a.timeCreated);
+  reminderList.sort((a, b) => a.completed - b.completed);
   saveToStorage();
   openReminder();
 }
@@ -287,16 +281,17 @@ function addYourReminder(inputBar, setDate, startTime, endTime,
   // get time start AM or PM
   const timeStart = startTime.value; 
   const timeEnd = endTime.value; 
-  const dateCreated = dayjs().format('MM/DD/YYYY, HH:mm');
+  const dateCreated = dayjs().format('MM/DD/YYYY HH:mm');
 
-  reminderList.push({
+  reminderList.unshift({
     id,
     completed : false,
     title     : reminderTitle,
     dateSet   : dateSet || '',
     timeStart : timeStart || '',
     timeEnd   : timeEnd || '',
-    dateCreated
+    timeCreated: Date.now(),
+    dateCreated,
   })
   inputBar.value = '';
   addReminder.disabled = true;
@@ -350,9 +345,6 @@ function renderReminder(){
       </div>
 
       <div class="reminder-tools">
-        <div class="edit-reminder">
-          <i class="bi bi-pencil-square"></i>
-        </div>
         <div class="delete-reminder">
           <i class="bi bi-trash"></i>
         </div>
@@ -397,9 +389,6 @@ function countActiveReminder(){
       </div>
 
       <div class="reminder-tools">
-        <div class="edit-reminder">
-          <i class="bi bi-pencil-square"></i>
-        </div>
         <div class="delete-reminder">
           <i class="bi bi-trash"></i>
         </div>
@@ -443,9 +432,6 @@ function countCompletedReminder(){
       </div>
 
       <div class="reminder-tools">
-        <div class="edit-reminder">
-          <i class="bi bi-pencil-square"></i>
-        </div>
         <div class="delete-reminder">
           <i class="bi bi-trash"></i>
         </div>
@@ -457,6 +443,7 @@ function countCompletedReminder(){
     ? renderCompletedReminder : emptyState().noCompleted}`;
 
   completedReminderTool();
+  return {getCompletedReminder};
 }
 
 function emptyState(){
@@ -464,11 +451,11 @@ function emptyState(){
     noReminder:
     `
       <div class='empty-state'>
-        <h2>
-          <img src="../../icons/star-sparkling.png">  
+        <h3>
+          &#10024;
             Ready, Set, Remind!
-          <img src="../../icons/star-sparkling.png">  
-        </h2>
+          &#10024;
+        </h3>
         <p>You don't have any reminders yet — why not add one to get started?</p>
       </div>
     `
@@ -476,41 +463,41 @@ function emptyState(){
     noActive:
     `
       <div class='empty-state'>
-        <h2>
-          <img src="../../icons/star-sparkling.png">  
+        <h3>
+          &#10024;
             Nothing left to do!
-          <img src="../../icons/star-sparkling.png">  
-        </h2>
+          &#10024;
+        </h3>
         <p>Nothing to do here! Enjoy the moment, you've been productive.</p>
       </div>
     `,
     noCompleted: 
     `
       <div class='empty-state'>
-        <h2>
-          <img src="../../icons/star-sparkling.png">  
+        <h3>
+          &#10024;
             Nothing completed yet
-          <img src="../../icons/star-sparkling.png">  
-        </h2>
+          &#10024;
+        </h3>
         <p>Zero completed reminders. Let's make some progress today!</p>
       </div>
     `,
   }
 }
 
-function reminderEdit(newTitle, currentTitle, edit){
-  currentTitle.forEach(el => {
-    const container = el.closest('.your-reminder');
-    const getId = container.dataset.reminderId;
-    const newEl = document.createElement('input');
-    const save = document.createElement('i');
-    save.setAttribute('class', 'bi bi-check2-square');
-    if(getId === newTitle.id){
-      edit.classList.add('on-edit');
-      el.replaceWith(newEl);
-    }
-  })
-}
+// function reminderEdit(newTitle, currentTitle, edit){
+//   currentTitle.forEach(el => {
+//     const container = el.closest('.your-reminder');
+//     const getId = container.dataset.reminderId;
+//     const newEl = document.createElement('input');
+//     const save = document.createElement('i');
+//     save.setAttribute('class', 'bi bi-check2-square');
+//     if(getId === newTitle.id){
+//       edit.classList.add('on-edit');
+//       el.replaceWith(newEl);
+//     }
+//   })
+// }
 
 
 function filterBtn(filter, reminderFilter){
