@@ -55,7 +55,7 @@ export function openReminder(){
           <div class="reminder-list">
 
             <!--GENERATE YOUR REMINDER HERE-->
-              ${reminderList.length > 0 ? renderReminder().reminderHTML : "You don't have any reminders yet — why not add one to get started?"}
+              ${reminderList.length > 0 ? renderReminder().reminderHTML : emptyState().noReminder}
             <!--GENERATE YOUR REMINDER HERE-->
 
           </div>
