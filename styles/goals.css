@@ -1,0 +1,393 @@
+.goals {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  width: 100%;
+  background: var(--color-background);
+  z-index: 2;
+  overflow-y: scroll;
+  scrollbar-width: none;
+}
+
+.toggle-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.goals-logo-circle {
+  position: sticky;
+  top: 0;
+  background: var(--color-background);
+  display: flex;
+  align-items: center;
+  padding: 20px;
+  gap: 8px;
+  color: #462700af;
+  box-shadow: 0 0 200px #66666641;
+  z-index: 10;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+}
+
+.title p {
+   font-size: 12px;
+}
+
+.pr-icon-circle {
+  position: relative;
+  height: 50px;
+  width: 50px;
+  background: #FA7600;
+  border-radius: 50px;
+}
+
+.goals-tab {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.progress-card {
+  display: flex;
+  margin: 10px;
+  gap: 15px;
+}
+
+.progress-card span {
+  font-size: 24px;
+}
+
+.avg-progress {
+  display: flex;
+  align-items: center;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+  border-radius: 12px;
+  padding: 8px 12px;
+  width: 100%;
+  gap: 10px;
+}
+
+.avg-progress i {
+  font-size: 18px;
+  color: #fff;
+  background: #1779fa;
+  border-radius: 20px;
+  padding: 8px 12px;
+}
+
+.completed {
+  display: flex;
+  align-items: center;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+  border-radius: 12px;
+  padding: 8px 12px;
+  width: 100%;
+  gap: 10px;
+}
+
+.completed i {
+  font-size: 18px;
+  color: #fff;
+  background: #fa8500ea;
+  border-radius: 20px;
+  padding: 8px 12px;
+}
+
+.set-goal {
+  display: flex;
+  flex-direction: column;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+  gap: 15px;
+  height: 100%;
+  padding: 20px;
+  border-radius: 20px;
+}
+
+.goals-logo-square {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  color: #262626;
+}
+
+.goals-logo-square h2 {
+  position: relative;
+}
+
+.goals-logo-square h2::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  height: 4px;
+  border-radius: 8px;
+  width: 55%;
+  background-image: linear-gradient(to right, #fcad1a96, #fa7600);
+}
+
+.set-goal p {
+  font-size: 14px;
+  color: #462700af;
+}
+
+.pr-icon-square {
+  position: relative;
+  height: 50px;
+  width: 50px;
+  background: #FA7600;
+  border-radius: 15px;
+}
+.square-1, .square-2, .square-3,
+.square-4 {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+  .square-1 {
+  height: 2px;
+  width: 2px;
+  background: #FA7600;
+  z-index: 4;
+  }
+  .square-2 {
+  background: #fff;
+  height: 10px;
+  width: 10px;
+  border-radius: 8px;
+  border: 2px solid #FA7600;
+  z-index: 3;
+  }
+  .square-3 {
+  background: #fff;
+  height: 18px;
+  width: 18px;
+  border-radius: 16px;
+  border: 2px solid #FA7600;
+  z-index: 2;
+  }
+  .square-4 {
+  background: #fff;
+  height: 26px;
+  width: 26px;
+  border-radius: 16px;
+  border: 2px solid #FA7600;
+  }
+  .dot {
+  position: absolute;
+  top: -4px;
+  right:-4px;
+  height: 18px;
+  width: 18px;
+  border-radius: 15px;
+  background: #fa9f1777;
+  z-index: 5;
+}
+
+.input-box {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.input-box input, .input-box select {
+  border: none;
+  padding: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 15px #3f3c3949;
+}
+
+.input-box-2 {
+  display: flex;
+  gap: 15px;
+}
+
+.category-box, .target-track {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
+.btn-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.btn-group i {
+  font-size: 16px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #26262660;
+  background: #fff8f0a2;
+}
+.btn-group button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 12px;
+  background: #FA7600;
+  color: #fff;
+}
+
+/**CONTROL BOX**/
+.goal-control-box {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+  gap: 15px;
+}
+
+.goal-controls-button {
+  display: flex;
+  gap: 15px;
+  padding: 10px;
+  border-radius: 16px;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+}
+
+.goal-controls-button button {
+  padding: 10px 20px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  background: #e9e3de70;
+}
+
+#all {
+  background: #FA7600;
+  color: #fff;
+}
+
+.goal-categories {
+  position: relative;
+  display: flex;
+  padding: 10px;
+  flex-direction: column;
+  gap: 8px;
+  border-radius: 16px;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+}
+
+.goal-categories p {
+  color: #462700af;
+}
+
+.first-line, .second-line {
+  display: flex;
+  gap: 4px;
+}
+
+.first-line button, .second-line button {
+  width: 100%;
+  padding: 10px 20px;
+  width: 100%;
+  border: none;
+  border-radius: 12px;
+  background: #e9e3de70;
+}
+
+#health {
+  background: #2b87ff;
+  color: #fff;
+}
+
+/**goal container**/
+.your-goal-list {
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+
+.your-goal-container {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+  padding: 20px;
+  gap: 8px;
+}
+
+.goal-category {
+  color: #462700af;
+}
+
+.goal-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.goal-deadline {
+  background: #e6c11e73;  
+  width: max-content;
+  padding: 4px 10px;
+  border-radius: 8px;
+  color: #d47501ee;
+}
+
+.track-progress {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.track-progress p {
+  color: #462700af;
+}
+
+.points {
+  display: flex;
+  justify-content: space-between;
+}
+
+.progress-bar {
+  position: relative;
+  height: 14px;
+  width: 100%;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 0 10px #0000002a;
+}
+
+.add-points {
+  display: flex;
+  gap: 6px;
+}
+
+.add-points input {
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #0000002a;
+  width: 90%;
+  padding: 8px;
+}
+
+#add {
+  width: 10%;
+  border: none;
+  border-radius: 20px;
+  background: #fa7600;
+  color: #fff;
+}
+
+.progress-bar::before {
+  content: '';
+  position: absolute;
+  border-radius: 20px;
+  top: 10%;
+  left: 1px;
+  height: 12px;
+  background: #FA7600;
+  width: 40%;
+}

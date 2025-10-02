@@ -1,7 +1,8 @@
 import './animation.js';
 import { randomQuotes } from './animation.js'
-import { openNotesFeature } from './Notes/notes.js';
-import { openReminder } from './Reminder/reminder.js';
+import { openNoteApp } from './Notes/notes.js';
+import { openReminderApp } from './Reminder/reminder.js';
+import { openGoalApp } from './Goals/goals.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -109,17 +110,17 @@ export function closeDashboard(){
 
 //  reminder
 cards.reminder.addEventListener('click', () => {
-  openReminder();
+  openReminderApp();
 })
 
 // notes
 cards.notes.addEventListener('click', () => {
-  openNotesFeature();
+  openNoteApp();
 });
 
 // goals
 cards.goals.addEventListener('click', () => {
-  alert('Still a work in progress.');
+  openGoalApp();
 })
 
 //tasks
