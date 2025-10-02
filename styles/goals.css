@@ -228,13 +228,14 @@
   box-shadow: 0 0 10px #26262660;
   background: #fff8f0a2;
 }
-.btn-group button {
+#createGoal {
   width: 100%;
   padding: 10px;
   border: none;
   border-radius: 12px;
   background: #FA7600;
   color: #fff;
+  cursor: pointer;
 }
 
 /**CONTROL BOX**/
@@ -390,4 +391,10 @@
   height: 12px;
   background: #FA7600;
   width: 40%;
+}
+
+/**CONTROL WITH JS**/
+#createGoal.disabled {
+  background: #cf7c339a;
+  cursor: default;
 }

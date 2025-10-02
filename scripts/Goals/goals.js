@@ -1,8 +1,4 @@
-const inputRequired = {
-  setGoal     :     document.getElementById('setGoal'),
-  category    :     document.getElementById('category'),
-  progress    :     document.getElementById('progress'),
-}
+const yourGoals = [];
 
 export function openGoalApp(){
   if(!document.querySelector('.goals')){
@@ -73,7 +69,7 @@ export function openGoalApp(){
                 </div>
                 <div class="btn-group">
                   <i class="bi bi-calendar2"></i>
-                  <button>+ Create Goal</button>
+                  <button id="createGoal" class="disabled">+ Create Goal</button>
                 </div>
               </div>
             </div>
@@ -169,7 +165,21 @@ export function openGoalApp(){
       `);
 
     closeTab();
+    setYourGoal();
   } else {return};
+}
+
+function getEle(){
+  const inputBox = {
+    setGoal     :     document.getElementById('setGoal'),
+    category    :     document.getElementById('category'),
+    progress    :     document.getElementById('progress'),
+  };
+  const control = {
+    createGoal  :     document.getElementById('createGoal'),
+
+  }
+  return {inputBox, control};
 }
 
 function closeTab(){
@@ -179,5 +189,35 @@ function closeTab(){
     yourTab.addEventListener('animationend', () => {
       yourTab.remove();
     }, {once: true})
+  })
+}
+
+function setYourGoal(){
+  const set = getEle();
+  const createGoal    = set.control.createGoal;
+
+  function checkInputs(){
+    const inputGoal     = set.inputBox.setGoal.value;
+    const inputCategory = set.inputBox.category.value;
+    const inputProgress = set.inputBox.progress.value;
+    if(!inputGoal || !inputCategory || !inputProgress){
+      return;
+    }
+    else {
+      createGoal.classList.remove('disabled');
+      addGoal(inputGoal, inputCategory, inputProgress, createGoal);
+    }
+  }
+
+  Object.values(set.inputBox).forEach(boxInput => {
+    boxInput.addEventListener('input', checkInputs);
+  })
+
+  checkInputs();
+}
+
+function addGoal(inputGoal, inputCategory, inputProgress, createGoal){
+  createGoal.addEventListener('click', () => {
+
   })
 }
