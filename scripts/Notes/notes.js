@@ -12,7 +12,7 @@ function saveToStorage() {
 }
 
 /*----------------- Open Notes Feature -----------------*/
-export function openNotesFeature() {
+export function openNoteApp() {
   if (!document.querySelector('.overlay')) {
     const noteEl = showMainOverlay();
     openOverlay(noteEl.overlay, noteEl.container);
@@ -128,12 +128,11 @@ function saveYourNotes(inputTitle, inputDescription) {
 
   const date = dayjs().format('MMM D, YYYY');
 
-  function generateId(length = 5) {
-    return `${title}-` + Math.random().toString(36).substr(2, length);
+  function generateId() {
+    return crypto.randomUUID();
   };
 
-  const id = generateId().replace(/\s+/g, '%');
-
+  const id = generateId();
   yourNotesList.unshift({
     id,
     title,
@@ -299,31 +298,77 @@ let noteEl = {};
 
 function openYourNote(noteId) {
   const yourNote = yourNotesList.find(note => note.id === noteId);
-  noteEl = notepad();
+  notepad();
 
   function notepad() {
     document.body.insertAdjacentHTML("beforeend", `
       <div class="your-note-tab-overlay">
-        <div class="your-note-tab">
+        <div class="your-note-tab" data-note-id="${yourNote.id}">
           <div class="drag-btn"><i class="bi bi-caret-down-fill"></i></div>
           <div class="your-note-title"><h1>${yourNote.title}</h1></div>
-          <div class="your-note-page"><textarea class="textpad" name="">${yourNote.textarea}</textarea></div>
+          <div class="your-note-page">
+            <div class="note-tools">
+              <i class="bi bi-alphabet-uppercase toggle-tool"></i>
+              <ul>
+                <li>
+                  <a>H1</a>
+                </li>
+                <li>
+                  <a>H2</a>        
+                </li>
+                <li>
+                  <a>H3</a>
+                </li>
+                <li>  
+                  <a class="bold">B</a>        
+                </li>
+                <li>
+                  <a>U</a>
+                </li>
+                <li>
+                  <a>I</a>
+                </li>
+              </ul>
+            </div>
+            <div class="textpad" contenteditable="true" name="">${yourNote.textarea}</div>
+          </div>
         </div>
       </div>
     `);
-    return {
-      mainOverlay:     document.querySelector('.overlay'),
-      noteListBox:     document.querySelector('.notes-container'),
-      yourNoteOverlay: document.querySelector('.your-note-tab-overlay'),
-      yourNoteTab:     document.querySelector('.your-note-tab'),
-      textpad:         document.querySelector('.textpad'),
-    };
+  }
+  noteEl = noteTabEl();
+  openNoteTab();
+  
+  function getSelectedText(){
+    return window.getSelection().toString();
   }
 
-  openNoteTab();
+  noteEl.toggleTool.addEventListener('click', function(){
+    if(noteEl.noteTools.classList.contains('active')){
+      noteEl.noteTools.classList.remove('active')
+      noteEl.noteTools.classList.add('close')
+    } else {
+      noteEl.noteTools.classList.remove('close');
+      noteEl.noteTools.classList.add('active');
+    }
+  })
 
+  document.querySelector('.bold').addEventListener('click', function(){
+    const container = this.closest('.your-note-tab');
+    const noteId = container.dataset.noteId;
+    const getText = yourNotesList.find(note => note.id === noteId);
+
+    const selectedText = getSelectedText();
+      console.log(selectedText);
+
+    if(getText.textarea.includes(selectedText)){
+      getText.textarea = getText.textarea.replace(selectedText, `<b>${selectedText}</b>`);
+    }
+  });
+
+  
   noteEl.textpad.addEventListener('input', () => {
-    const getText = noteEl.textpad.value;
+    const getText = noteEl.textpad.innerHTML;
     yourNote.textarea = getText;
     saveToStorage();
   });
@@ -332,6 +377,19 @@ function openYourNote(noteId) {
   closeBtn.addEventListener('click', () => {
     closeNoteTab();
   });
+}
+
+function noteTabEl(){
+  const noteEl = {
+    mainOverlay:     document.querySelector('.overlay'),
+    noteListBox:     document.querySelector('.notes-container'),
+    yourNoteOverlay: document.querySelector('.your-note-tab-overlay'),
+    yourNoteTab:     document.querySelector('.your-note-tab'),
+    textpad:         document.querySelector('.textpad'),
+    toggleTool:      document.querySelector('.toggle-tool'),
+    noteTools:       document.querySelector('.note-tools')
+  }
+  return noteEl;
 }
 
 const root = document.documentElement;

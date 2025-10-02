@@ -69,28 +69,70 @@
   scrollbar-width: none;
 }
 
-.your-note-page textarea {
+.your-note-page .textpad {
   font-family: "Montserrat", sans-serif;
-  font-weight: 500;
   font-size: 17px;
   resize: none;
   margin: 10px 0;
-  height: 100dvh;
+  height: 100%;
   width: 100vw;
   background: none;
   border: none;
   color: #fff;
   padding: 0 20px;
   line-height: 24px;
-  background-image: linear-gradient(to bottom, #e0e0e034 1px, transparent 1px);
-  background-size: 100% 24px; 
 }
 
-.your-note-page textarea:focus {
+.your-note-page .textpad:focus {
   border: none;
   outline: none;
 }
 
+/*--------NOTES TOOL--------*/
+.note-tools {
+  color: #262626;
+  position: absolute;
+  font-family: "Tinos", serif;
+  right: 0;
+  display: flex;
+  width: 26px;
+  padding: 5px 10px;
+  background: #afa2a2;
+  border-top-left-radius: 20px;
+  border-bottom-left-radius: 100px;
+  gap: 6px;
+  z-index: 2;
+}
+
+.note-tools i {
+  cursor: pointer;
+  transition: 0.3s ease-in;
+}
+
+.note-tools i:hover {
+  color: var(--color-accent);
+  cursor: pointer;
+}
+
+.note-tools ul {
+  list-style-type: none;
+  display: flex;
+  width: 100%;
+  justify-content: space-evenly;
+}
+
+.note-tools a {
+  background: #fff;
+  border-radius: 20px;
+  padding: 4px 6px;
+  cursor: pointer;
+  transition: 0.3s ease-in;
+}
+
+.note-tools a:hover {
+  background: #b3b3b3;
+  color: #3d3d3d;
+}
 
 /*--------LIGHT MODE--------*/
 body.light .your-note-tab {
@@ -102,9 +144,8 @@ body.light .your-note-title {
   color: #262626;
 }
 
-body.light .your-note-page textarea {
+body.light .your-note-page .textpad {
   color: #262626;
-  background-image: linear-gradient(to bottom, #d9b99b75 1px, transparent 1px);
 }
 
 body.light .drag-btn i:hover {

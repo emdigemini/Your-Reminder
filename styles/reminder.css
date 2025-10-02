@@ -252,6 +252,16 @@
   color: var(--low-accent)
 }
 
+/*----------OVERDUE----------*/
+.reminder-schedule.overdue {
+  color: #B22222;
+}
+
+.reminder-schedule.overdue::after {
+  content: '(OVERDUE)';
+  font-weight: 500;
+}
+
 /*------------LIGHT MODE------------*/
 body.light .reminder-tab {
   color: #383838;

@@ -2,7 +2,9 @@ import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 
 const reminderList = JSON.parse(localStorage.getItem('reminderList')) || [];
 
-export function openReminder(){
+console.log(reminderList);
+
+export function openReminderApp(){
   if(!document.querySelector('.reminder-tab')){
     document.body.insertAdjacentHTML('afterbegin', `
         <div class="reminder-tab">
@@ -273,8 +275,8 @@ function addYourReminder(inputBar, setDate, startTime, endTime,
   const dateSet = setDate.value;
 
   // generate id for each reminder
-  function generateId(length = 5){
-    return `${reminderTitle}-` + Math.random().toString(36).substr(2, length);
+  function generateId(){
+    return crypto.randomUUID();
   };
   const id = generateId();
 
@@ -332,7 +334,8 @@ function renderReminder(){
         </div>
         <div class="reminder-box">
           <div class="reminder-title">${reminder.title}</div>
-          <div class="reminder-schedule">
+          <div class="reminder-schedule 
+          ${overdue(reminder.dateSet, reminder.timeEnd)}">
             ${reminder.dateSet.length > 0 
               ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
               : ''
@@ -376,7 +379,7 @@ function countActiveReminder(){
         </div>
         <div class="reminder-box">
           <div class="reminder-title">${reminder.title}</div>
-          <div class="reminder-schedule">
+          <div class="reminder-schedule ${overdue(reminder.dateSet, reminder.timeEnd)}">
             ${reminder.dateSet.length > 0 
               ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
               : ''
@@ -499,6 +502,27 @@ function emptyState(){
 //   })
 // }
 
+
+
+function overdue(dateSet, timeEnd){
+  const reminderDate = new Date(
+    `${dateSet}${timeEnd.length > 0 ? `T${timeEnd}` : ''}`
+  );
+
+  const nowDate = new Date();
+
+  return reminderDate < nowDate ? 'overdue' : '';
+}
+
+
+// ${new Date(`${reminder.dateSet}
+//             ${reminder.timeEnd.length > 0 
+//               ? `T${reminder.timeEnd}` 
+//               : ''}` ) < new Date(`${currentDate}${reminder.timeEnd.length > 0 
+//                 ? `T${currentTime}` 
+//                 : ''}`) 
+//             ? 'overdue' 
+//             : ''}
 
 function filterBtn(filter, reminderFilter){
   reminderFilter.forEach(btn => btn.classList.remove('active'));
