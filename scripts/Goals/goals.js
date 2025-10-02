@@ -126,7 +126,7 @@ export function openGoalApp(){
                 </div>
                 <div class="add-points">
                   <input class="input-points" type="number" placeholder="0">
-                  <button id="add"><i class="bi bi-plus-circle-dotted"></i></button>
+                  <button id="addPoints"><i class="bi bi-plus-circle-dotted"></i></button>
                 </div>
               </div>
             </div>
@@ -154,7 +154,7 @@ export function openGoalApp(){
                 </div>
                 <div class="add-points">
                   <input class="input-points" type="number" placeholder="0">
-                  <button id="add"><i class="bi bi-plus-circle-dotted"></i></button>
+                  <button id="addPoints"><i class="bi bi-plus-circle-dotted"></i></button>
                 </div>
               </div>
             </div>

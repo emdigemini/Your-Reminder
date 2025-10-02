@@ -200,7 +200,7 @@
 
 .input-box input, .input-box select {
   border: none;
-  padding: 8px;
+  padding: 16px;
   border-radius: 8px;
   box-shadow: 0 0 15px #3f3c3949;
 }
@@ -223,14 +223,14 @@
 }
 .btn-group i {
   font-size: 16px;
-  padding: 8px 12px;
+  padding: 12px;
   border-radius: 8px;
   box-shadow: 0 0 10px #26262660;
   background: #fff8f0a2;
 }
 #createGoal {
   width: 100%;
-  padding: 10px;
+  padding: 16px;
   border: none;
   border-radius: 12px;
   background: #FA7600;
@@ -256,7 +256,7 @@
 }
 
 .goal-controls-button button {
-  padding: 10px 20px;
+  padding: 16px 20px;
   width: 100%;
   border: none;
   border-radius: 12px;
@@ -290,7 +290,7 @@
 
 .first-line button, .second-line button {
   width: 100%;
-  padding: 10px 20px;
+  padding: 16px 20px;
   width: 100%;
   border: none;
   border-radius: 12px;
@@ -354,7 +354,7 @@
 
 .progress-bar {
   position: relative;
-  height: 14px;
+  height: 18px;
   width: 100%;
   background: #fff;
   border-radius: 20px;
@@ -371,7 +371,7 @@
   border-radius: 8px;
   box-shadow: 0 0 10px #0000002a;
   width: 90%;
-  padding: 8px;
+  padding: 12px;
 }
 
 #addPoints {
@@ -388,7 +388,7 @@
   border-radius: 20px;
   top: 10%;
   left: 1px;
-  height: 12px;
+  height: 14px;
   background: #FA7600;
   width: 40%;
 }
