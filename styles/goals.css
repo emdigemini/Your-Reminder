@@ -1,3 +1,7 @@
+:root {
+  --progress-percentage: 0%;
+}
+
 .goals {
   position: absolute;
   top: 0;
@@ -82,7 +86,7 @@
   padding: 8px 12px;
 }
 
-.completed {
+.completed-goal {
   display: flex;
   align-items: center;
   background: #fff8f0a2;
@@ -93,7 +97,7 @@
   gap: 10px;
 }
 
-.completed i {
+.completed-goal i {
   font-size: 18px;
   color: #fff;
   background: #fa8500ea;
@@ -205,6 +209,10 @@
   box-shadow: 0 0 15px #3f3c3949;
 }
 
+.input-box input:focus, .input-box select  {
+  outline-color: #794e2867;
+}
+
 .input-box-2 {
   display: flex;
   gap: 15px;
@@ -213,7 +221,7 @@
 .category-box, .target-track {
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 50%;
 }
 
 .btn-group {
@@ -261,9 +269,10 @@
   border: none;
   border-radius: 12px;
   background: #e9e3de70;
+  cursor: pointer;
 }
 
-#all {
+#allGoal {
   background: #FA7600;
   color: #fff;
 }
@@ -295,6 +304,7 @@
   border: none;
   border-radius: 12px;
   background: #e9e3de70;
+  cursor: pointer;
 }
 
 #health {
@@ -306,6 +316,7 @@
 .your-goal-list {
   display: flex;
   flex-direction: column;
+  gap: 15px;
   padding: 10px;
 }
 
@@ -327,6 +338,20 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.control-goal i {
+  padding: 6px;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.control-goal i:hover {
+  color: #666;
+  font-size: 18px;
+  background: #66666677;
+  color: #e4e4e4;
 }
 
 .goal-deadline {
@@ -380,6 +405,7 @@
   border-radius: 20px;
   background: #fa7600;
   color: #fff;
+  cursor: pointer;
 }
 
 .progress-bar::before {
@@ -390,7 +416,7 @@
   left: 1px;
   height: 14px;
   background: #FA7600;
-  width: 40%;
+  width: var(--progress-percentage);
 }
 
 /**CONTROL WITH JS**/

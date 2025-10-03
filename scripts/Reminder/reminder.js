@@ -2,8 +2,6 @@ import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 
 const reminderList = JSON.parse(localStorage.getItem('reminderList')) || [];
 
-console.log(reminderList);
-
 export function openReminderApp(){
   if(!document.querySelector('.reminder-tab')){
     document.body.insertAdjacentHTML('afterbegin', `
@@ -266,7 +264,7 @@ function updateReminder(){
   reminderList.sort((a, b) => b.timeCreated - a.timeCreated);
   reminderList.sort((a, b) => a.completed - b.completed);
   saveToStorage();
-  openReminder();
+  openReminderApp();
 }
 
 function addYourReminder(inputBar, setDate, startTime, endTime, 
