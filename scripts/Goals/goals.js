@@ -256,33 +256,41 @@ function saveToStorage(){
   localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
 }
 
+let filterState = {
+    status: 'all', 
+    category: ''
+  };
+  
 function filterGoal(){
   const filterBtn = getElm();
   const group = [filterBtn.btn.health, filterBtn.btn.career, filterBtn.btn.personal, filterBtn.btn.financial];
 
   filterBtn.btn.allGoal.addEventListener('click', function(){
+    filterState.status = 'all';
     group.forEach(e => e.classList.remove('active'));
     filterBtn.btn.activeGoal.classList.remove('active');
     filterBtn.btn.completedGoal.classList.remove('active');
     this.classList.add('active');
     renderGoal();
-  })
+  });
 
   filterBtn.btn.activeGoal.addEventListener('click', function(){
+    filterState.status = 'active';
     filterBtn.btn.completedGoal.classList.remove('active');
     filterBtn.btn.allGoal.classList.remove('active');
     this.classList.add('active');
     const activeList = yourGoals.filter(goal => !goal.completed);
     Goal.renderFilter(activeList, 'active');
-  })
+  });
 
   filterBtn.btn.completedGoal.addEventListener('click', function(){
+    filterState.status = 'completed';
     filterBtn.btn.activeGoal.classList.remove('active');
     filterBtn.btn.allGoal.classList.remove('active');
     this.classList.add('active');
     const completedList = yourGoals.filter(goal => goal.completed);
     Goal.renderFilter(completedList, 'completed');
-  })
+  });
 
 }
 
@@ -291,6 +299,7 @@ function filterCategory(){
   const group = [go.btn.health, go.btn.career, go.btn.personal, go.btn.financial];
 
   go.btn.health.addEventListener('click', function(){
+    filterState.category = 'health';
     group.forEach(e => e.classList.remove('active'));
     this.classList.add('active');
     const domainType = yourGoals.filter(g => g.category === this.id);
@@ -298,6 +307,7 @@ function filterCategory(){
   })
 
    go.btn.career.addEventListener('click', function(){
+     filterState.category = 'career';
     group.forEach(e => e.classList.remove('active'));
     this.classList.add('active');
     const domainType = yourGoals.filter(g => g.category === this.id);
@@ -305,6 +315,7 @@ function filterCategory(){
   })
 
    go.btn.personal.addEventListener('click', function(){
+     filterState.category = 'personal';
     group.forEach(e => e.classList.remove('active'));
     this.classList.add('active');
     const domainType = yourGoals.filter(g => g.category === this.id);
@@ -312,6 +323,7 @@ function filterCategory(){
   })
 
    go.btn.financial.addEventListener('click', function(){
+     filterState.category = 'financial';
     group.forEach(e => e.classList.remove('active'));
     this.classList.add('active');
     const domainType = yourGoals.filter(g => g.category === this.id);
@@ -437,7 +449,32 @@ class Goal{
   static renderFilter(filtered, type){
     const goalList = document.querySelector('.your-goal-list');
     goalList.innerHTML = '';
-
+    
+    function emptyState() {
+      return `
+          <div class="empty-state">
+              <i class="bi bi-clipboard-check"></i>
+              <p class="title">Oops! Looks like this category is empty.</p>
+              <p class="desc">Time to fill it with awesome goals!</p>
+          </div>
+         `;
+    }
+    
+    if (filterState.category) {
+      const selected = filtered.filter(g => g.category === filterState.category);
+      
+      if (selected.length === 0) {
+        goalList.innerHTML = emptyState();
+        return;
+      }
+      
+      selected.forEach(g => {
+        const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+        goal.appendGoal();
+      });
+      return;
+    }
+    
     if(filtered.length === 0){
       goalList.innerHTML = `
         <div class="empty-state">
@@ -456,23 +493,64 @@ class Goal{
   }
 
   static renderCategory(domain){
-    const goalList = document.querySelector('.your-goal-list');
-    goalList.innerHTML = '';
-    console.log(domain);
-    if(domain.length === 0){
-      goalList.innerHTML = `
-        <div class="empty-state">
+    function emptyState(){
+      return`
+      <div class="empty-state">
           <i class="bi bi-clipboard-check"></i>
           <p class="title">Oops! Looks like this category is empty.</p>
           <p class="desc">Time to fill it with awesome goals!</p>
-        </div>
-      `;
+      </div>
+     `;
+    }
+    
+    const goalList = document.querySelector('.your-goal-list');
+    goalList.innerHTML = '';
+    
+    if (filterState.status === 'completed') {
+      const selected = domain.filter(g => g.completed);
+      
+      if(selected.length === 0){
+        goalList.innerHTML = emptyState();
+        return;
+      }
+      
+      selected.forEach(g => {
+        const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+        goal.appendGoal();
+      });
       return;
     }
-
+    
+    if (filterState.status === 'active') {
+      const selected = domain.filter(g => !g.completed);
+    
+      if (selected.length === 0) {
+        goalList.innerHTML = emptyState();
+        return;
+      }
+      
+      selected.forEach(g => {
+        const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+        goal.appendGoal();
+      });
+      return;
+    }
+    
+    if (domain.length === 0) {
+      goalList.innerHTML = `
+            <div class="empty-state">
+              <i class="bi bi-clipboard-check"></i>
+              <p class="title">Oops! Looks like this category is empty.</p>
+              <p class="desc">Time to fill it with awesome goals!</p>
+            </div>
+          `;
+      return;
+    }
+    
     domain.forEach(g => {
       const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
       goal.appendGoal();
     });
+    
   }
 }
