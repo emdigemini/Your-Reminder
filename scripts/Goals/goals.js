@@ -5,6 +5,14 @@ const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 export function openGoalApp(){
   if(!document.querySelector('.goals')){
     document.body.insertAdjacentHTML('afterbegin', `
+
+      <div class="working-sign-overlay">
+        <div class="working-sign">
+          <p>This app is still in development.</p>
+          <button class="close" type="button">Continue</button>
+        </div>
+      </div>
+      
       <div class="goals">
         <div class="goals-tab">
           <div class="goals-logo-circle">
@@ -116,7 +124,7 @@ export function openGoalApp(){
         </div>
       </div>
     `);
-
+    workSignAnim();
     closeTab();
     inputListener();
     renderGoal();
@@ -125,6 +133,24 @@ export function openGoalApp(){
     ? controlGoal()
     : null;
   } else {return};
+}
+
+function workSignAnim(){
+  const overlay = document.querySelector('.working-sign-overlay');
+  const sign = document.querySelector('.working-sign');
+  const close = document.querySelector('.close');
+  overlay.classList.add('anim');
+  sign.classList.add('anim');
+  close.addEventListener('click', () => {
+    overlay.classList.remove('anim');
+    overlay.classList.add('close');
+    sign.classList.remove('anim');
+    sign.classList.add('close');
+    sign.addEventListener('animationend', () => {
+      overlay.remove();
+      sign.remove();
+    }, {once: true})
+  })
 }
 
 function getElm(){

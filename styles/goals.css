@@ -2,6 +2,51 @@
   --progress-percentage: 0%;
 }
 
+.working-sign-overlay {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  background: #26262679;
+  backdrop-filter: blur(5px);
+  z-index: 999;
+  opacity: 0;
+}
+
+.working-sign {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  opacity: 0;
+}
+
+.working-sign p {
+  color: #00FF80;
+  font-size: 24px;
+  font-weight: 600;
+  text-shadow: 0 4px 20px #000;
+}
+
+.working-sign button {
+  color: #000000;
+  background: #00FF80;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.working-sign button:hover {
+  background: var(--low-accent);
+}
+
 .goals {
   position: absolute;
   top: 0;
