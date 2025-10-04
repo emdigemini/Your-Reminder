@@ -66,10 +66,10 @@ export function openGoalApp(){
                   <label for="category">Category</label>
                   <select name="category" id="category">
                     <option value="" hidden>Pick your goal area</option>
-                    <option value="personal growth">Personal Growth</option>
+                    <option value="personal">Personal Growth</option>
                     <option value="health">Health & Fitness</option>
                     <option value="career">Career & Skills</option>
-                    <option value="financial goals">Financial Goals</option>
+                    <option value="financial">Financial Goals</option>
                   </select>
                 </div>
                 <div class="target-track">
@@ -86,10 +86,10 @@ export function openGoalApp(){
           <!--END OF INPUT BOX-->
           
           <!--CONTROL BOX-->
-          <div class="goal-control-box">
+          <div class="goal-btn-box">
             <div class="goal-controls-button">
-              <button id="allGoal" class="goal-filter active">
-                All (0)
+              <button id="allGoal" class="goal-filter active">  
+                                        All (0)
               </button>
               <button id="activeGoal" class="goal-filter">
                 Active (0)
@@ -124,15 +124,34 @@ export function openGoalApp(){
         </div>
       </div>
     `);
-    workSignAnim();
-    closeTab();
-    inputListener();
-    renderGoal();
-    addGoal();
-    yourGoals.length > 0 
-    ? controlGoal()
-    : null;
+    allFunction();
   } else {return};
+}
+
+function allFunction(){
+  //animation to show this app still on development
+  workSignAnim();
+
+  //closes the tab and cleans up all related DOM elements and data
+  closeTab();
+
+  //add event listeners to all inputs for setting goals
+  inputListener();
+
+  //render all goals into the list container
+  renderGoal();
+
+  //save goals to localStorage
+  addGoal();
+
+  //filters goals by status: all, active or completed
+  filterGoal();
+
+  //filter goals by category: health, career, personal or financial
+  filterCategory();
+  
+  //handles editing and deleting of a specific goal
+  controlGoal();
 }
 
 function workSignAnim(){
@@ -155,15 +174,22 @@ function workSignAnim(){
 
 function getElm(){
   const input = {
-    setGoal     :     document.getElementById('setGoal'),
-    category    :     document.getElementById('category'),
-    target      :     document.getElementById('target'),
+    setGoal       :     document.getElementById('setGoal'),
+    category      :     document.getElementById('category'),
+    target        :     document.getElementById('target'),
   };
-  const control = {
-    createGoal  :     document.getElementById('createGoal'),
-    delGoal     :     document.querySelectorAll('.delete-goal'),
+  const btn = {
+    createGoal    :     document.getElementById('createGoal'),
+    delGoal       :     document.querySelectorAll('.delete-goal'),
+    allGoal       :     document.getElementById('allGoal'),
+    activeGoal    :     document.getElementById('activeGoal'),
+    completedGoal :     document.getElementById('completedGoal'),
+    health        :     document.getElementById('health'),
+    career        :     document.getElementById('career'),
+    personal      :     document.getElementById('personal'),
+    financial     :     document.getElementById('financial'),
   }
-  return {input, control};
+  return {input, btn};
 }
 
 function closeTab(){
@@ -191,7 +217,7 @@ function checkInputs(){
   const title    = set.input.setGoal.value;
   const category = set.input.category.value;
   const target   = set.input.target.value;
-  const createGoal = set.control.createGoal;
+  const createGoal = set.btn.createGoal;
   if(title === '' || category === '' || target === ''){
     createGoal.classList.add('disabled');
     return true;
@@ -203,7 +229,7 @@ function checkInputs(){
 
 function addGoal(){
   const set = getElm();
-  const createGoal = set.control.createGoal;
+  const createGoal = set.btn.createGoal;
 
   createGoal.addEventListener('click', () => {
     if(checkInputs()) return;
@@ -211,12 +237,14 @@ function addGoal(){
     const title    = set.input.setGoal.value;
     const category = set.input.category.value;
     const target   = Number(set.input.target.value);
+    const id = crypto.randomUUID();
 
-    const goal = new Goal(title, category, target, 0, false);
+
+    const goal = new Goal(id, title, category, target, 0, false);
     yourGoals.push(goal);
-    goal.appendGoal();
+    renderGoal();
     saveToStorage();
-    controlGoal();
+    console.log(yourGoals);
     for(let k in set.input){
       set.input[k].value ='';
     };
@@ -228,29 +256,133 @@ function saveToStorage(){
   localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
 }
 
+function filterGoal(){
+  const filterBtn = getElm();
+  const group = [filterBtn.btn.health, filterBtn.btn.career, filterBtn.btn.personal, filterBtn.btn.financial];
+
+  filterBtn.btn.allGoal.addEventListener('click', function(){
+    group.forEach(e => e.classList.remove('active'));
+    filterBtn.btn.activeGoal.classList.remove('active');
+    filterBtn.btn.completedGoal.classList.remove('active');
+    this.classList.add('active');
+    renderGoal();
+  })
+
+  filterBtn.btn.activeGoal.addEventListener('click', function(){
+    filterBtn.btn.completedGoal.classList.remove('active');
+    filterBtn.btn.allGoal.classList.remove('active');
+    this.classList.add('active');
+    const activeList = yourGoals.filter(goal => !goal.completed);
+    Goal.renderFilter(activeList, 'active');
+  })
+
+  filterBtn.btn.completedGoal.addEventListener('click', function(){
+    filterBtn.btn.activeGoal.classList.remove('active');
+    filterBtn.btn.allGoal.classList.remove('active');
+    this.classList.add('active');
+    const completedList = yourGoals.filter(goal => goal.completed);
+    Goal.renderFilter(completedList, 'completed');
+  })
+
+}
+
+function filterCategory(){
+  const go = getElm();
+  const group = [go.btn.health, go.btn.career, go.btn.personal, go.btn.financial];
+
+  go.btn.health.addEventListener('click', function(){
+    group.forEach(e => e.classList.remove('active'));
+    this.classList.add('active');
+    const domainType = yourGoals.filter(g => g.category === this.id);
+    Goal.renderCategory(domainType);
+  })
+
+   go.btn.career.addEventListener('click', function(){
+    group.forEach(e => e.classList.remove('active'));
+    this.classList.add('active');
+    const domainType = yourGoals.filter(g => g.category === this.id);
+    Goal.renderCategory(domainType);
+  })
+
+   go.btn.personal.addEventListener('click', function(){
+    group.forEach(e => e.classList.remove('active'));
+    this.classList.add('active');
+    const domainType = yourGoals.filter(g => g.category === this.id);
+    Goal.renderCategory(domainType);
+  })
+
+   go.btn.financial.addEventListener('click', function(){
+    group.forEach(e => e.classList.remove('active'));
+    this.classList.add('active');
+    const domainType = yourGoals.filter(g => g.category === this.id);
+    Goal.renderCategory(domainType);
+  })
+
+}
+
+function updateCategoryCounts(){
+  const count = getElm();
+  
+  count.btn.health.textContent = `Health (${yourGoals.filter(g => g.category === count.btn.health.id).length})`;
+  count.btn.career.textContent = `Career (${yourGoals.filter(g => g.category === count.btn.career.id).length})`;
+  count.btn.personal.textContent = `Personal (${yourGoals.filter(g => g.category === count.btn.personal.id).length})`;
+  count.btn.financial.textContent = `Financial (${yourGoals.filter(g => g.category === count.btn.financial.id).length})`;
+
+}
+
+function updateGoalCounts(){
+  const count = getElm();
+
+  count.btn.allGoal.textContent = `All (${yourGoals.length})`;
+  count.btn.activeGoal.textContent = `Active (${yourGoals.filter(g => !g.completed).length})`;
+  count.btn.completedGoal.textContent = `Completed (${yourGoals.filter(g => g.completed).length})`
+  
+}
+
 function renderGoal(){
   const goalList = document.querySelector('.your-goal-list');
   goalList.innerHTML = '';
-  yourGoals.forEach(goal => {
-    const render = new Goal(goal.title, goal.category, goal.target, goal.progress, goal.completed);
+  
+  updateGoalCounts();
+  updateCategoryCounts();
+  if (yourGoals.length === 0) {
+    goalList.innerHTML = `
+      <div class="empty-state">
+        <i class="bi bi-clipboard-check"></i>
+        <p class="title">No goals yet</p>
+        <p class="desc">Start by adding your first goal to track your progress!</p>
+      </div>
+    `;
+    return;
+  }
+
+  yourGoals.forEach(g => {
+    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
     render.appendGoal();
-  })
-  controlGoal();
+  });
+
 }
 
 function controlGoal(){
-  const ctrl = getElm();
-  ctrl.control.delGoal.forEach((del, i) => {
-    del.addEventListener('click', () => {
-      yourGoals.splice(i, 1);
+  const goalList = document.querySelector('.your-goal-list');
+
+  goalList.addEventListener('click', (e) => {
+    //DELETE LISTENER
+    if(e.target.classList.contains('delete-goal')){
+      const container = e.target.closest('.your-goal-container');
+      const goalId    = container.dataset.goalId;
+      const delId     = yourGoals.findIndex(g => g.id === goalId);
+
+      yourGoals.splice(delId, 1);
       saveToStorage();
       renderGoal();
-    })
+    }
   })
 }
 
 class Goal{
-  constructor(title, category, target, progress, completed){
+  constructor(id, title, category, target, progress, completed){
+    this.id         =   id;
     this.title      =   title;
     this.category   =   category;
     this.target     =   target;
@@ -264,13 +396,14 @@ class Goal{
     if(this.completed){
       container.classList.add('goal-completed')
     }
+    container.dataset.goalId = this.id;
     container.innerHTML = `
       <div class="goal-category">
         ${this.category}
       </div>
       <div class="goal-title">
         <h2>${this.title}</h2>
-        <div class="control-goal">
+        <div class="btn-goal">
           <i class="bi bi-pencil"></i>
           <i class="delete-goal bi bi-trash"></i>
         </div>
@@ -301,4 +434,45 @@ class Goal{
     goalList.appendChild(this.render());
   }
 
+  static renderFilter(filtered, type){
+    const goalList = document.querySelector('.your-goal-list');
+    goalList.innerHTML = '';
+
+    if(filtered.length === 0){
+      goalList.innerHTML = `
+        <div class="empty-state">
+          <i class="bi bi-clipboard-check"></i>
+          <p class="title">No ${type} goals</p>
+          <p class="desc">Try adding or completing a goal first.</p>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(g => {
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+      goal.appendGoal();
+    });
+  }
+
+  static renderCategory(domain){
+    const goalList = document.querySelector('.your-goal-list');
+    goalList.innerHTML = '';
+    console.log(domain);
+    if(domain.length === 0){
+      goalList.innerHTML = `
+        <div class="empty-state">
+          <i class="bi bi-clipboard-check"></i>
+          <p class="title">Oops! Looks like this category is empty.</p>
+          <p class="desc">Time to fill it with awesome goals!</p>
+        </div>
+      `;
+      return;
+    }
+
+    domain.forEach(g => {
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+      goal.appendGoal();
+    });
+  }
 }

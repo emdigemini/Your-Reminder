@@ -317,9 +317,23 @@
   cursor: pointer;
 }
 
-#allGoal {
+#allGoal.active, #activeGoal.active, 
+#completedGoal.active {
   background: #FA7600;
   color: #fff;
+}
+
+.goal-filter {
+  transition: 0.3s ease;
+}
+
+.goal-filter:hover {
+  background: #FA7600;
+  color: #fff;
+}
+
+.goal-filter:active {
+  transform: scale(0.90);
 }
 
 .goal-categories {
@@ -352,10 +366,25 @@
   cursor: pointer;
 }
 
-#health {
+#health.active, #career.active,
+#personal.active, #financial.active {
   background: #2b87ff;
   color: #fff;
 }
+
+.goal-categories button:hover {
+  transition: 0.3s ease;
+}
+
+.goal-categories button:hover {
+  background: #2b87ff;
+  color: #fff;
+}
+
+.goal-categories button:active {
+  transform: scale(0.90);
+}
+
 
 /**goal container**/
 .your-goal-list {
@@ -469,3 +498,28 @@
   background: #cf7c339a;
   cursor: default;
 }
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #b4b4b4;
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: #666;
+  margin-bottom: 15px;
+}
+
+.empty-state .title {
+  font-weight: 600;
+  color: #fff;
+  text-shadow: 0 0 2px #0000004d;
+  font-size: 1.2rem;
+}
+
+.empty-state .desc {
+  margin: 8px 0 20px;
+  color: #666666be;
+}
+
