@@ -101,12 +101,12 @@ export function openGoalApp(){
             <div class="goal-categories">
               <p>Categories</p>
               <div class="first-line">
-                <button id="health">Health (0)</button>
-                <button id="career">Career (0)</button>
+                <button id="health">Health</button>
+                <button id="career">Career</button>
               </div>
               <div class="second-line">
-                <button id="personal">Personal (0)</button>
-                <button id="financial">Financial (0)</button>
+                <button id="personal">Personal</button>
+                <button id="financial">Financial</button>
               </div>
             </div>
           </div>
@@ -256,78 +256,86 @@ function saveToStorage(){
   localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
 }
 
+/*===============FILTER FUNCTION===============*/
+let filterState = {
+  status: 'allGoal',
+  category: ''
+}
+
 function filterGoal(){
   const filterBtn = getElm();
-  const group = [filterBtn.btn.health, filterBtn.btn.career, filterBtn.btn.personal, filterBtn.btn.financial];
+  const groupCat = [filterBtn.btn.health, filterBtn.btn.career, filterBtn.btn.personal, filterBtn.btn.financial];
+  const groupFilter = [filterBtn.btn.allGoal, filterBtn.btn.activeGoal, filterBtn.btn.completedGoal];
 
-  filterBtn.btn.allGoal.addEventListener('click', function(){
-    group.forEach(e => e.classList.remove('active'));
-    filterBtn.btn.activeGoal.classList.remove('active');
-    filterBtn.btn.completedGoal.classList.remove('active');
-    this.classList.add('active');
-    renderGoal();
+  groupFilter.forEach(f => {
+    f.addEventListener('click', function(){
+      filterState.status = this.id;
+
+      groupFilter.forEach(e => e.classList.remove('active'));
+      this.classList.add('active');
+
+      if(this.id === 'allGoal'){
+        groupCat.forEach(e => e.classList.remove('active'));
+        filterState.category = '';
+        renderGoal();
+        return;
+      }
+        applyFilters();
+    })
   })
+}
 
-  filterBtn.btn.activeGoal.addEventListener('click', function(){
-    filterBtn.btn.completedGoal.classList.remove('active');
-    filterBtn.btn.allGoal.classList.remove('active');
-    this.classList.add('active');
-    const activeList = yourGoals.filter(goal => !goal.completed);
-    Goal.renderFilter(activeList, 'active');
-  })
-
-  filterBtn.btn.completedGoal.addEventListener('click', function(){
-    filterBtn.btn.activeGoal.classList.remove('active');
-    filterBtn.btn.allGoal.classList.remove('active');
-    this.classList.add('active');
-    const completedList = yourGoals.filter(goal => goal.completed);
-    Goal.renderFilter(completedList, 'completed');
-  })
-
+function applyFilters(){
+  let filtered = [...yourGoals];
+  let catFiltered = [];
+  // Filter by status
+  if(filterState.status === 'activeGoal') {
+    filtered = filtered.filter(g => !g.completed);
+  } else if (filterState.status === 'completedGoal') {
+    filtered = filtered.filter(g => g.completed);
+  }
+  updateCategoryCounts(filtered);  
+  // Filter by category
+  if(filterState.category) {
+    filtered = filtered.filter(g => g.category === filterState.category);
+  }
+  Goal.renderFilteredList(filtered);
 }
 
 function filterCategory(){
   const go = getElm();
   const group = [go.btn.health, go.btn.career, go.btn.personal, go.btn.financial];
-
-  go.btn.health.addEventListener('click', function(){
-    group.forEach(e => e.classList.remove('active'));
-    this.classList.add('active');
-    const domainType = yourGoals.filter(g => g.category === this.id);
-    Goal.renderCategory(domainType);
+  group.forEach(cat => {
+    cat.addEventListener('click', function(){
+      filterState.category = this.id;
+      group.forEach(e => e.classList.remove('active'));
+      this.classList.add('active');
+      applyFilters();
+    })
   })
-
-   go.btn.career.addEventListener('click', function(){
-    group.forEach(e => e.classList.remove('active'));
-    this.classList.add('active');
-    const domainType = yourGoals.filter(g => g.category === this.id);
-    Goal.renderCategory(domainType);
-  })
-
-   go.btn.personal.addEventListener('click', function(){
-    group.forEach(e => e.classList.remove('active'));
-    this.classList.add('active');
-    const domainType = yourGoals.filter(g => g.category === this.id);
-    Goal.renderCategory(domainType);
-  })
-
-   go.btn.financial.addEventListener('click', function(){
-    group.forEach(e => e.classList.remove('active'));
-    this.classList.add('active');
-    const domainType = yourGoals.filter(g => g.category === this.id);
-    Goal.renderCategory(domainType);
-  })
-
 }
 
-function updateCategoryCounts(){
+function updateCategoryCounts(filtered){
   const count = getElm();
-  
-  count.btn.health.textContent = `Health (${yourGoals.filter(g => g.category === count.btn.health.id).length})`;
-  count.btn.career.textContent = `Career (${yourGoals.filter(g => g.category === count.btn.career.id).length})`;
-  count.btn.personal.textContent = `Personal (${yourGoals.filter(g => g.category === count.btn.personal.id).length})`;
-  count.btn.financial.textContent = `Financial (${yourGoals.filter(g => g.category === count.btn.financial.id).length})`;
+  const group = [count.btn.health, count.btn.career, count.btn.personal, count.btn.financial];
 
+  function toPascalCase(str) {
+    return str
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+  }
+
+  if(filtered){
+    group.forEach(txt => {
+      txt.textContent = `${toPascalCase(txt.id)} (${filtered.filter(g => g.category === txt.id).length})`;
+    });
+    return;
+  }
+  
+  group.forEach(txt => {
+    txt.textContent = `${toPascalCase(txt.id)} (${yourGoals.filter(g => g.category === txt.id).length})`;
+  })
 }
 
 function updateGoalCounts(){
@@ -336,8 +344,19 @@ function updateGoalCounts(){
   count.btn.allGoal.textContent = `All (${yourGoals.length})`;
   count.btn.activeGoal.textContent = `Active (${yourGoals.filter(g => !g.completed).length})`;
   count.btn.completedGoal.textContent = `Completed (${yourGoals.filter(g => g.completed).length})`
-  
 }
+
+function emptyState(){
+  return`
+    <div class="empty-state">
+      <i class="bi bi-clipboard-check"></i>
+      <p class="title">Oops! Looks like this category is empty.</p>
+      <p class="desc">Time to fill it with awesome goals!</p>
+    </div>
+  `;
+}
+/*===============END OF FILTER FUNCTION===============*/
+
 
 function renderGoal(){
   const goalList = document.querySelector('.your-goal-list');
@@ -434,20 +453,28 @@ class Goal{
     goalList.appendChild(this.render());
   }
 
-  static renderFilter(filtered, type){
+  static renderFilteredList(filtered){
     const goalList = document.querySelector('.your-goal-list');
     goalList.innerHTML = '';
+    if(filterState.category && filtered.length === 0){
+      goalList.innerHTML = emptyState();
+      return;
+    }
 
     if(filtered.length === 0){
       goalList.innerHTML = `
         <div class="empty-state">
           <i class="bi bi-clipboard-check"></i>
-          <p class="title">No ${type} goals</p>
+          <p class="title">
+          No ${filterState.status === 'activeGoal' 
+            ? 'active' 
+            : 'completed'} goals
+          </p>
           <p class="desc">Try adding or completing a goal first.</p>
         </div>
-      `;
+      `;      
       return;
-    }
+    } 
 
     filtered.forEach(g => {
       const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
@@ -455,24 +482,4 @@ class Goal{
     });
   }
 
-  static renderCategory(domain){
-    const goalList = document.querySelector('.your-goal-list');
-    goalList.innerHTML = '';
-    console.log(domain);
-    if(domain.length === 0){
-      goalList.innerHTML = `
-        <div class="empty-state">
-          <i class="bi bi-clipboard-check"></i>
-          <p class="title">Oops! Looks like this category is empty.</p>
-          <p class="desc">Time to fill it with awesome goals!</p>
-        </div>
-      `;
-      return;
-    }
-
-    domain.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
-      goal.appendGoal();
-    });
-  }
 }

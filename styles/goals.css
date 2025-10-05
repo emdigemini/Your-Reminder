@@ -493,6 +493,19 @@
   width: var(--progress-percentage);
 }
 
+.delete-goal {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.delete-goal:hover {
+  color: #5f5f5f;
+}
+
+.delete-goal:active {
+  transform: scale(0.90);
+}
+
 /**CONTROL WITH JS**/
 #createGoal.disabled {
   background: #cf7c339a;
