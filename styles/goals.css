@@ -515,7 +515,7 @@
 .empty-state {
   text-align: center;
   padding: 60px 20px;
-  color: #b4b4b4;
+  color: var(--empty-state);
 }
 
 .empty-state i {
@@ -526,13 +526,11 @@
 
 .empty-state .title {
   font-weight: 600;
-  color: #fff;
-  text-shadow: 0 0 2px #0000004d;
   font-size: 1.2rem;
 }
 
 .empty-state .desc {
   margin: 8px 0 20px;
-  color: #666666be;
+  color: #666;
 }
 
