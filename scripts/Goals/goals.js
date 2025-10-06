@@ -1,16 +1,19 @@
-import { filterState, filterGoal, filterCategory, updateGoalCounts, updateCategoryCounts } from "./filter.js";
+import { filterState, filterGoal, filterCategory, applyFilters, updateGoalCounts, updateCategoryCounts } from "./filter.js";
+import { ifUnitsMoney } from "./utils/unit.js";
 
 export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 // localStorage.clear()
 
 export class Goal{
-  constructor(id, title, category, target, progress, completed){
+  constructor(id, title, category, target, progress, completed, unit, deadline){
     this.id = id;
     this.title = title;
     this.category = category;
     this.target = target;
     this.progress = progress;
     this.completed = completed;
+    this.unit = unit;
+    this.deadline = deadline;
   }
 
   render(){
@@ -34,13 +37,15 @@ export class Goal{
         </div>
       </div>
       <div class="goal-deadline">
-        <i class="bi bi-calendar2-check"></i> 06/05/2026
+        ${this.deadline 
+          ? `<i class="bi bi-calendar2-check"> ${this.deadline}</i> ` 
+          : ''}
       </div>
       <div class="track-progress">
         <p>Progress</p>
         <div class="points">
           <p class="percentage">${this.progress}%</p>
-          <p class="points">(0/${this.target})</p>
+          <p class="points">(0/${ifUnitsMoney(this.target, this.unit)})</p>
         </div>
         <div class="progress-bar"></div>
       </div>
@@ -78,7 +83,7 @@ export class Goal{
     }
 
     filtered.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed, g.unit, g.deadline);
       goal.appendGoal();
     });
   }
@@ -150,10 +155,10 @@ export function openGoalApp(){
                   <label for="category">Category</label>
                   <select name="category" id="category">
                     <option value="" hidden>Pick your goal area</option>
-                    <option value="personal">Personal Growth</option>
-                    <option value="health">Health & Fitness</option>
-                    <option value="career">Career & Skills</option>
-                    <option value="financial">Financial Goals</option>
+                    <option value="✨Personal">Personal Growth</option>
+                    <option value="🔋Health">Health & Fitness</option>
+                    <option value="💼Career">Career & Skills</option>
+                    <option value="💰Financial">Financial Goals</option>
                   </select>
                 </div>
 
@@ -169,10 +174,10 @@ export function openGoalApp(){
                   <label for="unit">Unit</label>
                   <input id="unit" type="text" placeholder="kg, hours, money...">
                 </div>
-                <div id="deadline" class="deadline">
+                <div class="deadline">
                   📅
                   <label for="deadline">Deadline</label>
-                  <input type="date">
+                  <input id="deadline" type="date">
                 </div>
               </div>
 
@@ -188,7 +193,7 @@ export function openGoalApp(){
           <!--END OF INPUT BOX-->
 
           <!--CONTROL BOX-->
-          <div class="goal-btn-box">
+          <div class="goal-control-box">
             <div class="goal-controls-button">
               <button id="allGoal" class="goal-filter active">🎯All (0)</button>
               <button id="activeGoal" class="goal-filter">⚡Active (0)</button>
@@ -228,6 +233,8 @@ export function getElm(){
     setGoal           :     document.getElementById('setGoal'),
     category          :     document.getElementById('category'),
     target            :     document.getElementById('target'),
+    unit              :     document.getElementById('unit'),
+    deadline          :     document.getElementById('deadline'),
   };
 
   const btn = {
@@ -256,7 +263,7 @@ function allFunction(){
   inputListener();
 
   // toggle visibility of the "Set Deadline" input
-  setDeadline();
+  toggleThird_inputBox();
 
   // render all goals into the list container
   renderGoal();
@@ -306,13 +313,21 @@ function closeTab(){
 
 function inputListener(){
   const set = getElm();
+  let invalid = true;
   Object.values(set.input).forEach(input => {
-    input.addEventListener('input', checkInputs);
+    input.addEventListener('input', function(e){
+      checkInputs(invalid);
+      if(input.id === 'unit'){
+        input.value = input.value.replace(/[0-9]/g, '');
+      }
+    });
   });
+
   checkInputs();
 }
 
-function setDeadline(){
+function toggleThird_inputBox(){
+  const input =  getElm();
   const setDeadlineBox = document.querySelector('.input-box-3');
   const btn = document.getElementById('setDeadline');
   const close = document.getElementById('closeInputBox3');
@@ -327,6 +342,9 @@ function setDeadline(){
     btn.classList.remove('active');
     setDeadlineBox.classList.remove('active');
   })
+
+
+
 }
 
 function checkInputs(){
@@ -335,30 +353,36 @@ function checkInputs(){
   const category = set.input.category.value;
   const target = set.input.target.value;
   const createGoal = set.btn.createGoal;
-
-  if(title === '' || category === '' || target === ''){
+  let invalid = true;
+  if(invalid){
     createGoal.classList.add('disabled');
-    return true;
+    return;
+  }
+  if(title === '' || category === '' || target === ''){
+    invalid = true;
+    return;
   } else {
+    invalid = false;
     createGoal.classList.remove('disabled');
   }
+
 }
 
 function addGoal(){
   const set = getElm();
   const createGoal = set.btn.createGoal;
-
   createGoal.addEventListener('click', () => {
     if(checkInputs()) return;
 
+    const id = crypto.randomUUID();
     const title = set.input.setGoal.value;
     const category = set.input.category.value;
     const target = Number(set.input.target.value);
-    const id = crypto.randomUUID();
+    const unit = set.input.unit.value;
+    const deadline = set.input.deadline.value;
 
-    const goal = new Goal(id, title, category, target, 0, true);
+    const goal = new Goal(id, title, category, target, 0, false, unit, deadline);
     yourGoals.push(goal);
-
     renderGoal();
     saveToStorage();
     console.log(yourGoals);
@@ -390,7 +414,7 @@ export function renderGoal(){
   }
 
   yourGoals.forEach(g => {
-    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed, g.unit, g.deadline);
     render.appendGoal();
   });
 }
@@ -424,3 +448,4 @@ function emptyState(){
     </div>
   `;
 }
+

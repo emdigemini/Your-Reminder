@@ -4,18 +4,17 @@
 
 .working-sign-overlay {
   position: absolute;
-  height: 100%;
+  height: 200%;
   width: 100%;
   top: 50%;
   left: 50%;
+  transform: translate(-50%, -50%);
   display: flex;
   justify-content: center;
   align-items: center;
-  transform: translate(-50%, -50%);
   background: #26262679;
   backdrop-filter: blur(5px);
   z-index: 999;
-  opacity: 0;
 }
 
 .working-sign {
@@ -194,6 +193,7 @@
   width: 50px;
   background: #FA7600;
   border-radius: 15px;
+  pointer-events: none;
 }
 .square-1, .square-2, .square-3,
 .square-4 {
@@ -264,6 +264,10 @@
   gap: 15px;
 }
 
+.input-box-2 input, .input-box-2 select {
+  width: 100%;
+}
+
 .category-box, .target-track {
   display: flex;
   flex-direction: column;
@@ -316,7 +320,7 @@
 
 .goal-controls-button {
   display: flex;
-  gap: 15px;
+  gap: 10px;
   padding: 10px;
   border-radius: 16px;
   background: #fff8f0a2;
@@ -324,7 +328,10 @@
 }
 
 .goal-controls-button button {
-  padding: 16px 20px;
+  padding: 20px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #383838;
   width: 100%;
   border: none;
   border-radius: 12px;
@@ -353,7 +360,7 @@
 
 .goal-categories {
   position: relative;
-  display: flex;
+  font-weight: 550;
   padding: 10px;
   flex-direction: column;
   gap: 8px;
@@ -373,7 +380,11 @@
 
 .first-line button, .second-line button {
   width: 100%;
+  font-size: 12px;
   padding: 16px 20px;
+  font-weight: 550;
+  margin-top: 8px;
+  color: #262626;
   width: 100%;
   border: none;
   border-radius: 12px;
@@ -403,6 +414,7 @@
 
 /**goal container**/
 .your-goal-list {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -420,6 +432,8 @@
 }
 
 .goal-category {
+  width: max-content;
+  font-size: 12px;
   color: #462700af;
 }
 
@@ -452,7 +466,7 @@
   display: none;
 }
 
-.goal-deadline {
+.goal-deadline i {
   background: #e6c11e73;  
   width: max-content;
   padding: 4px 10px;
@@ -542,10 +556,10 @@
 
 .input-box-3.active {
   display: flex;
-  animation: fadeIn 0.3s ease forwards;
+  animation: fadeIn-box3 0.3s ease forwards;
 }
 
-@keyframes fadeIn {
+@keyframes fadeIn-box3 {
   0% {
     transform: scaleY(0);
   }

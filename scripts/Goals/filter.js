@@ -64,7 +64,7 @@ export function filterCategory(){
   })
 }
 
-function applyFilters(){
+export function applyFilters(){
   let filtered = [...yourGoals];
   
   // Filter by status
