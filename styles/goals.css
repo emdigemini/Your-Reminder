@@ -75,8 +75,9 @@
   padding: 20px;
   gap: 8px;
   color: #462700af;
-  box-shadow: 0 0 200px #66666641;
+  box-shadow: 0 0 10px #26262644;
   z-index: 10;
+  border-radius: 0 0 20px 20px;
 }
 
 .title {
@@ -270,7 +271,7 @@
 }
 
 .input-box-3 {
-  display: flex;
+  display: none;
   gap: 15px;
   width: 100%;
 }
@@ -428,18 +429,27 @@
   align-items: center;
 }
 
-.control-goal i {
-  padding: 6px;
-  border-radius: 20px;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.btn-goal {
+  display: flex;
+  gap: 10px;
 }
 
-.control-goal i:hover {
-  color: #666;
-  font-size: 18px;
-  background: #66666677;
-  color: #e4e4e4;
+.btn-goal i {
+  color: #000000;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.btn-goal i:hover {
+  color: #5f5f5f;
+}
+
+.btn-goal i:active {
+  font-size: 14px;
+}
+
+#closeInputBox3 {
+  display: none;
 }
 
 .goal-deadline {
@@ -507,23 +517,41 @@
   width: var(--progress-percentage);
 }
 
-.delete-goal {
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.delete-goal:hover {
-  color: #5f5f5f;
-}
-
-.delete-goal:active {
-  transform: scale(0.90);
-}
-
 /**CONTROL WITH JS**/
 #createGoal.disabled {
   background: #cf7c339a;
   cursor: default;
+}
+
+#closeInputBox3.active {
+  display: flex;
+  cursor: pointer;
+  background: #f334346c;
+  color: #fff;
+  transition: 0.3s ease;
+}
+
+#closeInputBox3.active:hover {
+  background: #fff8f0a2;
+  color: #000;
+}
+
+#setDeadline.active {
+  display: none;
+}
+
+.input-box-3.active {
+  display: flex;
+  animation: fadeIn 0.3s ease forwards;
+}
+
+@keyframes fadeIn {
+  0% {
+    transform: scaleY(0);
+  }
+  100% {
+    transform: scaleY(1);
+  }
 }
 
 .empty-state {
@@ -556,8 +584,4 @@
 #setDeadline:hover {
   color: #5c5c5c;
   background: #fff8f0f8;
-}
-
-#setDeadline:active {
-  transform: scale(0.90);
 }

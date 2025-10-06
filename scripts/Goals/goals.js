@@ -1,5 +1,89 @@
-const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
+import { filterState, filterGoal, filterCategory, updateGoalCounts, updateCategoryCounts } from "./filter.js";
+
+export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 // localStorage.clear()
+
+export class Goal{
+  constructor(id, title, category, target, progress, completed){
+    this.id = id;
+    this.title = title;
+    this.category = category;
+    this.target = target;
+    this.progress = progress;
+    this.completed = completed;
+  }
+
+  render(){
+    const container = document.createElement('div');
+    container.classList.add('your-goal-container');
+    if(this.completed){
+      container.classList.add('goal-completed');
+    }
+    container.dataset.goalId = this.id;
+    container.innerHTML = `
+      <div class="goal-category">${this.category}</div>
+      <div class="goal-title">
+        <h2>${this.title}</h2>
+        <div class="btn-goal">
+          <div id="edit-goal">
+            <i class="bi bi-pencil"></i>
+          </div>
+          <div id="delete-goal">
+            <i class="delete-goal bi bi-trash"></i>
+          </div>
+        </div>
+      </div>
+      <div class="goal-deadline">
+        <i class="bi bi-calendar2-check"></i> 06/05/2026
+      </div>
+      <div class="track-progress">
+        <p>Progress</p>
+        <div class="points">
+          <p class="percentage">${this.progress}%</p>
+          <p class="points">(0/${this.target})</p>
+        </div>
+        <div class="progress-bar"></div>
+      </div>
+      <div class="add-points">
+        <input class="input-points" type="number" placeholder="0">
+        <button id="addPoints"><i class="bi bi-plus-circle-dotted"></i></button>
+      </div>
+    `;
+    return container;
+  }
+
+  appendGoal(){
+    const goalList = document.querySelector('.your-goal-list');
+    goalList.appendChild(this.render());
+  }
+
+  static renderFilteredList(filtered){
+    const goalList = document.querySelector('.your-goal-list');
+    goalList.innerHTML = '';
+
+    if(filterState.category && filtered.length === 0){
+      goalList.innerHTML = emptyState();
+      return;
+    }
+
+    if(filtered.length === 0){
+      goalList.innerHTML = `
+        <div class="empty-state">
+          <i class="bi bi-clipboard-check"></i>
+          <p class="title">No ${filterState.status === 'activeGoal' ? 'active' : 'completed'} goals</p>
+          <p class="desc">Try adding or completing a goal first.</p>
+        </div>
+      `;
+      return;
+    }
+
+    filtered.forEach(g => {
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
+      goal.appendGoal();
+    });
+  }
+
+}
 
 export function openGoalApp(){
   if(!document.querySelector('.goals')){
@@ -93,7 +177,10 @@ export function openGoalApp(){
               </div>
 
               <div class="btn-group">
-                <i id="setDeadline" class="bi bi-calendar2"></i>
+                <div class="toggle-input-box-3">
+                  <i id="setDeadline" class="bi bi-calendar2"></i>
+                  <i id="closeInputBox3" class="bi bi-x-lg"></i>
+                </div>
                 <button id="createGoal" class="disabled">+ Create Goal</button>
               </div>
             </div>
@@ -136,6 +223,28 @@ export function openGoalApp(){
   }
 }
 
+export function getElm(){
+  const input = {
+    setGoal           :     document.getElementById('setGoal'),
+    category          :     document.getElementById('category'),
+    target            :     document.getElementById('target'),
+  };
+
+  const btn = {
+    createGoal        :     document.getElementById('createGoal'),
+    delGoal           :     document.querySelectorAll('.delete-goal'),
+    allGoal           :     document.getElementById('allGoal'),
+    activeGoal        :     document.getElementById('activeGoal'),
+    completedGoal     :     document.getElementById('completedGoal'),
+    health            :     document.getElementById('health'),
+    career            :     document.getElementById('career'),
+    personal          :     document.getElementById('personal'),
+    financial         :     document.getElementById('financial'),
+  }
+
+  return {input, btn};
+}
+
 function allFunction(){
   // animation to show this app still on development
   workSignAnim();
@@ -145,6 +254,9 @@ function allFunction(){
 
   // add event listeners to all inputs for setting goals
   inputListener();
+
+  // toggle visibility of the "Set Deadline" input
+  setDeadline();
 
   // render all goals into the list container
   renderGoal();
@@ -182,28 +294,6 @@ function workSignAnim(){
   })
 }
 
-function getElm(){
-  const input = {
-    setGoal : document.getElementById('setGoal'),
-    category : document.getElementById('category'),
-    target : document.getElementById('target'),
-  };
-
-  const btn = {
-    createGoal : document.getElementById('createGoal'),
-    delGoal : document.querySelectorAll('.delete-goal'),
-    allGoal : document.getElementById('allGoal'),
-    activeGoal : document.getElementById('activeGoal'),
-    completedGoal : document.getElementById('completedGoal'),
-    health : document.getElementById('health'),
-    career : document.getElementById('career'),
-    personal : document.getElementById('personal'),
-    financial : document.getElementById('financial'),
-  }
-
-  return {input, btn};
-}
-
 function closeTab(){
   const yourTab = document.querySelector('.goals');
   document.querySelector('.toggle-btn').addEventListener('click', () => {
@@ -220,6 +310,23 @@ function inputListener(){
     input.addEventListener('input', checkInputs);
   });
   checkInputs();
+}
+
+function setDeadline(){
+  const setDeadlineBox = document.querySelector('.input-box-3');
+  const btn = document.getElementById('setDeadline');
+  const close = document.getElementById('closeInputBox3');
+  btn.addEventListener('click', function(){
+    this.classList.add('active');
+    close.classList.add('active');
+    setDeadlineBox.classList.add('active');
+  })
+  close.addEventListener('click', function(){
+    console.log('click');
+    this.classList.remove('active');
+    btn.classList.remove('active');
+    setDeadlineBox.classList.remove('active');
+  })
 }
 
 function checkInputs(){
@@ -249,7 +356,7 @@ function addGoal(){
     const target = Number(set.input.target.value);
     const id = crypto.randomUUID();
 
-    const goal = new Goal(id, title, category, target, 0, false);
+    const goal = new Goal(id, title, category, target, 0, true);
     yourGoals.push(goal);
 
     renderGoal();
@@ -264,113 +371,7 @@ function addGoal(){
   checkInputs();
 }
 
-function saveToStorage(){
-  localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
-}
-
-/*===============FILTER FUNCTION===============*/
-let filterState = { status: 'allGoal', category: '' }
-
-function filterGoal(){
-  const filterBtn = getElm();
-  const groupCat = [filterBtn.btn.health, filterBtn.btn.career, filterBtn.btn.personal, filterBtn.btn.financial];
-  const groupFilter = [filterBtn.btn.allGoal, filterBtn.btn.activeGoal, filterBtn.btn.completedGoal];
-
-  groupFilter.forEach(f => {
-    f.addEventListener('click', function(){
-      filterState.status = this.id;
-      groupFilter.forEach(e => e.classList.remove('active'));
-      this.classList.add('active');
-
-      if(this.id === 'allGoal'){
-        groupCat.forEach(e => e.classList.remove('active'));
-        filterState.category = '';
-        renderGoal();
-        return;
-      }
-      applyFilters();
-    })
-  })
-}
-
-function applyFilters(){
-  let filtered = [...yourGoals];
-  let catFiltered = [];
-
-  // Filter by status
-  if(filterState.status === 'activeGoal') {
-    filtered = filtered.filter(g => !g.completed);
-  } else if (filterState.status === 'completedGoal') {
-    filtered = filtered.filter(g => g.completed);
-  }
-
-  updateCategoryCounts(filtered);
-
-  // Filter by category
-  if(filterState.category) {
-    filtered = filtered.filter(g => g.category === filterState.category);
-  }
-
-  Goal.renderFilteredList(filtered);
-}
-
-function filterCategory(){
-  const go = getElm();
-  const group = [go.btn.health, go.btn.career, go.btn.personal, go.btn.financial];
-
-  group.forEach(cat => {
-    cat.addEventListener('click', function(){
-      filterState.category = this.id;
-      group.forEach(e => e.classList.remove('active'));
-      this.classList.add('active');
-      applyFilters();
-    })
-  })
-}
-
-function updateCategoryCounts(filtered){
-  const count = getElm();
-  const group = [count.btn.health, count.btn.career, count.btn.personal, count.btn.financial];
-
-  function toPascalCase(str) {
-    return str
-      .split(' ')
-      .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-      .join('');
-  }
-
-  if(filtered){
-    group.forEach(txt => {
-      txt.textContent = `${toPascalCase(txt.id)} (${filtered.filter(g => g.category === txt.id).length})`;
-    });
-    return;
-  }
-
-  group.forEach(txt => {
-    txt.textContent = `${toPascalCase(txt.id)} (${yourGoals.filter(g => g.category === txt.id).length})`;
-  })
-}
-
-function updateGoalCounts(){
-  const count = getElm();
-  count.btn.allGoal.textContent = `🎯All (${yourGoals.length})`;
-  count.btn.activeGoal.textContent = `⚡Active (${yourGoals.filter(g => !g.completed).length})`;
-  count.btn.completedGoal.textContent = `✨Completed (${yourGoals.filter(g => g.completed).length})`;
-}
-
-function emptyState(){
-  return `
-    <div class="empty-state">
-      <i class="bi bi-clipboard-check"></i>
-      <p class="title">Oops! Looks like this category is empty.</p>
-      <p class="desc">Time to fill it with awesome goals!</p>
-    </div>
-  `;
-}
-
-/*===============END OF FILTER FUNCTION===============*/
-
-function renderGoal(){
+export function renderGoal(){
   const goalList = document.querySelector('.your-goal-list');
   goalList.innerHTML = '';
 
@@ -394,6 +395,11 @@ function renderGoal(){
   });
 }
 
+function saveToStorage(){
+  localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
+}
+
+//listener for delete and edit
 function controlGoal(){
   const goalList = document.querySelector('.your-goal-list');
   goalList.addEventListener('click', (e) => {
@@ -404,125 +410,17 @@ function controlGoal(){
       const delId = yourGoals.findIndex(g => g.id === goalId);
       yourGoals.splice(delId, 1);
       saveToStorage();
-      renderGoal();
+      applyFilters();
     }
   })
 }
 
-class Goal{
-  constructor(id, title, category, target, progress, completed){
-    this.id = id;
-    this.title = title;
-    this.category = category;
-    this.target = target;
-    this.progress = progress;
-    this.completed = completed;
-  }
-
-  render(){
-    const container = document.createElement('div');
-    container.classList.add('your-goal-container');
-    if(this.completed){
-      container.classList.add('goal-completed');
-    }
-    container.dataset.goalId = this.id;
-    container.innerHTML = `
-      <div class="goal-category">${this.category}</div>
-      <div class="goal-title">
-        <h2>${this.title}</h2>
-        <div class="btn-goal">
-          <i class="bi bi-pencil"></i>
-          <i class="delete-goal bi bi-trash"></i>
-        </div>
-      </div>
-      <div class="goal-deadline">
-        <i class="bi bi-calendar2-check"></i> 06/05/2026
-      </div>
-      <div class="track-progress">
-        <p>Progress</p>
-        <div class="points">
-          <p class="percentage">${this.progress}%</p>
-          <p class="points">(0/${this.target})</p>
-        </div>
-        <div class="progress-bar"></div>
-      </div>
-      <div class="add-points">
-        <input class="input-points" type="number" placeholder="0">
-        <button id="addPoints"><i class="bi bi-plus-circle-dotted"></i></button>
-      </div>
-    `;
-    return container;
-  }
-
-  appendGoal(){
-    const goalList = document.querySelector('.your-goal-list');
-    goalList.appendChild(this.render());
-  }
-
-  static renderFilteredList(filtered){
-    const goalList = document.querySelector('.your-goal-list');
-    goalList.innerHTML = '';
-
-    if(filterState.category && filtered.length === 0){
-      goalList.innerHTML = emptyState();
-      return;
-    }
-
-    if(filtered.length === 0){
-      goalList.innerHTML = `
-        <div class="empty-state">
-          <i class="bi bi-clipboard-check"></i>
-          <p class="title">No ${filterState.status === 'activeGoal' ? 'active' : 'completed'} goals</p>
-          <p class="desc">Try adding or completing a goal first.</p>
-        </div>
-      `;
-      return;
-    }
-
-    filtered.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
-      goal.appendGoal();
-    });
-  }
-
-  static renderCategory(domain){
-    const goalList = document.querySelector('.your-goal-list');
-    goalList.innerHTML = '';
-
-    if(filterState.status === 'activeGoal'){
-      const active_filters = domain.filter(g => !g.completed);
-      if(active_filters.length === 0){
-        goalList.innerHTML = emptyState();
-        return;
-      }
-      domain.forEach(g => {
-        const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
-        goal.appendGoal();
-      })
-      return;
-    }
-
-    if(filterState.status === 'completedGoal'){
-      const active_filters = domain.filter(g => g.completed);
-      if(active_filters.length === 0){
-        goalList.innerHTML = emptyState();
-        return;
-      }
-      domain.forEach(g => {
-        const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
-        goal.appendGoal();
-      })
-      return;
-    }
-
-    if(domain.length === 0){
-      goalList.innerHTML = emptyState();
-      return;
-    }
-
-    domain.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed);
-      goal.appendGoal();
-    });
-  }
+function emptyState(){
+  return `
+    <div class="empty-state">
+      <i class="bi bi-clipboard-check"></i>
+      <p class="title">Oops! Looks like this category is empty.</p>
+      <p class="desc">Time to fill it with awesome goals!</p>
+    </div>
+  `;
 }
