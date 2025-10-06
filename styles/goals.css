@@ -269,6 +269,20 @@
   width: 50%;
 }
 
+.input-box-3 {
+  display: flex;
+  gap: 15px;
+  width: 100%;
+}
+
+.unit, .deadline {
+  width: 50%;
+}
+
+.unit input, .deadline input {
+  width: 100%;
+}
+
 .btn-group {
   display: flex;
   align-items: center;
@@ -534,3 +548,16 @@
   color: #666;
 }
 
+#setDeadline {
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+#setDeadline:hover {
+  color: #5c5c5c;
+  background: #fff8f0f8;
+}
+
+#setDeadline:active {
+  transform: scale(0.90);
+}

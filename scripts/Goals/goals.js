@@ -79,8 +79,21 @@ export function openGoalApp(){
                 </div>
               </div>
 
+              <div class="input-box-3">
+                <div class="unit">
+                  🔢
+                  <label for="unit">Unit</label>
+                  <input id="unit" type="text" placeholder="kg, hours, money...">
+                </div>
+                <div id="deadline" class="deadline">
+                  📅
+                  <label for="deadline">Deadline</label>
+                  <input type="date">
+                </div>
+              </div>
+
               <div class="btn-group">
-                <i class="bi bi-calendar2"></i>
+                <i id="setDeadline" class="bi bi-calendar2"></i>
                 <button id="createGoal" class="disabled">+ Create Goal</button>
               </div>
             </div>
@@ -90,9 +103,9 @@ export function openGoalApp(){
           <!--CONTROL BOX-->
           <div class="goal-btn-box">
             <div class="goal-controls-button">
-              <button id="allGoal" class="goal-filter active">All (0)</button>
-              <button id="activeGoal" class="goal-filter">Active (0)</button>
-              <button id="completedGoal" class="goal-filter">Completed (0)</button>
+              <button id="allGoal" class="goal-filter active">🎯All (0)</button>
+              <button id="activeGoal" class="goal-filter">⚡Active (0)</button>
+              <button id="completedGoal" class="goal-filter">✨Completed (0)</button>
             </div>
 
             <div class="goal-categories">
@@ -340,9 +353,9 @@ function updateCategoryCounts(filtered){
 
 function updateGoalCounts(){
   const count = getElm();
-  count.btn.allGoal.textContent = `All (${yourGoals.length})`;
-  count.btn.activeGoal.textContent = `Active (${yourGoals.filter(g => !g.completed).length})`;
-  count.btn.completedGoal.textContent = `Completed (${yourGoals.filter(g => g.completed).length})`;
+  count.btn.allGoal.textContent = `🎯All (${yourGoals.length})`;
+  count.btn.activeGoal.textContent = `⚡Active (${yourGoals.filter(g => !g.completed).length})`;
+  count.btn.completedGoal.textContent = `✨Completed (${yourGoals.filter(g => g.completed).length})`;
 }
 
 function emptyState(){
