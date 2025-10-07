@@ -37,6 +37,12 @@ export function ifUnitsMoney(target, unit){
     '៛',  // Cambodian Riel
   ];
 
+  if(unit == 'money' || unit == 'Money' || unit == 'MONEY'){
+    const money = Number(target).toLocaleString('en-US');
+    unit = '$';
+    return `${unit}${money}`;
+  }
+
   if(moneySymbols.includes(unit)){
     const money = Number(target).toLocaleString('en-US');
     return `${unit}${money}`

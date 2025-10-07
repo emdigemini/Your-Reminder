@@ -311,21 +311,6 @@ function closeTab(){
   })
 }
 
-function inputListener(){
-  const set = getElm();
-  let invalid = true;
-  Object.values(set.input).forEach(input => {
-    input.addEventListener('input', function(e){
-      checkInputs(invalid);
-      if(input.id === 'unit'){
-        input.value = input.value.replace(/[0-9]/g, '');
-      }
-    });
-  });
-
-  checkInputs();
-}
-
 function toggleThird_inputBox(){
   const input =  getElm();
   const setDeadlineBox = document.querySelector('.input-box-3');
@@ -342,22 +327,30 @@ function toggleThird_inputBox(){
     btn.classList.remove('active');
     setDeadlineBox.classList.remove('active');
   })
-
-
-
 }
 
+function inputListener(){
+  const set = getElm();
+  Object.values(set.input).forEach(input => {
+    input.addEventListener('input', function(e){
+      checkInputs();
+      if(input.id === 'unit'){
+        input.value = input.value.replace(/[0-9]/g, '');
+      }
+    });
+  });
+
+  checkInputs();
+}
+
+let invalid = true;
 function checkInputs(){
   const set = getElm();
   const title = set.input.setGoal.value;
   const category = set.input.category.value;
   const target = set.input.target.value;
   const createGoal = set.btn.createGoal;
-  let invalid = true;
-  if(invalid){
-    createGoal.classList.add('disabled');
-    return;
-  }
+  createGoal.classList.add('disabled');
   if(title === '' || category === '' || target === ''){
     invalid = true;
     return;
@@ -365,34 +358,29 @@ function checkInputs(){
     invalid = false;
     createGoal.classList.remove('disabled');
   }
-
 }
 
 function addGoal(){
   const set = getElm();
   const createGoal = set.btn.createGoal;
-  createGoal.addEventListener('click', () => {
-    if(checkInputs()) return;
 
+  createGoal.addEventListener('click', () => {
+    if(invalid)return;
     const id = crypto.randomUUID();
     const title = set.input.setGoal.value;
     const category = set.input.category.value;
     const target = Number(set.input.target.value);
     const unit = set.input.unit.value;
     const deadline = set.input.deadline.value;
-
     const goal = new Goal(id, title, category, target, 0, false, unit, deadline);
     yourGoals.push(goal);
     renderGoal();
     saveToStorage();
-    console.log(yourGoals);
-
     for(let k in set.input){
       set.input[k].value ='';
     };
+    checkInputs();
   })
-
-  checkInputs();
 }
 
 export function renderGoal(){
