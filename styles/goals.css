@@ -484,7 +484,7 @@
   color: #462700af;
 }
 
-.points {
+.progress {
   display: flex;
   justify-content: space-between;
 }
@@ -498,12 +498,12 @@
   box-shadow: 0 0 10px #0000002a;
 }
 
-.add-points {
+.add-progress {
   display: flex;
   gap: 6px;
 }
 
-.add-points input {
+.add-progress input {
   border: none;
   border-radius: 8px;
   box-shadow: 0 0 10px #0000002a;

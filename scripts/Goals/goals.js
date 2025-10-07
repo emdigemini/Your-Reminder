@@ -1,16 +1,17 @@
 import { filterState, filterGoal, filterCategory, applyFilters, updateGoalCounts, updateCategoryCounts } from "./filter.js";
-import { ifUnitsMoney } from "./utils/unit.js";
+import { ifUnitsMoney } from "./utils/goal.js";
 
 export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
-// localStorage.clear()
+// localStorage.clear() 
 
 export class Goal{
-  constructor(id, title, category, target, progress, completed, unit, deadline){
+  constructor(id, title, category, target, progress, points, completed, unit, deadline){
     this.id = id;
     this.title = title;
     this.category = category;
     this.target = target;
     this.progress = progress;
+    this.points = points;
     this.completed = completed;
     this.unit = unit;
     this.deadline = deadline;
@@ -43,15 +44,15 @@ export class Goal{
       </div>
       <div class="track-progress">
         <p>Progress</p>
-        <div class="points">
+        <div class="progress">
           <p class="percentage">${this.progress}%</p>
-          <p class="points">(0/${ifUnitsMoney(this.target, this.unit)})</p>
+          <p class="points">(${this.points}/${ifUnitsMoney(this.target, this.unit)})</p>
         </div>
         <div class="progress-bar"></div>
       </div>
-      <div class="add-points">
+      <div class="add-progress">
         <input class="input-points" type="number" placeholder="0">
-        <button id="addPoints"><i class="bi bi-plus-circle-dotted"></i></button>
+        <button id="addPoints" class="add-points"><i class="add-points bi bi-plus-circle-dotted"></i></button>
       </div>
     `;
     return container;
@@ -83,7 +84,7 @@ export class Goal{
     }
 
     filtered.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed, g.unit, g.deadline);
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline);
       goal.appendGoal();
     });
   }
@@ -239,7 +240,6 @@ export function getElm(){
 
   const btn = {
     createGoal        :     document.getElementById('createGoal'),
-    delGoal           :     document.querySelectorAll('.delete-goal'),
     allGoal           :     document.getElementById('allGoal'),
     activeGoal        :     document.getElementById('activeGoal'),
     completedGoal     :     document.getElementById('completedGoal'),
@@ -249,10 +249,18 @@ export function getElm(){
     financial         :     document.getElementById('financial'),
   }
 
-  return {input, btn};
+  const goal = {
+    inputPoints       :     document.querySelectorAll('.input-points'),
+    addPoints         :     document.querySelectorAll('.add-points'),
+  }
+
+  return {input, btn, goal};
 }
 
 function allFunction(){
+  // render all goals into the list container
+  renderGoal();
+
   // animation to show this app still on development
   workSignAnim();
 
@@ -264,9 +272,6 @@ function allFunction(){
 
   // toggle visibility of the "Set Deadline" input
   toggleThird_inputBox();
-
-  // render all goals into the list container
-  renderGoal();
 
   // save goals to localStorage
   addGoal();
@@ -312,7 +317,6 @@ function closeTab(){
 }
 
 function toggleThird_inputBox(){
-  const input =  getElm();
   const setDeadlineBox = document.querySelector('.input-box-3');
   const btn = document.getElementById('setDeadline');
   const close = document.getElementById('closeInputBox3');
@@ -331,17 +335,90 @@ function toggleThird_inputBox(){
 
 function inputListener(){
   const set = getElm();
-  Object.values(set.input).forEach(input => {
-    input.addEventListener('input', function(e){
+  const goalList = document.querySelector('.your-goal-list');
+
+  Object.values(set.input).forEach(k => {
+    k.addEventListener('input', () => {
       checkInputs();
-      if(input.id === 'unit'){
-        input.value = input.value.replace(/[0-9]/g, '');
+      if(k.id === 'unit'){
+        k.value = k.value.replace(/[0-9]/g, '');
       }
     });
   });
 
+  goalList.addEventListener('input', (e) => {
+    if(e.target.classList.contains('input-points')){
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const goalIndex = yourGoals.findIndex(g => g.id === goalId);
+      const value = Number(e.target.value);
+      yourGoals[goalIndex].tempPoints = value;
+    }
+  })
+  
   checkInputs();
 }
+
+
+//listener for delete and edit
+function controlGoal(){
+  const goalList = document.querySelector('.your-goal-list');
+  goalList.addEventListener('click', (e) => {
+    // DELETE LISTENER
+    if(e.target.classList.contains('delete-goal')){
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const delId = yourGoals.findIndex(g => g.id === goalId);
+      yourGoals.splice(delId, 1);
+      saveToStorage();
+      applyFilters();
+    }
+
+    if(e.target.classList.contains('add-points')){
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const goalIndex = yourGoals.findIndex(g => g.id === goalId);
+
+      const goal = yourGoals[goalIndex];
+      if(goal.tempPoints + goal.points > goal.target){
+        console.log("Stop right there, overachiever! 🚫You've already maxed out your goal.");
+        return; 
+      }
+
+      goal.points += goal.tempPoints;
+      console.log(yourGoals);
+      
+      container.querySelector('.input-points').value = '';
+      goal.tempPoints = 0;
+      goal.progress = Number(Math.min((goal.points / goal.target) * 100, 100).toFixed(2));
+
+      saveToStorage();
+      applyFilters();
+      updateProgressBar(goal);
+    }
+  });
+}
+
+function updateProgressBar(goal){
+  const container = document.querySelector(`.your-goal-container[data-goal-id]`);
+  const progressBar = container.querySelector('.progress-bar');
+
+  
+}
+
+// function addPointsListener(){
+//   const goalList = document.querySelector('.your-goal-list');
+//   goalList.addEventListener('click', (e) => {
+//     if(e.target.classList.contains('add-points')){
+//       const container = e.target.closest('.your-goal-container');
+//       const goalId = container.dataset.goalId;
+//       const pointId = yourGoals.findIndex(g => g.id === goalId);
+
+//       saveToStorage();
+//       applyFilters();
+//     }
+//   })
+// }
 
 let invalid = true;
 function checkInputs(){
@@ -372,10 +449,11 @@ function addGoal(){
     const target = Number(set.input.target.value);
     const unit = set.input.unit.value;
     const deadline = set.input.deadline.value;
-    const goal = new Goal(id, title, category, target, 0, false, unit, deadline);
+    const goal = new Goal(id, title, category, target, 0, 0, false, unit, deadline);
     yourGoals.push(goal);
     renderGoal();
     saveToStorage();
+    console.log(yourGoals);
     for(let k in set.input){
       set.input[k].value ='';
     };
@@ -402,29 +480,13 @@ export function renderGoal(){
   }
 
   yourGoals.forEach(g => {
-    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.completed, g.unit, g.deadline);
+    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline);
     render.appendGoal();
   });
 }
 
 function saveToStorage(){
   localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
-}
-
-//listener for delete and edit
-function controlGoal(){
-  const goalList = document.querySelector('.your-goal-list');
-  goalList.addEventListener('click', (e) => {
-    // DELETE LISTENER
-    if(e.target.classList.contains('delete-goal')){
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const delId = yourGoals.findIndex(g => g.id === goalId);
-      yourGoals.splice(delId, 1);
-      saveToStorage();
-      applyFilters();
-    }
-  })
 }
 
 function emptyState(){
