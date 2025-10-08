@@ -2,50 +2,6 @@
   --progress-percentage: 0%;
 }
 
-.working-sign-overlay {
-  position: absolute;
-  height: 200%;
-  width: 100%;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: #26262679;
-  backdrop-filter: blur(5px);
-  z-index: 999;
-}
-
-.working-sign {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 15px;
-  opacity: 0;
-}
-
-.working-sign p {
-  color: #00FF80;
-  font-size: 24px;
-  font-weight: 600;
-  text-shadow: 0 4px 20px #000;
-}
-
-.working-sign button {
-  color: #000000;
-  background: #00FF80;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 12px;
-  cursor: pointer;
-  transition: 0.3s ease;
-}
-
-.working-sign button:hover {
-  background: var(--low-accent);
-}
-
 .goals {
   position: absolute;
   top: 0;
@@ -68,12 +24,12 @@
 .goals-logo-circle {
   position: sticky;
   top: 0;
-  background: var(--color-background);
+  background: #262626;
   display: flex;
   align-items: center;
   padding: 20px;
   gap: 8px;
-  color: #462700af;
+  color: #ebebeb;
   box-shadow: 0 0 10px #26262644;
   z-index: 10;
   border-radius: 0 0 20px 20px;
@@ -112,10 +68,10 @@
   font-size: 24px;
 }
 
-.avg-progress {
+.avg-progress, .completed-goal {
   display: flex;
   align-items: center;
-  background: #fff8f0a2;
+  background: #262626;
   box-shadow: 0 0 10px #26262644;
   border-radius: 12px;
   padding: 8px 12px;
@@ -125,26 +81,15 @@
 
 .avg-progress i {
   font-size: 18px;
-  color: #fff;
+  color: #ebebeb;
   background: #1779fa;
   border-radius: 20px;
   padding: 8px 12px;
 }
 
-.completed-goal {
-  display: flex;
-  align-items: center;
-  background: #fff8f0a2;
-  box-shadow: 0 0 10px #26262644;
-  border-radius: 12px;
-  padding: 8px 12px;
-  width: 100%;
-  gap: 10px;
-}
-
 .completed-goal i {
   font-size: 18px;
-  color: #fff;
+  color: #ebebeb;
   background: #fa8500ea;
   border-radius: 20px;
   padding: 8px 12px;
@@ -153,7 +98,7 @@
 .set-goal {
   display: flex;
   flex-direction: column;
-  background: #fff8f0a2;
+  background: #262626;
   box-shadow: 0 0 10px #26262644;
   gap: 15px;
   height: 100%;
@@ -170,6 +115,7 @@
 
 .goals-logo-square h2 {
   position: relative;
+  color: #fff;
 }
 
 .goals-logo-square h2::before {
@@ -184,7 +130,7 @@
 
 .set-goal p {
   font-size: 14px;
-  color: #462700af;
+  color: #666;
 }
 
 .pr-icon-square {
@@ -305,8 +251,8 @@
   padding: 16px;
   border: none;
   border-radius: 12px;
-  background: #FA7600;
-  color: #fff;
+  background: #00FF80;
+  color: #262626;
   cursor: pointer;
 }
 
@@ -323,7 +269,7 @@
   gap: 10px;
   padding: 10px;
   border-radius: 16px;
-  background: #fff8f0a2;
+  background: #262626;
   box-shadow: 0 0 10px #26262644;
 }
 
@@ -331,18 +277,19 @@
   padding: 20px 0;
   font-size: 12px;
   font-weight: 600;
-  color: #383838;
+  color: #ebebeb;
   width: 100%;
   border: none;
   border-radius: 12px;
-  background: #e9e3de70;
+  background: #262626;
+  border: 1px solid #00ff8094;
   cursor: pointer;
 }
 
 #allGoal.active, #activeGoal.active, 
 #completedGoal.active {
-  background: #FA7600;
-  color: #fff;
+  background: #00FF80;
+  color: #262626;
 }
 
 .goal-filter {
@@ -350,8 +297,8 @@
 }
 
 .goal-filter:hover {
-  background: #FA7600;
-  color: #fff;
+  background: #00FF80;
+  color: #262626;
 }
 
 .goal-filter:active {
@@ -365,12 +312,12 @@
   flex-direction: column;
   gap: 8px;
   border-radius: 16px;
-  background: #fff8f0a2;
+  background: #262626;
   box-shadow: 0 0 10px #26262644;
 }
 
 .goal-categories p {
-  color: #462700af;
+  color: #00FF80;
 }
 
 .first-line, .second-line {
@@ -388,23 +335,22 @@
   width: 100%;
   border: none;
   border-radius: 12px;
-  background: #e9e3de70;
+  background: #262626;
+  border: 1px solid #00ff8094;
+  color: #ebebeb;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 #health.active, #career.active,
 #personal.active, #financial.active {
-  background: #2b87ff;
-  color: #fff;
+  background: #00FF80;
+  color: #262626;
 }
 
 .goal-categories button:hover {
-  transition: 0.3s ease;
-}
-
-.goal-categories button:hover {
-  background: #2b87ff;
-  color: #fff;
+  background: #00FF80;
+  color: #262626;
 }
 
 .goal-categories button:active {
@@ -426,22 +372,24 @@
   display: flex;
   flex-direction: column;
   border-radius: 8px;
-  background: #fff8f0a2;
+  background: #262626;
   box-shadow: 0 0 10px #26262644;
   padding: 20px;
   gap: 8px;
 }
 
+
 .goal-category {
   width: max-content;
   font-size: 12px;
-  color: #462700af;
+  color: #01d169;
 }
 
 .goal-title {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  color: #ebebeb;
 }
 
 .btn-goal {
@@ -454,7 +402,7 @@
 }
 
 .btn-goal i {
-  color: #000000;
+  color: #038a46;
   cursor: pointer;
   transition: 0.3s ease;
 }
@@ -472,11 +420,11 @@
 }
 
 .goal-deadline i {
-  background: #e6c11e73;  
+  background: #01d1696b;  
   width: max-content;
   padding: 4px 10px;
   border-radius: 8px;
-  color: #d47501ee;
+  color: #ebebeb;
 }
 
 .track-progress {
@@ -486,7 +434,7 @@
 }
 
 .track-progress p {
-  color: #462700af;
+  color: #01d169;
 }
 
 .progress {
@@ -539,7 +487,8 @@
 
 /**CONTROL WITH JS**/
 #createGoal.disabled {
-  background: #cf7c339a;
+  background: #9de4c094;
+  color: #ffffff41;
   cursor: default;
 }
 
@@ -554,6 +503,11 @@
 #closeInputBox3.active:hover {
   background: #fff8f0a2;
   color: #000;
+}
+
+#setDeadline {
+  color: #262626;
+  background: #01d169;
 }
 
 #setDeadline.active {
@@ -644,3 +598,118 @@
 }
 
 
+/*LIGHT MODE*/
+body.light .goals-logo-circle {
+  background: #fff8f0;
+  color: #462700af;
+}
+
+body.light .avg-progress,
+body.light .completed-goal {
+  background: #fff8f0a2;
+  box-shadow: 0 0 10px #26262644;
+}
+
+body.light .set-goal {
+  background: #fff8f0a2;
+}
+
+body.light .set-goal h2 {
+  color: #262626;
+}
+
+body.light .set-goal p {
+  color: #462700af;
+}
+
+body.light #createGoal {
+  background: #FA7600;
+  color: #fff;
+}
+
+body.light #createGoal.disabled {
+  background: #cf7c339a;
+}
+
+body.light .goal-controls-button {
+  background: #fff8f0a2;
+}
+
+body.light .goal-controls-button button {
+  background: #e9e3de70;
+  border: none;
+  color: #262626;
+}
+
+body.light #allGoal.active, 
+body.light #activeGoal.active, 
+body.light #completedGoal.active {
+  background: #fa7600;
+  color: #fff;
+}
+
+body.light .goal-filter:hover {
+  background: #FA7600;
+  color: #fff;
+}
+
+body.light .goal-categories {
+  background: #fff8f0a2;
+}
+
+body.light .goal-categories button {
+  background: #e9e3de70;
+  border: none;
+  color: #262626;
+}
+
+body.light #health.active, 
+body.light #career.active,
+body.light #personal.active, 
+body.light #financial.active {
+  background: #2b87ff;
+  color: #fff;
+}
+
+body.light .goal-categories button:hover {
+  background: #2b87ff;
+  color: #fff;
+}
+
+body.light .goal-categories p {
+  color: #462700af;
+}
+
+body.light .your-goal-container {
+  background: #fff8f0a2;
+}
+
+body.light .goal-category {
+  color: #462700af;
+}
+
+body.light .goal-title {
+  color: #262626;
+}
+
+body.light .btn-goal i {
+  color: #000000;
+  transition: 0.3s ease;
+}
+
+body.light .btn-goal i:hover {
+  color: #038a4681;
+}
+
+body.light .goal-deadline i {
+  background: #e6c11e73;  
+  color: #d47501ee;
+}
+
+body.light .track-progress p {
+  color: #462700af;
+}
+
+body.light #setDeadline {
+  background: #fff;
+}

@@ -363,7 +363,8 @@ function controlGoal(){
         return; 
       }
 
-      goal.points += goal.tempPoints;
+      if(goal.tempPoints > 0) 
+        goal.points += goal.tempPoints;
       
       container.querySelector('.input-points').value = '';
       goal.tempPoints = 0;
@@ -371,7 +372,6 @@ function controlGoal(){
 
       if(goal.progress === 100){
         goal.completed = true;
-        goal.timeCompleted = Date.now();
       }
 
       saveToStorage();
@@ -543,7 +543,6 @@ function countGoalCompleted(){
 
 function getAvgProgress() {
    const average = document.querySelector('.avg-progress .count span');
-    if (!average) return;
 
     if (yourGoals.length === 0) {
       average.textContent = "0%";
