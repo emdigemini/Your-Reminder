@@ -1,4 +1,4 @@
-import { Goal, yourGoals, getElm, renderGoal } from "./goals.js";
+import { Goal, yourGoals, getElm, renderGoal, updateProgressBar, sortItem } from "./goals.js";
 
 /*===============FILTER FUNCTION===============*/
 export let filterState = { status: 'allGoal', category: '' }
@@ -17,14 +17,14 @@ export function updateCategoryCounts(filtered){
   const group = [count.btn.health, count.btn.career, count.btn.personal, count.btn.financial];
 
   if(filtered){
-    group.forEach(txt => {
-      txt.textContent = `${toPascalCase(txt.id)} (${filtered.filter(g => g.category === txt.id).length})`;
+    group.forEach(cat => {
+      cat.textContent = `${cat.value} (${filtered.filter(g => g.category === cat.value).length})`;
     });
     return;
   }
 
-  group.forEach(txt => {
-    txt.textContent = `${toPascalCase(txt.id)} (${yourGoals.filter(g => g.category === txt.id).length})`;
+  group.forEach(cat => {
+    cat.textContent = `${cat.value} (${yourGoals.filter(g => g.category === cat.value).length})`;
   })
 }
 
@@ -56,7 +56,7 @@ export function filterCategory(){
 
   group.forEach(cat => {
     cat.addEventListener('click', function(){
-      filterState.category = this.id;
+      filterState.category = this.value;
       group.forEach(e => e.classList.remove('active'));
       this.classList.add('active');
       applyFilters();
@@ -75,20 +75,14 @@ export function applyFilters(){
   }
   updateGoalCounts();
   updateCategoryCounts(filtered);
-
   // Filter by category
   if(filterState.category) {
     filtered = filtered.filter(g => g.category === filterState.category);
   }
-
+  
+  sortItem(filtered);
   Goal.renderFilteredList(filtered);
-}
-
-function toPascalCase(str) {
-  return str
-    .split(' ')
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
-    .join('');
-}
+  updateProgressBar(filtered);
+} 
 
 /*===============END OF FILTER FUNCTION===============*/

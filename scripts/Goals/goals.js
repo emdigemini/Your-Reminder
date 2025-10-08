@@ -20,9 +20,6 @@ export class Goal{
   render(){
     const container = document.createElement('div');
     container.classList.add('your-goal-container');
-    if(this.completed){
-      container.classList.add('goal-completed');
-    }
     container.dataset.goalId = this.id;
     container.innerHTML = `
       <div class="goal-category">${this.category}</div>
@@ -48,12 +45,15 @@ export class Goal{
           <p class="percentage">${this.progress}%</p>
           <p class="points">(${this.points}/${ifUnitsMoney(this.target, this.unit)})</p>
         </div>
-        <div class="progress-bar"></div>
+        <div class="progress-bar">
+          <div class="your_progress"></div>
+        </div>
       </div>
       <div class="add-progress">
         <input class="input-points" type="number" placeholder="0">
         <button id="addPoints" class="add-points"><i class="add-points bi bi-plus-circle-dotted"></i></button>
       </div>
+      ${this.completed ? '<div class="goal-completed"></div>' : ''}
     `;
     return container;
   }
@@ -94,13 +94,6 @@ export class Goal{
 export function openGoalApp(){
   if(!document.querySelector('.goals')){
     document.body.insertAdjacentHTML('afterbegin', `
-      <div class="working-sign-overlay">
-        <div class="working-sign">
-          <p>This app is still in development.</p>
-          <button class="close" type="button">Continue</button>
-        </div>
-      </div>
-
       <div class="goals">
         <div class="goals-tab">
           <div class="goals-logo-circle">
@@ -121,14 +114,14 @@ export function openGoalApp(){
             <div class="avg-progress">
               <i class="bi bi-bar-chart-steps"></i>
               <div class="count">
-                <span>0%</span>
+                <span class="avg_progress">0%</span>
                 <p>Avg Progress</p>
               </div>
             </div>
             <div class="completed-goal">
               <i class="bi bi-award-fill"></i>
               <div class="count">
-                <span>0</span>
+                <span class="completed_count">0</span>
                 <p>Completed</p>
               </div>
             </div>
@@ -147,25 +140,31 @@ export function openGoalApp(){
               <h2>Set Your Goal</h2>
             </div>
 
-            <p>Transform your dreams into achievable milestones. Set clear targets and track your progress toward what matters most.</p>
+            <p>
+            Transform your dreams into achievable milestones. 
+            Set clear targets and track your progress toward what matters most.
+            </p>
 
             <div class="input-box">
-              <input type="text" id="setGoal" placeholder="What do you want to achieve?" autocomplete="off">
+              <input type="text" id="setGoal" 
+              placeholder="What do you want to achieve?" 
+              autocomplete="off">
               <div class="input-box-2">
                 <div class="category-box">
                   <label for="category">Category</label>
                   <select name="category" id="category">
                     <option value="" hidden>Pick your goal area</option>
-                    <option value="✨Personal">Personal Growth</option>
-                    <option value="🔋Health">Health & Fitness</option>
-                    <option value="💼Career">Career & Skills</option>
-                    <option value="💰Financial">Financial Goals</option>
+                    <option value="✨Personal">✨Personal Growth</option>
+                    <option value="🔋Health">🔋Health & Fitness</option>
+                    <option value="💼Career">💼Career & Skills</option>
+                    <option value="💰Financial">💰Financial Goals</option>
                   </select>
                 </div>
 
                 <div class="target-track">
                   <label for="target">Target</label>
-                  <input type="number" id="target" placeholder="100" autocomplete="off">
+                  <input type="number" id="target" 
+                  placeholder="100" autocomplete="off">
                 </div>
               </div>
 
@@ -204,12 +203,12 @@ export function openGoalApp(){
             <div class="goal-categories">
               <p>Categories</p>
               <div class="first-line">
-                <button id="health">Health</button>
-                <button id="career">Career</button>
+                <button id="health" value="🔋Health">Health</button>
+                <button id="career" value="💼Career">Career</button>
               </div>
               <div class="second-line">
-                <button id="personal">Personal</button>
-                <button id="financial">Financial</button>
+                <button id="personal" value="✨Personal"></button>
+                <button id="financial" value="💰Financial"></button>
               </div>
             </div>
           </div>
@@ -261,9 +260,6 @@ function allFunction(){
   // render all goals into the list container
   renderGoal();
 
-  // animation to show this app still on development
-  workSignAnim();
-
   // closes the tab and cleans up all related DOM elements and data
   closeTab();
 
@@ -284,26 +280,6 @@ function allFunction(){
 
   // handles editing and deleting of a specific goal
   controlGoal();
-}
-
-function workSignAnim(){
-  const overlay = document.querySelector('.working-sign-overlay');
-  const sign = document.querySelector('.working-sign');
-  const close = document.querySelector('.close');
-
-  overlay.classList.add('anim');
-  sign.classList.add('anim');
-
-  close.addEventListener('click', () => {
-    overlay.classList.remove('anim');
-    overlay.classList.add('close');
-    sign.classList.remove('anim');
-    sign.classList.add('close');
-    sign.addEventListener('animationend', () => {
-      overlay.remove();
-      sign.remove();
-    }, {once: true})
-  })
 }
 
 function closeTab(){
@@ -371,6 +347,8 @@ function controlGoal(){
       const delId = yourGoals.findIndex(g => g.id === goalId);
       yourGoals.splice(delId, 1);
       saveToStorage();
+      countGoalCompleted();
+      getAvgProgress();
       applyFilters();
     }
 
@@ -386,39 +364,58 @@ function controlGoal(){
       }
 
       goal.points += goal.tempPoints;
-      console.log(yourGoals);
       
       container.querySelector('.input-points').value = '';
       goal.tempPoints = 0;
       goal.progress = Number(Math.min((goal.points / goal.target) * 100, 100).toFixed(2));
 
+      if(goal.progress === 100){
+        goal.completed = true;
+        goal.timeCompleted = Date.now();
+      }
+
       saveToStorage();
+      countGoalCompleted();
+      getAvgProgress();
       applyFilters();
-      updateProgressBar(goal);
     }
   });
 }
 
-function updateProgressBar(goal){
-  const container = document.querySelector(`.your-goal-container[data-goal-id]`);
-  const progressBar = container.querySelector('.progress-bar');
+export function updateProgressBar(filtered){
+  if(!filtered){
+    yourGoals.forEach(g => {
+      const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
+      const progressBar = container.querySelector('.your_progress');
 
-  
+      progressBar.style.width = `${g.progress}%`;
+
+      const hue = (g.progress / 100) * 145;
+      
+      const nextHue = hue + 20;
+      progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
+      progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
+      completedState(g);
+    });
+    return;
+  }
+  if(filtered.length === 0)
+    return;
+  filtered.forEach(g => {
+    const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
+    const progressBar = container.querySelector('.your_progress');
+
+    progressBar.style.width = `${g.progress}%`;
+    progressBar.style.width = `${g.progress}%`;
+
+    const hue = (g.progress / 100) * 145;
+    
+    const nextHue = hue + 20;
+    progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
+    progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
+    completedState(g);
+  });
 }
-
-// function addPointsListener(){
-//   const goalList = document.querySelector('.your-goal-list');
-//   goalList.addEventListener('click', (e) => {
-//     if(e.target.classList.contains('add-points')){
-//       const container = e.target.closest('.your-goal-container');
-//       const goalId = container.dataset.goalId;
-//       const pointId = yourGoals.findIndex(g => g.id === goalId);
-
-//       saveToStorage();
-//       applyFilters();
-//     }
-//   })
-// }
 
 let invalid = true;
 function checkInputs(){
@@ -450,6 +447,7 @@ function addGoal(){
     const unit = set.input.unit.value;
     const deadline = set.input.deadline.value;
     const goal = new Goal(id, title, category, target, 0, 0, false, unit, deadline);
+    goal.timeCreated = Date.now();
     yourGoals.push(goal);
     renderGoal();
     saveToStorage();
@@ -467,7 +465,8 @@ export function renderGoal(){
 
   updateGoalCounts();
   updateCategoryCounts();
-
+  countGoalCompleted();
+  getAvgProgress();
   if (yourGoals.length === 0) {
     goalList.innerHTML = `
       <div class="empty-state">
@@ -478,15 +477,53 @@ export function renderGoal(){
     `;
     return;
   }
-
+  sortItem();
   yourGoals.forEach(g => {
     const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline);
     render.appendGoal();
   });
+  updateProgressBar();
+}
+
+export function sortItem(filtered){
+  // sort every time: incomplete first and newest first
+  if(!filtered){
+    yourGoals.sort((a, b) => {
+      if(a.completed === b.completed) {
+        return b.timeCreated - a.timeCreated; 
+      }
+      return a.completed - b.completed; 
+    });
+    saveToStorage();
+    return;
+  }
+  filtered.sort((a, b) => {
+    if(a.completed === b.completed) {
+      return b.timeCreated - a.timeCreated; 
+    }
+    return a.completed - b.completed; 
+  });
+  saveToStorage();
 }
 
 function saveToStorage(){
   localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
+}
+
+function completedState(g){
+  if(g.completed){
+    // let message = [
+    //   "Achievement unlocked: “Actually finished something.” 🧠",
+    //   "Bro just completed a goal 💀",
+    //   "The prophecy has been fulfilled. 🔮",
+    //   "Your ancestors are proud. 😌",
+    // ];
+    const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
+    const goalIsCompleted = container.querySelector('.goal-completed');
+    goalIsCompleted.innerHTML = `
+      <p>Bro just completed a goal 💀</p>
+    `
+  }
 }
 
 function emptyState(){
@@ -499,3 +536,22 @@ function emptyState(){
   `;
 }
 
+function countGoalCompleted(){
+  const count = document.querySelector('.completed_count');
+  count.innerHTML = yourGoals.filter(g => g.completed).length;
+};
+
+function getAvgProgress() {
+   const average = document.querySelector('.avg-progress .count span');
+    if (!average) return;
+
+    if (yourGoals.length === 0) {
+      average.textContent = "0%";
+      return;
+    }
+
+    const totalProgress = yourGoals.reduce((sum, goal) => sum + goal.progress, 0);
+    const avgProgress = totalProgress / yourGoals.length;
+
+    average.textContent = `${Number(avgProgress.toFixed(2))}%`;
+}

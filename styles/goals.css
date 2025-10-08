@@ -422,6 +422,7 @@
 }
 
 .your-goal-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   border-radius: 8px;
@@ -445,6 +446,10 @@
 
 .btn-goal {
   display: flex;
+  position: relative;
+  max-width: 45px;
+  min-width: 30px;
+  width: 100%;
   gap: 10px;
 }
 
@@ -494,6 +499,7 @@
   height: 18px;
   width: 100%;
   background: #fff;
+  border: 1px solid #66666663;
   border-radius: 20px;
   box-shadow: 0 0 10px #0000002a;
 }
@@ -599,3 +605,42 @@
   color: #5c5c5c;
   background: #fff8f0f8;
 }
+
+.your_progress {
+  height: 100%;
+  width: 0;
+  background: #00FF80;
+  border-radius: 100px;
+}
+
+.goal-completed {
+  font-family: "Cagliostro", serif;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+  top: 0;
+  left: 0;
+  border-radius: 8px;
+  backdrop-filter: blur(1.5px);
+}
+
+.goal-completed p {
+  font-size: 16px;
+  color: #ffffff; 
+  font-weight: 600; 
+  background: #66666677;
+  backdrop-filter: blur(5px);
+  padding: 10px 20px; 
+  border-radius: 8px; 
+}
+
+.delete-goal {
+  position: absolute;
+  right: 0;
+  z-index: 2;
+}
+
+
