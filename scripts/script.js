@@ -167,3 +167,24 @@ window.addEventListener("resize", setHeight);
 window.addEventListener("orientationchange", setHeight);
 setHeight(); // initial
 
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+
+const dt = new Date();
+const day = dt.getDate();
+const month = dt.getMonth();
+const year = dt.getFullYear();
+// console.log(day, month, year);
+
+const firstDayOfMonth = new Date(year, month, 1);
+const daysInMonth = new Date(year, month + 1, 0).getDate();
+
+const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
+  weekday: 'long',
+  month: 'numeric',
+  day: 'numeric',
+  year: 'numeric',
+});
+console.log(dateString);
+const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
+console.log(paddingDays);

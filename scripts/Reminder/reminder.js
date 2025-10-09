@@ -333,7 +333,7 @@ function renderReminder(){
         <div class="reminder-box">
           <div class="reminder-title">${reminder.title}</div>
           <div class="reminder-schedule 
-          ${overdue(reminder.dateSet, reminder.timeEnd)}">
+          ${overdue(reminder)}">
             ${reminder.dateSet.length > 0 
               ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
               : ''
@@ -377,7 +377,7 @@ function countActiveReminder(){
         </div>
         <div class="reminder-box">
           <div class="reminder-title">${reminder.title}</div>
-          <div class="reminder-schedule ${overdue(reminder.dateSet, reminder.timeEnd)}">
+          <div class="reminder-schedule ${overdue(reminder)}">
             ${reminder.dateSet.length > 0 
               ? `<i class="bi bi-calendar-event"></i> ${reminder.dateSet},` 
               : ''
@@ -502,25 +502,15 @@ function emptyState(){
 
 
 
-function overdue(dateSet, timeEnd){
+function overdue(reminder){
   const reminderDate = new Date(
-    `${dateSet}${timeEnd.length > 0 ? `T${timeEnd}` : ''}`
+    `${reminder.dateSet}${reminder.timeEnd.length > 0 ? `T${reminder.timeEnd}` : ''}`
   );
 
   const nowDate = new Date();
 
-  return reminderDate < nowDate ? 'overdue' : '';
+  return reminderDate < nowDate && !reminder.completed ? 'overdue' : '';
 }
-
-
-// ${new Date(`${reminder.dateSet}
-//             ${reminder.timeEnd.length > 0 
-//               ? `T${reminder.timeEnd}` 
-//               : ''}` ) < new Date(`${currentDate}${reminder.timeEnd.length > 0 
-//                 ? `T${currentTime}` 
-//                 : ''}`) 
-//             ? 'overdue' 
-//             : ''}
 
 function filterBtn(filter, reminderFilter){
   reminderFilter.forEach(btn => btn.classList.remove('active'));

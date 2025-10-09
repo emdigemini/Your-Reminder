@@ -445,7 +445,8 @@ function addGoal(){
     const category = set.input.category.value;
     const target = Number(set.input.target.value);
     const unit = set.input.unit.value;
-    const deadline = set.input.deadline.value;
+    const deadline = new Date(set.input.deadline.value).toLocaleDateString('en-US');
+;
     const goal = new Goal(id, title, category, target, 0, 0, false, unit, deadline);
     goal.timeCreated = Date.now();
     yourGoals.push(goal);
