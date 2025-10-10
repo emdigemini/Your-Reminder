@@ -649,44 +649,19 @@
 }
 
 /*----------GOAL APP----------*/
-.working-sign-overlay.anim {
-  animation: fadeIn 0.3s ease-in forwards;
-}
-
-.working-sign.anim {
-  animation: fadeIn 0.5s ease-in forwards;
-}
-
-.working-sign-overlay.close {
-  animation: fadeOut 0.3s ease-in-out forwards;
-}
-
-.working-sign.close {
-  animation: fadeOut 0.5s ease-in-out forwards;
-}
-
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
-}
-
-@keyframes fadeOut {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0;
-  }
-}
-
 .goals {
   animation: openTab 0.5s ease-in forwards;
 }
 
 .goals.close {
+  animation: closeTab 0.5s ease-in forwards;
+}
+
+/*----------TASK APP----------*/
+.tasks-tab {
+  animation: openTab 0.5s ease-in forwards;
+}
+
+.tasks-tab.close {
   animation: closeTab 0.5s ease-in forwards;
 }
