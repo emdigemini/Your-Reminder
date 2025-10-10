@@ -3,6 +3,7 @@ import { randomQuotes } from './animation.js'
 import { openNoteApp } from './Notes/notes.js';
 import { openReminderApp } from './Reminder/reminder.js';
 import { openGoalApp } from './Goals/goals.js';
+import { openTaskApp } from './Tasks/tasks.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -125,7 +126,7 @@ cards.goals.addEventListener('click', () => {
 
 //tasks
 cards.tasks.addEventListener('click', () => {
-  alert('Still a work in progress.');
+  openTaskApp();
 })
 
 //settings
@@ -155,8 +156,6 @@ function openSettings(){
     document.body.removeEventListener('click', settingsBox);
   }
 }
-
-
 
 start();
 
