@@ -98,3 +98,76 @@ function closeTab(){
     }, {once: true})
   })
 }
+
+let nav = 0;
+let anotherYear;
+
+document.getElementById('nextDate').addEventListener('click', () => {
+  nav++;
+  load();
+});
+
+document.getElementById('backDate').addEventListener('click', () => {
+  nav--;
+  load();
+});
+
+document.querySelector('.today').addEventListener('click', () => {
+  nav = 0;
+  load();
+})
+
+function load(){
+  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  const short_weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+  const dt = new Date();
+  const day = dt.getDate();
+  const month = dt.getMonth();
+  const year = dt.getFullYear();
+
+  let newMonth = month + nav;
+  let newYear = year;
+  if(nav !== 0){
+    dt.setMonth(month + nav);
+  }
+
+  if (newMonth > 11) {
+    newMonth = 0;
+    newYear++;
+    anotherYear = newYear;
+  } else if (newMonth < 0) {
+    newMonth = 11;
+    newYear--;
+  }
+
+  const firstDayOfMonth = new Date(year, month, 1);
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  document.getElementById('monthDisplay').innerText = 
+  `${dt.toLocaleDateString('en-us', {month: 'long'})} ${newYear}`;
+  
+  const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
+    weekday: 'long',
+    month: 'numeric',
+    day: 'numeric',
+    year: 'numeric'
+  });
+
+  const getIndexOfWeekdays = dateString.split(',')[0];
+  const paddingDays = short_weekdays.indexOf(getIndexOfWeekdays);
+
+  for(let i = 1; i <= paddingDays + daysInMonth; i++){
+    const daySquare = document.createElement('div');
+    daySquare.classList.add('day');
+    
+    if(i > paddingDays){
+      daySquare.innerText = i - paddingDays;
+      daySquare.addEventListener('click', () => console.log('click'));
+    } else {
+      daySquare.classList.add('padding');
+    }
+
+  }
+}
+
+load();

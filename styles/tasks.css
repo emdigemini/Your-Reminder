@@ -81,14 +81,14 @@
   color: #462700af;
 }
 
-.today-text {
+.today {
   padding: 4px 10px;
   border-radius: 20px;
-  cursor: default;
+  cursor: pointer;
   transition: 0.3s ease;
 }
 
-.today-text:hover {
+.today:hover {
   background: #f09e3936;
 }
 
@@ -121,17 +121,18 @@
   border-radius: 12px;
   padding: 14px 8px;
   cursor: pointer;
-  transition: 0.3s ease;
+  transition: 0.4s ease;
 }
 
 .days:hover {
   background: #def03936;
+  transform: scale(1.20);
 }
 
 .days.active {
   background: #FA7600;
   color: #fff;
-  transform: scale(1.05);
+  transform: scale(1.20);
 }
 
 .selected-date {

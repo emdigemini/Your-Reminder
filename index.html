@@ -27,7 +27,7 @@
 </head>
 <body>
 
-  <!-- <div class="tasks-tab">
+  <div class="tasks-tab">
     <i class="toggle-btn bi bi-caret-down"></i>
     <div class="task-header">
       <i class="bi bi-list-check"></i>
@@ -45,16 +45,16 @@
         <div class="cal-text">
           <div class="select-date-text">
             <p>Select Date</p>
-            <p>October 2025</p>
+            <p id="monthDisplay">October 2025</p>
           </div>
-          <div class="today-text">
+          <div class="today">
             <p>Today</p>
           </div>
         </div>
       </div>
 
       <div class="choose-date">
-        <i class="fa fa-caret-left" aria-hidden="true"></i>
+        <i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i>
         <div class="calendar">
           <div class="days">
             <p class="day">Sun</p>
@@ -85,7 +85,7 @@
             <p class="todate">7</p>
           </div>
         </div>
-        <i class="fa fa-caret-right" aria-hidden="true"></i>
+        <i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i>
       </div>
       
       <div class="selected-date">
@@ -106,7 +106,7 @@
 
       </div>
     </div>
-  </div> -->
+  </div>
 
   <div class="app-header">
       <div class="your-profile">

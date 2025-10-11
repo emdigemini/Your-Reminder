@@ -166,8 +166,11 @@ window.addEventListener("resize", setHeight);
 window.addEventListener("orientationchange", setHeight);
 setHeight(); // initial
 
+
+
 const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const long_weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const short_weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
 const dt = new Date();
 const day = dt.getDate();
@@ -179,11 +182,25 @@ const firstDayOfMonth = new Date(year, month, 1);
 const daysInMonth = new Date(year, month + 1, 0).getDate();
 
 const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-  weekday: 'long',
+  weekday: 'short',
   month: 'numeric',
   day: 'numeric',
   year: 'numeric',
 });
+const getIndexOfWeekdays = dateString.split(',')[0];
+
 console.log(dateString);
-const paddingDays = weekdays.indexOf(dateString.split(', ')[0]);
+const paddingDays = short_weekdays.indexOf(getIndexOfWeekdays);
 console.log(paddingDays);
+
+for(let i = 1; i <= paddingDays + daysInMonth; i++){
+  const daySquare = document.createElement('div');
+  daySquare.classList.add('day'); 
+  
+  if(i > paddingDays){
+    daySquare.innerText = i - paddingDays;
+    daySquare.addEventListener('click', () => console.log('click'));
+  } else {
+    daySquare.classList.add('padding');
+  }
+}

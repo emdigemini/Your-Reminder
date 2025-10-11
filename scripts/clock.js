@@ -1,24 +1,19 @@
-const day = new Date();
+export function loadDate(){
+  const dt = new Date();
+  const day = dt.getDate();
+  const month = dt.getMonth();
+  const year = dt.getFullYear();
+  const hr = dt.getHours().toString().padStart(2, '0');
+  const mm = dt.getMinutes().toString().padStart(2, '0');
+  const ss = dt.getSeconds().toString().padStart(2, '0');
 
-const dayJS = (callback) => {
-  setInterval(()=>{
-    const YYYY = day.getFullYear();
-    const D = day.getDate();
-    const month = day.getMonth();
-
-    const HR = day.getHours();
-    const MN = day.getMinutes();
-    const SC = day.getSeconds();
-
-
-
-    const months = ['January', 'February', 'March', 
-                    'April', 'May', 'June', 
-                    'July', 'August', 'September',
-                    'October', 'November', 'December'
-                  ]
-
-    const MMM = months[month];
-
-  }, 1000)
+  const todayDate = new Date(year, month, day);
+  const dateString = todayDate.toLocaleDateString('en-us', {
+    weekday: 'short',
+    month: 'short',
+    year: 'numeric',
+    day: '2-digit'
+  })
+  
+  return {dateString, hr, mm, ss};
 }

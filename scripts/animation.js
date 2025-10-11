@@ -1,5 +1,4 @@
-import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
-import './clock.js';
+import { loadDate } from './clock.js';
 import { quotes } from '../quotes generator/quotes.js';
 
 // generate random quotes
@@ -19,12 +18,6 @@ const startupQuotes = document.querySelectorAll('.startup-quote-line');
 const id = ['one', 'two', 'three', 'four']
 let i = 0;
 let k = 0;
-
-// startup quotes animation
-// function startupAnimation(){
-//   setInterval(() => {
-//   }, 2500)
-// }
 
 // quotes animation logic
 export function quotesAnimation(){
@@ -68,18 +61,18 @@ export function quotesAnimation(){
 
 // generate time and date
 function dateAndTime(){
-  const date = dayjs().format('MMM D, YYYY');
-  const hr = dayjs().format('HH');
-  const mm = dayjs().format('mm');
-  const ss = dayjs().format('ss');
+  const dateData = loadDate();
+
+  const date = dateData.dateString;
+  const hr = dateData.hr;
+  const mm = dateData.mm;
+  const ss = dateData.ss;
   document.querySelector('.current-date').textContent = date;
   document.getElementById('hr').textContent = hr;
   document.getElementById('mn').textContent = mm;
   document.getElementById('ss').textContent = ss;
-
 }
 
-// startupAnimation();
 randomQuotes();
 quotesAnimation();
 dateAndTime();
@@ -91,5 +84,3 @@ if ('serviceWorker' in navigator) {
       .catch(err => console.log('SW failed:', err));
   });
 }
-
-
