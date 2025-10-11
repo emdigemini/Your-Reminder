@@ -14,7 +14,61 @@ export function openTaskApp(){
 
     </div>
     <div class="task-select-date">
+      <div class="cal-header">
+        <div class="cal-icon">
+          <i class="fas fa-calendar-check"></i>
+        </div>
+        <div class="cal-text">
+          <div class="select-date-text">
+            <p>Select Date</p>
+            <p>October 2025</p>
+          </div>
+          <div class="today-text">
+            <p>Today</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="choose-date">
+        <i class="fa fa-caret-left" aria-hidden="true"></i>
+        <div class="calendar">
+          <div class="days">
+            <p class="day">Sun</p>
+            <p class="todate">1</p>
+          </div>
+          <div class="days active">
+            <p class="day">Mon</p>
+            <p class="todate">2</p>
+          </div>
+          <div class="days">
+            <p class="day">Tue</p>
+            <p class="todate">3</p>
+          </div>
+          <div class="days">
+            <p class="day">Wed</p>
+            <p class="todate">4</p>
+          </div>
+          <div class="days">
+            <p class="day">Thu</p>
+            <p class="todate">5</p>
+          </div>
+          <div class="days">
+            <p class="day">Fri</p>
+            <p class="todate">6</p>
+          </div>
+          <div class="days">
+            <p class="day">Sat</p>
+            <p class="todate">7</p>
+          </div>
+        </div>
+        <i class="fa fa-caret-right" aria-hidden="true"></i>
+      </div>
       
+      <div class="selected-date">
+        <p>Selected Date</p>
+        <p>Monday, October 2, 2025</p>
+      </div>
+
     </div>
     <div class="task-progress">
 
