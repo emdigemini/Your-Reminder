@@ -189,9 +189,7 @@ const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
 });
 const getIndexOfWeekdays = dateString.split(',')[0];
 
-console.log(dateString);
 const paddingDays = short_weekdays.indexOf(getIndexOfWeekdays);
-console.log(paddingDays);
 
 for(let i = 1; i <= paddingDays + daysInMonth; i++){
   const daySquare = document.createElement('div');

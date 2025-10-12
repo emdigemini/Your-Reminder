@@ -102,35 +102,43 @@ function closeTab(){
 let nav = 0;
 let anotherYear;
 
-document.getElementById('nextDate').addEventListener('click', () => {
+const nextBtn = document.getElementById('nextDate');
+const backBtn = document.getElementById('backDate');
+const todayBtn = document.querySelector('.today');
+const todate = document.querySelectorAll('.todate');
+const days = document.querySelectorAll('.days');
+
+nextBtn.addEventListener('click', () => {
   nav++;
   load();
 });
 
-document.getElementById('backDate').addEventListener('click', () => {
+backBtn.addEventListener('click', () => {
   nav--;
   load();
 });
 
-document.querySelector('.today').addEventListener('click', () => {
+todayBtn.addEventListener('click', () => {
   nav = 0;
   load();
 })
 
 function load(){
   const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  const short_weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
   const dt = new Date();
-  const day = dt.getDate();
-  const month = dt.getMonth();
-  const year = dt.getFullYear();
+  const current = new Date();
+  const day = current.getDate();
+  const month = current.getMonth();
+  const year = current.getFullYear();
 
   let newMonth = month + nav;
   let newYear = year;
-  if(nav !== 0){
-    dt.setMonth(month + nav);
-  }
+  current.setDate(current.getDate() + nav);
+
+
+  const weekStart = new Date(current);
+  weekStart.setDate(current.getDate() - current.getDay());
 
   if (newMonth > 11) {
     newMonth = 0;
@@ -141,33 +149,59 @@ function load(){
     newYear--;
   }
 
-  const firstDayOfMonth = new Date(year, month, 1);
-  const daysInMonth = new Date(year, month + 1, 0).getDate();
-  document.getElementById('monthDisplay').innerText = 
-  `${dt.toLocaleDateString('en-us', {month: 'long'})} ${newYear}`;
-  
-  const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-    weekday: 'long',
-    month: 'numeric',
-    day: 'numeric',
-    year: 'numeric'
+  let tempDate = new Date(weekStart);
+
+  todate.forEach((el, i) => {
+    const dayNum = tempDate.getDate();
+    el.innerHTML = dayNum;
+    tempDate.setDate(tempDate.getDate() + 1);
   });
 
-  const getIndexOfWeekdays = dateString.split(',')[0];
-  const paddingDays = short_weekdays.indexOf(getIndexOfWeekdays);
+  const activeDate = new Date(current);
+  const currentWeekday = current.getDay();
+  const activeDay = activeDate.getDay();
 
-  for(let i = 1; i <= paddingDays + daysInMonth; i++){
-    const daySquare = document.createElement('div');
-    daySquare.classList.add('day');
-    
-    if(i > paddingDays){
-      daySquare.innerText = i - paddingDays;
-      daySquare.addEventListener('click', () => console.log('click'));
-    } else {
-      daySquare.classList.add('padding');
+  days.forEach((el, i) => {
+    el.classList.remove('select');
+
+    el.addEventListener('click', () => {
+      if(dt.getDate() === weekStart.getDate()){
+        days[dt.getDay()].classList.add('active');
+      } else {
+        days[dt.getDay()].classList.remove('active');
+      }
+      days[activeDate.getDay()].classList.remove('select');
+      activeDate.setDate(current.getDate() - currentWeekday + i);
+
+      el.classList.add('select');
+      updateSelectedDate();
+    })
+  })
+
+  days[activeDay].classList.add('select');
+
+  if(!days[dt.getDay()].classList.contains('select')){
+    if(dt.getDate() === weekStart.getDate()){
+      days[dt.getDay()].classList.add('active');
     }
-
+  } else {
+      days[dt.getDay()].classList.remove('active');
   }
+
+
+  function updateSelectedDate(){
+    document.getElementById('monthDisplay').innerText = 
+    `${current.toLocaleDateString('en-us', {month: 'long'})} ${newYear}`;
+    document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric'
+    })}`;
+  }
+
+  updateSelectedDate();
+
 }
 
 load();

@@ -130,6 +130,10 @@
 }
 
 .days.active {
+  color: #FA7600;
+}
+
+.days.select {
   background: #FA7600;
   color: #fff;
   transform: scale(1.20);
