@@ -1,4 +1,4 @@
-import { Goal, yourGoals, getElm, renderGoal, updateProgressBar, sortItem } from "./goals.js";
+import { Goal, yourGoals, getElm, renderGoal, updateProgressBar, sortItem, editYourGoal } from "./goals.js";
 
 /*===============FILTER FUNCTION===============*/
 export let filterState = { status: 'allGoal', category: '' }
@@ -83,6 +83,7 @@ export function applyFilters(){
   sortItem(filtered);
   Goal.renderFilteredList(filtered);
   updateProgressBar(filtered);
+  editYourGoal();
 } 
 
 /*===============END OF FILTER FUNCTION===============*/

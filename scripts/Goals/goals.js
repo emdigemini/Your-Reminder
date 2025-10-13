@@ -287,6 +287,8 @@ function allFunction(){
   // filter goals by category: health, career, personal or financial
   filterCategory();
 
+
+  controlGoal();
 }
 
 function closeTab(){
@@ -344,23 +346,11 @@ function inputListener(){
 
 
 //listener for delete and edit
-function controlGoal(){
+export function editYourGoal(e){
   const ctrl = getElm();
   const goalList = document.querySelector('.your-goal-list');
-  goalList.addEventListener('click', (e) => {
-    // DELETE LISTENER
-    if(e.target.classList.contains('delete-goal')){
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const delId = yourGoals.findIndex(g => g.id === goalId);
-      yourGoals.splice(delId, 1);
-      saveToStorage();
-      countGoalCompleted();
-      getAvgProgress();
-      applyFilters();
-    }
-
-    // EDIT LISTENER
+  goalList.addEventListener('click', e => {
+  // EDIT LISTENER
     if(e.target.closest('.editIt')){
       console.log('hi');
       e.target.classList.add('active');
@@ -385,7 +375,22 @@ function controlGoal(){
       saveToStorage();
       renderGoal();
     }
-
+  })
+}
+function controlGoal(){
+  const goalList = document.querySelector('.your-goal-list');
+  goalList.addEventListener('click', (e) => {
+    // DELETE LISTENER
+    if(e.target.classList.contains('delete-goal')){
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const delId = yourGoals.findIndex(g => g.id === goalId);
+      yourGoals.splice(delId, 1);
+      saveToStorage();
+      countGoalCompleted();
+      getAvgProgress();
+      applyFilters();
+    }
 
     if(e.target.classList.contains('add-points')){
       const container = e.target.closest('.your-goal-container');
@@ -529,7 +534,7 @@ export function renderGoal(){
     render.appendGoal();
   });
   updateProgressBar();
-  controlGoal();
+  editYourGoal();
 }
 
 export function sortItem(filtered){
