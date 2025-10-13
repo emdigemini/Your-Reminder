@@ -374,7 +374,7 @@
   border-radius: 8px;
   background: #262626;
   box-shadow: 0 0 10px #26262644;
-  padding: 20px;
+  padding: 2px 20px 20px;
   gap: 8px;
 }
 
@@ -390,6 +390,36 @@
   justify-content: space-between;
   align-items: center;
   color: #ebebeb;
+}
+
+.current-title.hide {
+  display: none;
+}
+
+.change-goal-name {
+  border: none;
+  padding: 6px;
+  background: #fff;
+  border-radius: 6px;
+  color: #262626;
+}
+
+.change-goal-name.hide {
+  display: none;
+}
+
+.change-goal-name:focus {
+  border: none;
+  outline: none;
+  box-shadow: 0 0 4px #262626;
+}
+
+.editIt.active {
+  display: none;
+}
+
+.saveIt.inactive {
+  display: none;
 }
 
 .btn-goal {

@@ -1,3 +1,7 @@
+:root {
+  --box-padding: 20px;
+}
+
 .tasks-tab {
   position: absolute;
   top: 0;
@@ -26,6 +30,7 @@
   border-radius: 50px;
 }
 
+/*==========TASK CALENDAR==========*/
 .task-select-date, 
 .task-progress,
 .add-task,
@@ -36,6 +41,8 @@
   width: 100%;
   box-shadow: 0 0 20px #26262669;
   border-radius: 20px;
+  gap: 20px;
+  padding: var(--box-padding);
 }
 
 .task-progress {
@@ -53,8 +60,6 @@
 .task-select-date {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: flex;
-  padding: 10px;
-  gap: 20px;
   max-height: 750px;
   height: max-content;
 }
@@ -83,9 +88,10 @@
 }
 
 .today {
-  padding: 4px 10px;
-  border-radius: 20px;
+  padding: 6px 12px;
+  border-radius: 8px;
   cursor: pointer;
+  text-align: center;
   transition: 0.3s ease;
 }
 
@@ -162,8 +168,8 @@
 
 .days:hover {
   background: #def03936;
-  transform: scale(1.20);
-  margin: 8px 8px 0;
+  transform: scale(1.05);
+  margin: 4px 2px 0;
 }
 
 .days.select {
@@ -230,9 +236,119 @@
   color: #462700af;
 }
 
+/*==========TASK PROGRESS==========*/
+.task-progress {
+  max-height: 400px;
+  height: max-content;
+}
+
+.track-task-progress {
+  display: flex;
+  justify-content: space-between;
+}
+
+.task-progress-header,
+.task-progress-status {
+  max-width: max-content;
+  width: max-content;
+}
+
+.task-progress-header p:first-child {
+  font-weight: 600;
+  color: #3b3b3b;
+}
+
+.task-progress-header p:last-child {
+  color: #462700af;
+}
+
+.task-progress-status div {
+  display: flex;
+  gap: 6px;
+}
+
+.task-progress-status div i {
+  color: #462700af;
+}
+
+.task-progress-status div p:last-child {
+  color: #3b3b3b;
+  font-weight: 550;
+}
+
+.task-progress-status p:last-child {
+  color: #462700af;
+}
+
+.task-progress-bar {
+  height: 12px;
+  border-radius: 50px;
+  background: #a0a0a054;
+}
+
+.task-overview {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
+.card-overview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  min-width: 70px;
+  max-width: 700px;
+  width: 100%;
+  padding: 10px 0;
+}
+
+.card-overview.total {
+  background: #77aae17c;
+}
+
+.card-overview.completed {
+  background: #29a43c59;
+}
+
+.card-overview.pending {
+  background: #f77c8485;
+}
+
+.card-overview.total i {
+  color: #2887ec;
+  font-size: 35px;
+}
+
+.card-overview.completed i {
+  color: #0cbe27;
+  font-size: 35px;
+}
+
+.card-overview.pending i {
+  color: #be0c18;
+  font-size: 35px;
+}
+
+.task-total,
+.task-completed,
+.task-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.task-total p:last-child,
+.task-completed p:last-child,
+.task-pending p:last-child {
+  color: #462700af;
+  font-size: 15px;
+}
+
+/*==========TASK CREATION==========*/
 .add-task {
   height: max-content;
   transition: .3s ease;
+  padding: 0;
 }
 
 .add-task button {
@@ -242,7 +358,7 @@
   gap: 12px;
   font-size: 14px;
   font-weight: 500;
-  padding: 20px;
+  padding: var(--box-padding);
   height: 100%;
   border: none;
   border-radius: 20px;
@@ -277,7 +393,7 @@
 .new-task.active {
   display: flex;
   flex-direction: column;
-  padding: 20px;
+  padding: var(--box-padding);
   gap: 15px;
 }
 

@@ -5,7 +5,7 @@ export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 // localStorage.clear() 
 
 export class Goal{
-  constructor(id, title, category, target, progress, points, completed, unit, deadline){
+  constructor(id, title, category, target, progress, points, completed, unit, deadline, created){
     this.id = id;
     this.title = title;
     this.category = category;
@@ -15,6 +15,7 @@ export class Goal{
     this.completed = completed;
     this.unit = unit;
     this.deadline = deadline;
+    this.created = created;
   }
 
   render(){
@@ -22,12 +23,16 @@ export class Goal{
     container.classList.add('your-goal-container');
     container.dataset.goalId = this.id;
     container.innerHTML = `
+      <div class="date-created">Created - ${this.created}</div>
       <div class="goal-category">${this.category}</div>
       <div class="goal-title">
-        <h2>${this.title}</h2>
+        <h2 class="current-title">${this.title}</h2>
+        <input class="change-goal-name hide" type="text" value="${this.title}"
+        placeholder="Rename your goal...">
         <div class="btn-goal">
           <div id="edit-goal">
-            <i class="bi bi-pencil"></i>
+            <i class="editIt bi bi-pencil"></i>
+            <i class="saveIt inactive bi bi-check2"></i>
           </div>
           <div id="delete-goal">
             <i class="delete-goal bi bi-trash"></i>
@@ -84,7 +89,7 @@ export class Goal{
     }
 
     filtered.forEach(g => {
-      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline);
+      const goal = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline, g.created);
       goal.appendGoal();
     });
   }
@@ -251,6 +256,10 @@ export function getElm(){
   const goal = {
     inputPoints       :     document.querySelectorAll('.input-points'),
     addPoints         :     document.querySelectorAll('.add-points'),
+    editGoal          :     document.querySelectorAll('.editIt'),
+    saveGoal          :     document.querySelectorAll('.saveIt'),
+    currentTitle      :     document.querySelectorAll('.current-title'),
+    changeTitle       :     document.querySelectorAll('.change-goal-name')
   }
 
   return {input, btn, goal};
@@ -278,8 +287,6 @@ function allFunction(){
   // filter goals by category: health, career, personal or financial
   filterCategory();
 
-  // handles editing and deleting of a specific goal
-  controlGoal();
 }
 
 function closeTab(){
@@ -294,9 +301,9 @@ function closeTab(){
 
 function toggleThird_inputBox(){
   const setDeadlineBox = document.querySelector('.input-box-3');
-  const btn = document.getElementById('setDeadline');
+  const toggleDeadlineBox = document.getElementById('setDeadline');
   const close = document.getElementById('closeInputBox3');
-  btn.addEventListener('click', function(){
+  toggleDeadlineBox.addEventListener('click', function(){
     this.classList.add('active');
     close.classList.add('active');
     setDeadlineBox.classList.add('active');
@@ -338,6 +345,7 @@ function inputListener(){
 
 //listener for delete and edit
 function controlGoal(){
+  const ctrl = getElm();
   const goalList = document.querySelector('.your-goal-list');
   goalList.addEventListener('click', (e) => {
     // DELETE LISTENER
@@ -351,6 +359,33 @@ function controlGoal(){
       getAvgProgress();
       applyFilters();
     }
+
+    // EDIT LISTENER
+    if(e.target.closest('.editIt')){
+      console.log('hi');
+      e.target.classList.add('active');
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const index = yourGoals.findIndex(g => g.id === goalId);
+      ctrl.goal.saveGoal[index].classList.remove('inactive');
+      ctrl.goal.currentTitle[index].classList.add('hide');
+      ctrl.goal.changeTitle[index].classList.remove('hide');
+    }
+
+    if(e.target.closest('.saveIt')){
+      e.target.classList.add('inactive');
+      const container = e.target.closest('.your-goal-container');
+      const goalId = container.dataset.goalId;
+      const index = yourGoals.findIndex(g => g.id === goalId);
+      const newTitle = ctrl.goal.changeTitle[index].value;
+      yourGoals[index].title = newTitle;
+      ctrl.goal.editGoal[index].classList.remove('active');
+      ctrl.goal.currentTitle[index].classList.remove('hide');
+      ctrl.goal.changeTitle[index].classList.add('hide');
+      saveToStorage();
+      renderGoal();
+    }
+
 
     if(e.target.classList.contains('add-points')){
       const container = e.target.closest('.your-goal-container');
@@ -417,6 +452,8 @@ export function updateProgressBar(filtered){
   });
 }
 
+
+/*============ADD YOUR GOAL============*/
 let invalid = true;
 function checkInputs(){
   const set = getElm();
@@ -445,9 +482,17 @@ function addGoal(){
     const category = set.input.category.value;
     const target = Number(set.input.target.value);
     const unit = set.input.unit.value;
-    const deadline = new Date(set.input.deadline.value).toLocaleDateString('en-US');
+    const deadline = set.input.deadline.value 
+    ? new Date(set.input.deadline.value).toLocaleDateString()
+    : '';
+    const created = new Date().toLocaleDateString('en-us', {
+      weekday: 'short',
+      month: 'numeric',
+      day: '2-digit',
+      year: 'numeric'
+    });
 ;
-    const goal = new Goal(id, title, category, target, 0, 0, false, unit, deadline);
+    const goal = new Goal(id, title, category, target, 0, 0, false, unit, deadline, created);
     goal.timeCreated = Date.now();
     yourGoals.push(goal);
     renderGoal();
@@ -480,10 +525,11 @@ export function renderGoal(){
   }
   sortItem();
   yourGoals.forEach(g => {
-    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline);
+    const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline, g.created);
     render.appendGoal();
   });
   updateProgressBar();
+  controlGoal();
 }
 
 export function sortItem(filtered){

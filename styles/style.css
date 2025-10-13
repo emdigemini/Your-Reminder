@@ -284,6 +284,12 @@
 }
 
 /*changes*/
+.toggle-btn {
+  transition: .3s ease;
+}
+.toggle-btn:hover {
+  color: rgba(84, 84, 84, 0.485);
+}
 
 /*---------------- LIGHT MODE ----------------*/
 body.light {

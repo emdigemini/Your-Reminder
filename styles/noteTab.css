@@ -26,6 +26,7 @@
   gap: 15px;
   top: 0;
   user-select: none;
+  touch-action: none;
 }
 
 .drag-btn {

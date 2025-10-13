@@ -28,7 +28,7 @@ export function openTaskApp(){
       </div>
 
       <div class="choose-date">
-        <i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i>
+        <button><i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i></button>
         <div class="calendar">
           <div class="days">
             <p class="day">Sun</p>
@@ -59,7 +59,7 @@ export function openTaskApp(){
             <p class="todate">7</p>
           </div>
         </div>
-        <i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i>
+        <button><i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i></button>
       </div>
       
       <div class="selected-date">
@@ -70,23 +70,75 @@ export function openTaskApp(){
     </div>
 
     <div class="task-progress">
-
     </div>
     <div class="add-task">
 
+      <button id="addTask">
+        <i class="fa fa-plus" aria-hidden="true"></i> 
+        Add New Task</button>
+
+        <div class="new-task">
+
+          <div class="new-task-header">
+            <div class="plus-icon">
+              <i class="fas fa-plus"></i>
+            </div>
+            <div class="new-task-selected-date">
+              <p>New Task</p>
+              <div>
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <p>Monday, Oct 13, 2025</p>  
+              </div>
+            </div>
+          </div>
+          <div class="new-task-title">
+            <label for="titleInput">
+              <i class="bi bi-fonts"></i>
+              Task Title
+            </label>
+            <input id="titleInput" type="text" placeholder="What needs to be done?">
+          </div>
+          <div class="add-prior">
+            <label>
+              <i class="bi bi-flag"></i>
+              Priority
+            </label>
+            <div class="prior-select">
+              <div class="selected">
+                Select Priority
+              </div>
+              <ul class="options">
+                <li data-value="low"><span class="dott low"></span> Low Priority</li>
+                <li data-value="medium"><span class="dott medium"></span> Medium Priority</li>
+                <li data-value="high"><span class="dott high"></span> High Priority</li>
+              </ul>
+            </div>
+          </div>
+          <div class="buttons">
+            <button id="addTaskBtn">
+              <i class="fa fa-plus" aria-hidden="true"></i> 
+              Add Task
+            </button>
+            <button id="cancelBtn">
+              Cancel
+            </button>
+          </div>
+        </div>
     </div>
     <div class="task-list">
       <div class="task-container">
-
+        
       </div>
     </div>
   </div>
 
   `);
   };
+
   closeTab();
   navigateDate();
   loadCalendar();
+  addNewTask();
 }
 
 function closeTab(){
@@ -172,13 +224,19 @@ function loadCalendar(){
   } else {
     days[currentDay].classList.remove('active');
   }
+
+  document.getElementById('monthDisplay').innerText = 
+  `${navDate.toLocaleDateString('en-us', {month: 'long', year: 'numeric'})}`;
 }
 
 function calendarClickListener(e){
-  if(e.target.matches('.days')){
-    console.log('hi');
+  if(e.target.closest('.days')){
     const date = Array.from(this.querySelectorAll('.days'));
     const index = date.indexOf(e.target);
+
+    if(e.target.classList.contains('select')){
+      return;
+    }
 
     date[activeDate.getDay()].classList.remove('select');
     activeDate.setDate(navDate.getDate() - currentDay + index);
@@ -197,8 +255,6 @@ function calendarClickListener(e){
 }
 
 function updateSelectedDate(){
-  document.getElementById('monthDisplay').innerText = 
-  `${navDate.toLocaleDateString('en-us', {month: 'long', year: 'numeric'})}`;
   document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
     weekday: 'short',
     month: 'short',
@@ -206,41 +262,45 @@ function updateSelectedDate(){
     year: 'numeric'
   })}`;
 }
+closeTab();
 navigateDate();
 loadCalendar();
+addNewTask();
 
 /*============ADD NEW TASK============*/
-const addTask = document.getElementById('addTask');
-const createNewTask = document.querySelector('.new-task');
-const cancelBtn = document.getElementById('cancelBtn');
+function addNewTask(){
+  const addTask = document.getElementById('addTask');
+  const createNewTask = document.querySelector('.new-task');
+  const cancelBtn = document.getElementById('cancelBtn');
 
-addTask.addEventListener('click', () => {
-  addTask.classList.add('inactive');
-  createNewTask.classList.add('active')
-})
+  addTask.addEventListener('click', () => {
+    addTask.classList.add('inactive');
+    createNewTask.classList.add('active')
+  })
 
-cancelBtn.addEventListener('click', () => {
-  addTask.classList.remove('inactive');
-  createNewTask.classList.remove('active')
-})
+  cancelBtn.addEventListener('click', () => {
+    addTask.classList.remove('inactive');
+    createNewTask.classList.remove('active')
+  })
 
-const selectPrior = document.querySelector('.prior-select');
-const selected = selectPrior.querySelector('.selected');
-const options = selectPrior.querySelectorAll('.options li');
+  const selectPrior = document.querySelector('.prior-select');
+  const selected = selectPrior.querySelector('.selected');
+  const options = selectPrior.querySelectorAll('.options li');
 
-selected.addEventListener('click', () => {
-  selectPrior.classList.toggle('active');
-});
-
-options.forEach(option => {
-  option.addEventListener('click', () => {
-    selected.innerHTML = option.innerHTML;
-    selectPrior.classList.remove('active');
+  selected.addEventListener('click', () => {
+    selectPrior.classList.toggle('active');
   });
-});
 
-window.addEventListener('click', (e) => {
-  if (!selectPrior.contains(e.target)) {
-    selectPrior.classList.remove('active');
-  }
-});
+  options.forEach(option => {
+    option.addEventListener('click', () => {
+      selected.innerHTML = option.innerHTML;
+      selectPrior.classList.remove('active');
+    });
+  });
+
+  window.addEventListener('click', (e) => {
+    if (!selectPrior.contains(e.target)) {
+      selectPrior.classList.remove('active');
+    }
+  });
+}
