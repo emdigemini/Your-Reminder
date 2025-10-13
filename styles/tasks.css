@@ -55,6 +55,7 @@
   display: flex;
   padding: 10px;
   gap: 20px;
+  max-height: 750px;
   height: max-content;
 }
 
@@ -93,6 +94,7 @@
 }
 
 .choose-date {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -100,10 +102,43 @@
   font-weight: 550;
 }
 
-.choose-date i {
+.choose-date::before {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 50%;
+  background: linear-gradient(to right, #e5e5e5, #FA7600, #e5e5e5);
+  border-radius: 50%;
+  top: -10px;
+  right: 0;
+  transform: translate(-50%, -50%);
+}
+
+.choose-date button {
   cursor: pointer;
   color: #262626de;
   font-size: 24px;
+  padding: 4px 8px;
+  border: none;
+  background: none;
+  border-radius: 6px;
+  transition: .3s ease;
+}
+
+.choose-date button:hover {
+  background: #def03936;
+}
+
+.choose-date button:active {
+  transform: scale(.80);
+}
+
+.choose-date button:first-child {
+  margin-left: 5%;
+}
+
+.choose-date button:last-child {
+  margin-right: 5%;
 }
 
 .calendar {
@@ -117,7 +152,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  font-size: 12px;
+  font-size: 14px;
   border-radius: 8px;
   padding: 10px 8px;
   cursor: pointer;
@@ -128,6 +163,7 @@
 .days:hover {
   background: #def03936;
   transform: scale(1.20);
+  margin: 8px 8px 0;
 }
 
 .days.select {
@@ -137,7 +173,11 @@
   margin: 8px 8px 0;
 }
 
-.days.active {
+.days.select .day {
+  color: #fff;
+}
+
+.days.active, .days.active .day {
   position: relative;
   color: #FA7600;
 }
@@ -163,6 +203,10 @@
   top: 5px;
 }
 
+.day {
+  color: #462700af;
+}
+
 .todate,.day {
   pointer-events: none;
   z-index: 2;
@@ -184,4 +228,257 @@
 
 .selected-date p:first-child {
   color: #462700af;
+}
+
+.add-task {
+  height: max-content;
+  transition: .3s ease;
+}
+
+.add-task button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 20px;
+  height: 100%;
+  border: none;
+  border-radius: 20px;
+  background: none;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.add-task button.inactive {
+  display: none;
+}
+
+.add-task button i {
+  font-size: 12px;
+  transition: .3s ease;
+}
+
+.add-task button:hover {
+  color: #fff;
+  background: #FA7600;
+}
+
+.add-task button:hover i {
+  transform: rotate(90deg);
+  color: #fff;
+}
+
+.new-task {
+  display: none;
+}
+
+.new-task.active {
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  gap: 15px;
+}
+
+.new-task-header {
+  display: flex;
+  gap: 8px;
+}
+
+.plus-icon {
+  padding: 6px 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: #FA7600;
+  color: #fff;
+}
+
+.new-task-selected-date {
+  color: #262626;
+}
+
+.new-task-selected-date div {
+  display: flex;
+  gap: 4px;
+  color: #462700af;
+}
+
+.new-task-title,
+.add-prior {
+  display: flex;
+  flex-direction: column;
+}
+
+.new-task-title label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.new-task-title label i {
+  font-size: 24px;
+}
+
+#titleInput, #selectPrior {
+  background: #fff;
+  border: none;
+  padding: 12px;
+  border-radius: 12px;
+}
+
+#titleInput::placeholder {
+  color: #462700af;
+}
+
+#titleInput:focus,
+#selectPrior:focus {
+  box-shadow: 0 0 4px #462700af;
+  outline: none;
+}
+
+.add-prior label {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  gap: 12px;
+}
+
+.add-prior label i {
+  font-size: 14px;
+}
+
+.prior-select {
+  position: relative;
+  font-family: 'Poppins', sans-serif;
+  user-select: none;
+}
+
+.selected {
+  position: relative;
+  background: #fff;
+  margin-top: 6px;
+  border-radius: 12px;
+  padding: 10px 12px;
+  cursor: pointer;
+  font-weight: 500;
+  font-size: 12px;
+  color: #333;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.selected::after {
+  position: absolute;
+  content: "▼";
+  font-size: 0.6rem;
+  right: 10px;
+  color: #777;
+  transition: transform 0.2s ease;
+}
+
+.prior-select.active .selected::after {
+  transform: rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 100%;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(-10px);
+  font-size: 12px;
+  transition: all 0.2s ease;
+  z-index: 99;
+}
+
+.prior-select.active .options {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0);
+}
+
+.options li {
+  padding: 10px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: 0.2s ease;
+}
+
+.options li:hover {
+  background: #f3f3f3;
+}
+
+/* Dot colors */
+.dott {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+}
+
+.dott.low {
+  background: #4caf50;
+}
+
+.dott.medium {
+  background: #ff9800;
+}
+
+.dott.high {
+  background: #f44336;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+  height: 50px;
+}
+
+.buttons button {
+  width: 100%;
+}
+
+#addTaskBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  gap: 6px;
+  padding: 10px;
+  background: #FA7600;
+  color: #fff;
+}
+
+#addTaskBtn:hover {
+  background: #fa7500c2;
+}
+
+#cancelBtn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px;
+  padding: 10px;
+}
+
+#cancelBtn:hover {
+  background: #262626a2;
+}
+
+#addTaskBtn:active,
+#cancelBtn:active {
+  transform: scale(0.95);
 }

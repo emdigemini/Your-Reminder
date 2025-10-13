@@ -54,7 +54,7 @@
       </div>
 
       <div class="choose-date">
-        <i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i>
+        <button><i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i></button>
         <div class="calendar">
           <div class="days">
             <p class="day">Sun</p>
@@ -85,7 +85,7 @@
             <p class="todate">7</p>
           </div>
         </div>
-        <i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i>
+        <button><i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i></button>
       </div>
       
       <div class="selected-date">
@@ -96,14 +96,64 @@
     </div>
 
     <div class="task-progress">
-
     </div>
     <div class="add-task">
 
+      <button id="addTask">
+        <i class="fa fa-plus" aria-hidden="true"></i> 
+        Add New Task</button>
+
+        <div class="new-task">
+
+          <div class="new-task-header">
+            <div class="plus-icon">
+              <i class="fas fa-plus"></i>
+            </div>
+            <div class="new-task-selected-date">
+              <p>New Task</p>
+              <div>
+                <i class="fa fa-calendar" aria-hidden="true"></i>
+                <p>Monday, Oct 13, 2025</p>  
+              </div>
+            </div>
+          </div>
+          <div class="new-task-title">
+            <label for="titleInput">
+              <i class="bi bi-fonts"></i>
+              Task Title
+            </label>
+            <input id="titleInput" type="text" placeholder="What needs to be done?">
+          </div>
+          <div class="add-prior">
+            <label>
+              <i class="bi bi-flag"></i>
+              Priority
+            </label>
+            <div class="prior-select">
+              <div class="selected">
+                Select Priority
+              </div>
+              <ul class="options">
+                <li data-value="low"><span class="dott low"></span> Low Priority</li>
+                <li data-value="medium"><span class="dott medium"></span> Medium Priority</li>
+                <li data-value="high"><span class="dott high"></span> High Priority</li>
+              </ul>
+            </div>
+          </div>
+          <div class="buttons">
+            <button id="addTaskBtn">
+              <i class="fa fa-plus" aria-hidden="true"></i> 
+              Add Task
+            </button>
+            <button id="cancelBtn">
+              Cancel
+            </button>
+          </div>
+        </div>
     </div>
     <div class="task-list">
       <div class="task-container">
-
+        
       </div>
     </div>
   </div>

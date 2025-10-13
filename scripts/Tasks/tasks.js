@@ -19,22 +19,22 @@ export function openTaskApp(){
         <div class="cal-text">
           <div class="select-date-text">
             <p>Select Date</p>
-            <p>October 2025</p>
+            <p id="monthDisplay">October 2025</p>
           </div>
-          <div class="today-text">
+          <div class="today">
             <p>Today</p>
           </div>
         </div>
       </div>
 
       <div class="choose-date">
-        <i class="fa fa-caret-left" aria-hidden="true"></i>
+        <i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i>
         <div class="calendar">
           <div class="days">
             <p class="day">Sun</p>
             <p class="todate">1</p>
           </div>
-          <div class="days active">
+          <div class="days">
             <p class="day">Mon</p>
             <p class="todate">2</p>
           </div>
@@ -59,15 +59,16 @@ export function openTaskApp(){
             <p class="todate">7</p>
           </div>
         </div>
-        <i class="fa fa-caret-right" aria-hidden="true"></i>
+        <i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i>
       </div>
       
       <div class="selected-date">
         <p>Selected Date</p>
-        <p>Monday, October 2, 2025</p>
+        <p id="selectedDate">Monday, October 2, 2025</p>
       </div>
 
     </div>
+
     <div class="task-progress">
 
     </div>
@@ -80,9 +81,12 @@ export function openTaskApp(){
       </div>
     </div>
   </div>
+
   `);
   };
   closeTab();
+  navigateDate();
+  loadCalendar();
 }
 
 function closeTab(){
@@ -96,6 +100,8 @@ function closeTab(){
     }, {once: true})
   })
 }
+
+/*============NAVIGATE CALENDAR============*/
 
 let nav = 0;
 let activeDate = new Date();
@@ -170,6 +176,7 @@ function loadCalendar(){
 
 function calendarClickListener(e){
   if(e.target.matches('.days')){
+    console.log('hi');
     const date = Array.from(this.querySelectorAll('.days'));
     const index = date.indexOf(e.target);
 
@@ -201,3 +208,39 @@ function updateSelectedDate(){
 }
 navigateDate();
 loadCalendar();
+
+/*============ADD NEW TASK============*/
+const addTask = document.getElementById('addTask');
+const createNewTask = document.querySelector('.new-task');
+const cancelBtn = document.getElementById('cancelBtn');
+
+addTask.addEventListener('click', () => {
+  addTask.classList.add('inactive');
+  createNewTask.classList.add('active')
+})
+
+cancelBtn.addEventListener('click', () => {
+  addTask.classList.remove('inactive');
+  createNewTask.classList.remove('active')
+})
+
+const selectPrior = document.querySelector('.prior-select');
+const selected = selectPrior.querySelector('.selected');
+const options = selectPrior.querySelectorAll('.options li');
+
+selected.addEventListener('click', () => {
+  selectPrior.classList.toggle('active');
+});
+
+options.forEach(option => {
+  option.addEventListener('click', () => {
+    selected.innerHTML = option.innerHTML;
+    selectPrior.classList.remove('active');
+  });
+});
+
+window.addEventListener('click', (e) => {
+  if (!selectPrior.contains(e.target)) {
+    selectPrior.classList.remove('active');
+  }
+});
