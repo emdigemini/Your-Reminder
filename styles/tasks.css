@@ -108,20 +108,21 @@
 
 .calendar {
   display: flex;
-  gap: 15px;
   justify-content: center;
   flex-wrap: wrap;
 }
 
 .days {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   font-size: 12px;
-  border-radius: 12px;
-  padding: 14px 8px;
+  border-radius: 8px;
+  padding: 10px 8px;
   cursor: pointer;
-  transition: 0.4s ease;
+  width: 40px;
+  transition: 0.3s ease;
 }
 
 .days:hover {
@@ -129,24 +130,55 @@
   transform: scale(1.20);
 }
 
-.days.active {
-  color: #FA7600;
-}
-
 .days.select {
   background: #FA7600;
   color: #fff;
   transform: scale(1.20);
+  margin: 8px 8px 0;
+}
+
+.days.active {
+  position: relative;
+  color: #FA7600;
+}
+
+.days.active::before {
+  content: '';
+  position: absolute;
+  height: 2px;
+  width: 100%;
+  background: #FA7600;
+  border-radius: 20px;
+  top: 5px;
+  z-index: 2;
+}
+
+.days.active::after {
+  content: '';
+  position: absolute;
+  height: 45px;
+  width: 100%;
+  background: #FFFFFF;
+  box-shadow: 0 0 2px #2626267D;
+  top: 5px;
+}
+
+.todate,.day {
+  pointer-events: none;
+  z-index: 2;
 }
 
 .selected-date {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  text-align: center;
   width: max-content;
   align-self: center;
   padding: 10px 40px;
   margin: 0 0 15px 0;
+  min-width: 100px;
+  max-width: 300px;
+  width: 100%;
   border-bottom: 1px solid #66666685;
 }
 

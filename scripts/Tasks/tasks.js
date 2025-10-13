@@ -1,5 +1,3 @@
-
-
 export function openTaskApp(){
   if(!document.querySelector('.tasks-tab')){
   document.body.insertAdjacentHTML('afterbegin', `
@@ -100,108 +98,106 @@ function closeTab(){
 }
 
 let nav = 0;
-let anotherYear;
+let activeDate = new Date();
+let dt = new Date();
+let navDate, currentDay, weekStart, tempDate;
 
-const nextBtn = document.getElementById('nextDate');
-const backBtn = document.getElementById('backDate');
-const todayBtn = document.querySelector('.today');
-const todate = document.querySelectorAll('.todate');
-const days = document.querySelectorAll('.days');
-
-nextBtn.addEventListener('click', () => {
-  nav++;
-  load();
-});
-
-backBtn.addEventListener('click', () => {
-  nav--;
-  load();
-});
-
-todayBtn.addEventListener('click', () => {
-  nav = 0;
-  load();
-})
-
-function load(){
-  const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
-  const dt = new Date();
-  const current = new Date();
-  const day = current.getDate();
-  const month = current.getMonth();
-  const year = current.getFullYear();
-
-  let newMonth = month + nav;
-  let newYear = year;
-  current.setDate(current.getDate() + nav);
+function navigateDate(){
+  const nextBtn = document.getElementById('nextDate');
+  const backBtn = document.getElementById('backDate');
+  const todayBtn = document.querySelector('.today');
 
 
-  const weekStart = new Date(current);
-  weekStart.setDate(current.getDate() - current.getDay());
-
-  if (newMonth > 11) {
-    newMonth = 0;
-    newYear++;
-    anotherYear = newYear;
-  } else if (newMonth < 0) {
-    newMonth = 11;
-    newYear--;
-  }
-
-  let tempDate = new Date(weekStart);
-
-  todate.forEach((el, i) => {
-    const dayNum = tempDate.getDate();
-    el.innerHTML = dayNum;
-    tempDate.setDate(tempDate.getDate() + 1);
+  nextBtn.addEventListener('click', () => {
+    nav++;
+    loadCalendar();
   });
 
-  const activeDate = new Date(current);
-  const currentWeekday = current.getDay();
-  const activeDay = activeDate.getDay();
+  backBtn.addEventListener('click', () => {
+    nav--;
+    loadCalendar();
+  });
 
-  days.forEach((el, i) => {
-    el.classList.remove('select');
-
-    el.addEventListener('click', () => {
-      if(dt.getDate() === weekStart.getDate()){
-        days[dt.getDay()].classList.add('active');
-      } else {
-        days[dt.getDay()].classList.remove('active');
-      }
-      days[activeDate.getDay()].classList.remove('select');
-      activeDate.setDate(current.getDate() - currentWeekday + i);
-
-      el.classList.add('select');
-      updateSelectedDate();
-    })
+  todayBtn.addEventListener('click', () => {
+    nav = 0;
+    loadCalendar();
   })
-
-  days[activeDay].classList.add('select');
-
-  if(!days[dt.getDay()].classList.contains('select')){
-    if(dt.getDate() === weekStart.getDate()){
-      days[dt.getDay()].classList.add('active');
-    }
-  } else {
-      days[dt.getDay()].classList.remove('active');
-  }
-
-
-  function updateSelectedDate(){
-    document.getElementById('monthDisplay').innerText = 
-    `${current.toLocaleDateString('en-us', {month: 'long'})} ${newYear}`;
-    document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
-      weekday: 'long',
-      month: 'long',
-      day: 'numeric',
-      year: 'numeric'
-    })}`;
-  }
-
-  updateSelectedDate();
-
 }
 
-load();
+function loadCalendar(){
+  const calendar = document.querySelector('.calendar');
+  const days = calendar.querySelectorAll('.days');
+  const todate = calendar.querySelectorAll('.todate');
+
+  dt = new Date();
+  currentDay = dt.getDay();
+
+  navDate = new Date();
+  navDate.setDate(navDate.getDate() + nav * 7);
+
+  weekStart = new Date(navDate);
+  weekStart.setDate(navDate.getDate() - navDate.getDay());
+
+  tempDate = new Date(weekStart);
+  tempDate.setDate(weekStart.getDate() + currentDay);
+
+  todate.forEach(el => {
+    const dayNum = weekStart.getDate();
+    el.innerHTML = dayNum;
+    weekStart.setDate(weekStart.getDate() + 1);
+  });
+
+  activeDate = new Date(navDate);
+
+  days.forEach(el => el.classList.remove('select'));
+
+  calendar.removeEventListener('click', calendarClickListener);
+  calendar.addEventListener('click', calendarClickListener);
+
+  if(dt.toDateString() === tempDate.toDateString()){
+    days[currentDay].classList.add('select');
+    updateSelectedDate();
+  }
+
+  if(!days[currentDay].classList.contains('select') 
+    && dt.toDateString() === tempDate.toDateString()
+  ){
+    days[currentDay].classList.add('active');
+  } else {
+    days[currentDay].classList.remove('active');
+  }
+}
+
+function calendarClickListener(e){
+  if(e.target.matches('.days')){
+    const date = Array.from(this.querySelectorAll('.days'));
+    const index = date.indexOf(e.target);
+
+    date[activeDate.getDay()].classList.remove('select');
+    activeDate.setDate(navDate.getDate() - currentDay + index);
+    e.target.classList.add('select');
+
+    if(!date[currentDay].classList.contains('select') 
+      && dt.toDateString() === tempDate.toDateString()
+    ){
+      date[currentDay].classList.add('active');
+    } else {
+      date[currentDay].classList.remove('active');
+    }
+    
+    updateSelectedDate();
+  }
+}
+
+function updateSelectedDate(){
+  document.getElementById('monthDisplay').innerText = 
+  `${navDate.toLocaleDateString('en-us', {month: 'long', year: 'numeric'})}`;
+  document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
+    weekday: 'short',
+    month: 'short',
+    day: 'numeric',
+    year: 'numeric'
+  })}`;
+}
+navigateDate();
+loadCalendar();
