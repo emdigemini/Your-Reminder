@@ -81,7 +81,7 @@ You can try the app here:
 
 Your App — Copyright (c) 2025 Dhenmark Opana
 
-Source Available License
+LICENSE
 
 This software and its source code are made publicly available for educational and demonstration purposes only.  
 You may view and learn from the code, but you are not permitted to copy, modify, distribute, or use it for commercial purposes without explicit permission from the author.
