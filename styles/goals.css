@@ -24,7 +24,7 @@
 .goals-logo-circle {
   position: sticky;
   top: 0;
-  background: #262626;
+  background: var(--card-goal);
   display: flex;
   align-items: center;
   padding: 20px;
@@ -71,7 +71,7 @@
 .avg-progress, .completed-goal {
   display: flex;
   align-items: center;
-  background: #262626;
+  background: var(--card-goal);
   box-shadow: 0 0 10px #26262644;
   border-radius: 12px;
   padding: 8px 12px;
@@ -98,7 +98,7 @@
 .set-goal {
   display: flex;
   flex-direction: column;
-  background: #262626;
+  background: var(--card-goal);
   box-shadow: 0 0 10px #26262644;
   gap: 15px;
   height: 100%;
@@ -269,7 +269,7 @@
   gap: 10px;
   padding: 10px;
   border-radius: 16px;
-  background: #262626;
+  background: var(--card-goal);
   box-shadow: 0 0 10px #26262644;
 }
 
@@ -312,7 +312,7 @@
   flex-direction: column;
   gap: 8px;
   border-radius: 16px;
-  background: #262626;
+  background: var(--card-goal);
   box-shadow: 0 0 10px #26262644;
 }
 
@@ -630,18 +630,12 @@
 
 /*LIGHT MODE*/
 body.light .goals-logo-circle {
-  background: #fff8f0;
   color: #462700af;
 }
 
 body.light .avg-progress,
 body.light .completed-goal {
-  background: #fff8f0a2;
   box-shadow: 0 0 10px #26262644;
-}
-
-body.light .set-goal {
-  background: #fff8f0a2;
 }
 
 body.light .set-goal h2 {
@@ -661,10 +655,6 @@ body.light #createGoal.disabled {
   background: #cf7c339a;
 }
 
-body.light .goal-controls-button {
-  background: #fff8f0a2;
-}
-
 body.light .goal-controls-button button {
   background: #e9e3de70;
   border: none;
@@ -681,10 +671,6 @@ body.light #completedGoal.active {
 body.light .goal-filter:hover {
   background: #FA7600;
   color: #fff;
-}
-
-body.light .goal-categories {
-  background: #fff8f0a2;
 }
 
 body.light .goal-categories button {
@@ -708,10 +694,6 @@ body.light .goal-categories button:hover {
 
 body.light .goal-categories p {
   color: #462700af;
-}
-
-body.light .your-goal-container {
-  background: #fff8f0a2;
 }
 
 body.light .goal-category {
