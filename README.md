@@ -79,14 +79,14 @@ You can try the app here:
 
 ## 📜 License  
 
-Copyright (c) 2025 Dhenmark Opana
+Your App — Copyright (c) 2025 Dhenmark Opana
 
-All rights reserved.
+Source Available License
 
-This project and its source code are the intellectual property of Dhenmark Opana.  
-No part of this project may be reproduced, distributed, or modified without the explicit permission of the author.
+This software and its source code are made publicly available for educational and demonstration purposes only.  
+You may view and learn from the code, but you are not permitted to copy, modify, distribute, or use it for commercial purposes without explicit permission from the author.
 
-For inquiries, collaborations, or contributions, please contact:  
+To request permission or to contribute to this project, please contact:  
 📧 GitHub: https://github.com/emdigemini  
 📸 Instagram: https://www.instagram.com/emdi.gem/
 
