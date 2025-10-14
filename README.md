@@ -79,7 +79,17 @@ You can try the app here:
 
 ## 📜 License  
 
-This project is open-source and available under the [MIT License](LICENSE).  
+Copyright (c) 2025 Dhenmark Opana
+
+All rights reserved.
+
+This project and its source code are the intellectual property of Dhenmark Opana.  
+No part of this project may be reproduced, distributed, or modified without the explicit permission of the author.
+
+For inquiries, collaborations, or contributions, please contact:  
+📧 GitHub: https://github.com/emdigemini  
+📸 Instagram: https://www.instagram.com/emdi.gem/
+
 
 ---
 
