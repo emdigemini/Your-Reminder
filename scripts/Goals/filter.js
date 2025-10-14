@@ -1,4 +1,4 @@
-import { Goal, yourGoals, getElm, renderGoal, updateProgressBar, sortItem, editYourGoal } from "./goals.js";
+import { Goal, yourGoals, getElm, renderGoal, updateProgressBar, sortItem, addGoalListListener } from "./goals.js";
 
 /*===============FILTER FUNCTION===============*/
 export let filterState = { status: 'allGoal', category: '' }
@@ -27,6 +27,11 @@ export function updateCategoryCounts(filtered){
     cat.textContent = `${cat.value} (${yourGoals.filter(g => g.category === cat.value).length})`;
   })
 }
+
+export function countGoalCompleted(){
+  const count = document.querySelector('.completed_count');
+  count.innerHTML = yourGoals.filter(g => g.completed).length;
+};
 
 export function filterGoal(){
   const filterBtn = getElm();
@@ -83,7 +88,7 @@ export function applyFilters(){
   sortItem(filtered);
   Goal.renderFilteredList(filtered);
   updateProgressBar(filtered);
-  editYourGoal();
+  addGoalListListener();
 } 
 
 /*===============END OF FILTER FUNCTION===============*/

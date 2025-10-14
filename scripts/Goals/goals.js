@@ -1,8 +1,11 @@
-import { filterState, filterGoal, filterCategory, applyFilters, updateGoalCounts, updateCategoryCounts } from "./filter.js";
+import { filterState, filterGoal, filterCategory, applyFilters, updateGoalCounts, updateCategoryCounts, countGoalCompleted } from "./filter.js";
 import { ifUnitsMoney } from "./utils/goal.js";
 
 export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 // localStorage.clear() 
+function saveToStorage(){
+  localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
+}
 
 export class Goal{
   constructor(id, title, category, target, progress, points, completed, unit, deadline, created){
@@ -27,7 +30,7 @@ export class Goal{
       <div class="goal-category">${this.category}</div>
       <div class="goal-title">
         <h2 class="current-title">${this.title}</h2>
-        <input class="change-goal-name hide" type="text" value="${this.title}"
+        <input class="change-title hide" type="text" value="${this.title}"
         placeholder="Rename your goal...">
         <div class="btn-goal">
           <div id="edit-goal">
@@ -257,9 +260,6 @@ export function getElm(){
     inputPoints       :     document.querySelectorAll('.input-points'),
     addPoints         :     document.querySelectorAll('.add-points'),
     editGoal          :     document.querySelectorAll('.editIt'),
-    saveGoal          :     document.querySelectorAll('.saveIt'),
-    currentTitle      :     document.querySelectorAll('.current-title'),
-    changeTitle       :     document.querySelectorAll('.change-goal-name')
   }
 
   return {input, btn, goal};
@@ -287,8 +287,6 @@ function allFunction(){
   // filter goals by category: health, career, personal or financial
   filterCategory();
 
-
-  controlGoal();
 }
 
 function closeTab(){
@@ -301,23 +299,7 @@ function closeTab(){
   })
 }
 
-function toggleThird_inputBox(){
-  const setDeadlineBox = document.querySelector('.input-box-3');
-  const toggleDeadlineBox = document.getElementById('setDeadline');
-  const close = document.getElementById('closeInputBox3');
-  toggleDeadlineBox.addEventListener('click', function(){
-    this.classList.add('active');
-    close.classList.add('active');
-    setDeadlineBox.classList.add('active');
-  })
-  close.addEventListener('click', function(){
-    console.log('click');
-    this.classList.remove('active');
-    btn.classList.remove('active');
-    setDeadlineBox.classList.remove('active');
-  })
-}
-
+/*============INPUT BOX LISTENER============*/
 function inputListener(){
   const set = getElm();
   const goalList = document.querySelector('.your-goal-list');
@@ -344,121 +326,6 @@ function inputListener(){
   checkInputs();
 }
 
-
-//listener for delete and edit
-export function editYourGoal(e){
-  const ctrl = getElm();
-  const goalList = document.querySelector('.your-goal-list');
-  goalList.addEventListener('click', e => {
-  // EDIT LISTENER
-    if(e.target.closest('.editIt')){
-      console.log('hi');
-      e.target.classList.add('active');
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const index = yourGoals.findIndex(g => g.id === goalId);
-      ctrl.goal.saveGoal[index].classList.remove('inactive');
-      ctrl.goal.currentTitle[index].classList.add('hide');
-      ctrl.goal.changeTitle[index].classList.remove('hide');
-    }
-
-    if(e.target.closest('.saveIt')){
-      e.target.classList.add('inactive');
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const index = yourGoals.findIndex(g => g.id === goalId);
-      const newTitle = ctrl.goal.changeTitle[index].value;
-      yourGoals[index].title = newTitle;
-      ctrl.goal.editGoal[index].classList.remove('active');
-      ctrl.goal.currentTitle[index].classList.remove('hide');
-      ctrl.goal.changeTitle[index].classList.add('hide');
-      saveToStorage();
-      renderGoal();
-    }
-  })
-}
-function controlGoal(){
-  const goalList = document.querySelector('.your-goal-list');
-  goalList.addEventListener('click', (e) => {
-    // DELETE LISTENER
-    if(e.target.classList.contains('delete-goal')){
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const delId = yourGoals.findIndex(g => g.id === goalId);
-      yourGoals.splice(delId, 1);
-      saveToStorage();
-      countGoalCompleted();
-      getAvgProgress();
-      applyFilters();
-    }
-
-    if(e.target.classList.contains('add-points')){
-      const container = e.target.closest('.your-goal-container');
-      const goalId = container.dataset.goalId;
-      const goalIndex = yourGoals.findIndex(g => g.id === goalId);
-
-      const goal = yourGoals[goalIndex];
-      if(goal.tempPoints + goal.points > goal.target){
-        console.log("Stop right there, overachiever! 🚫You've already maxed out your goal.");
-        return; 
-      }
-
-      if(goal.tempPoints > 0) 
-        goal.points += goal.tempPoints;
-      
-      container.querySelector('.input-points').value = '';
-      goal.tempPoints = 0;
-      goal.progress = Number(Math.min((goal.points / goal.target) * 100, 100).toFixed(2));
-
-      if(goal.progress === 100){
-        goal.completed = true;
-      }
-
-      saveToStorage();
-      countGoalCompleted();
-      getAvgProgress();
-      applyFilters();
-    }
-  });
-}
-
-export function updateProgressBar(filtered){
-  if(!filtered){
-    yourGoals.forEach(g => {
-      const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
-      const progressBar = container.querySelector('.your_progress');
-
-      progressBar.style.width = `${g.progress}%`;
-
-      const hue = (g.progress / 100) * 145;
-      
-      const nextHue = hue + 20;
-      progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
-      progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
-      completedState(g);
-    });
-    return;
-  }
-  if(filtered.length === 0)
-    return;
-  filtered.forEach(g => {
-    const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
-    const progressBar = container.querySelector('.your_progress');
-
-    progressBar.style.width = `${g.progress}%`;
-    progressBar.style.width = `${g.progress}%`;
-
-    const hue = (g.progress / 100) * 145;
-    
-    const nextHue = hue + 20;
-    progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
-    progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
-    completedState(g);
-  });
-}
-
-
-/*============ADD YOUR GOAL============*/
 let invalid = true;
 function checkInputs(){
   const set = getElm();
@@ -476,10 +343,27 @@ function checkInputs(){
   }
 }
 
+function toggleThird_inputBox(){
+  const setDeadlineBox = document.querySelector('.input-box-3');
+  const toggleDeadlineBox = document.getElementById('setDeadline');
+  const close = document.getElementById('closeInputBox3');
+  toggleDeadlineBox.addEventListener('click', function(){
+    this.classList.add('active');
+    close.classList.add('active');
+    setDeadlineBox.classList.add('active');
+  })
+  close.addEventListener('click', function(){
+    console.log('click');
+    this.classList.remove('active');
+    btn.classList.remove('active');
+    setDeadlineBox.classList.remove('active');
+  })
+}
+
+/*============ADD YOUR GOAL============*/
 function addGoal(){
   const set = getElm();
   const createGoal = set.btn.createGoal;
-
   createGoal.addEventListener('click', () => {
     if(invalid)return;
     const id = crypto.randomUUID();
@@ -518,6 +402,7 @@ export function renderGoal(){
   updateCategoryCounts();
   countGoalCompleted();
   getAvgProgress();
+
   if (yourGoals.length === 0) {
     goalList.innerHTML = `
       <div class="empty-state">
@@ -533,9 +418,152 @@ export function renderGoal(){
     const render = new Goal(g.id, g.title, g.category, g.target, g.progress, g.points, g.completed, g.unit, g.deadline, g.created);
     render.appendGoal();
   });
+
   updateProgressBar();
-  editYourGoal();
+  addGoalListListener();
 }
+
+/*================================================
+LISTENERS TO CONTROL YOUR GOAL
+SUCH EDITING, DELETING & ADDING POINTS TO PROGRESS
+================================================*/
+export function addGoalListListener(){
+  preventMultiple_ControlHandler();
+  controlGoalHandler();
+}
+
+function preventMultiple_ControlHandler(){
+  const goalList = document.querySelector('.your-goal-list');
+  goalList.removeEventListener('click', controlGoal);
+}
+
+function controlGoalHandler(){
+  const goalList = document.querySelector('.your-goal-list');
+  goalList.addEventListener('click', controlGoal);
+}
+
+function controlGoal(e){
+  // DELETE LISTENER
+  if(e.target.classList.contains('delete-goal')){
+    const container = e.target.closest('.your-goal-container');
+    const goalId = container.dataset.goalId;
+    const delId = yourGoals.findIndex(g => g.id === goalId);
+    yourGoals.splice(delId, 1);
+    saveToStorage();
+    countGoalCompleted();
+    getAvgProgress();
+    applyFilters();
+  }
+
+  if(e.target.closest('.editIt')){
+    e.target.classList.add('active');
+    const container = e.target.closest('.your-goal-container');
+    const saveBtn = container.querySelector('.saveIt');       
+    const currentTitle = container.querySelector('.current-title');
+    const changeTitle = container.querySelector('.change-title');
+    saveBtn.classList.remove('inactive');
+    currentTitle.classList.add('hide');
+    changeTitle.classList.remove('hide');
+  }
+
+  if(e.target.closest('.saveIt')){
+    e.target.classList.add('inactive');
+    const container = e.target.closest('.your-goal-container');
+    const editBtn = container.querySelector('.editIt');       
+    const currentTitle = container.querySelector('.current-title');
+    const changeTitle = container.querySelector('.change-title');
+
+    const goalId = container.dataset.goalId;
+    const index = yourGoals.findIndex(g => g.id === goalId);
+    const newTitle = changeTitle.value;
+    yourGoals[index].title = newTitle;
+
+    editBtn.classList.remove('active');
+    currentTitle.classList.remove('hide');
+    changeTitle.classList.add('hide');
+    saveToStorage();
+    renderGoal();
+  }
+
+  if(e.target.classList.contains('add-points')){
+    const container = e.target.closest('.your-goal-container');
+    const goalId = container.dataset.goalId;
+    const goalIndex = yourGoals.findIndex(g => g.id === goalId);
+
+    const goal = yourGoals[goalIndex];
+    if(goal.tempPoints + goal.points > goal.target){
+      console.log("Stop right there, overachiever! 🚫You've already maxed out your goal.");
+      return; 
+    }
+
+    if(goal.tempPoints > 0) 
+      goal.points += goal.tempPoints;
+    
+    container.querySelector('.input-points').value = '';
+    goal.tempPoints = 0;
+    goal.progress = Number(Math.min((goal.points / goal.target) * 100, 100).toFixed(2));
+
+    if(goal.progress === 100){
+      goal.completed = true;
+    }
+
+    saveToStorage();
+    countGoalCompleted();
+    getAvgProgress();
+    applyFilters();
+  }
+}
+
+export function updateProgressBar(filtered){
+  if(!filtered){
+    yourGoals.forEach(g => {
+      const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
+      const progressBar = container.querySelector('.your_progress');
+
+      progressBar.style.width = `${g.progress}%`;
+
+      const hue = (g.progress / 100) * 145;
+      
+      const nextHue = hue + 20;
+      progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
+      progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
+      completedState(g);
+    });
+    return;
+  }
+  if(filtered.length === 0)
+    return;
+  filtered.forEach(g => {
+    const container = document.querySelector(`.your-goal-container[data-goal-id="${g.id}"]`);
+    const progressBar = container.querySelector('.your_progress');
+
+    progressBar.style.width = `${g.progress}%`;
+    progressBar.style.width = `${g.progress}%`;
+
+    const hue = (g.progress / 100) * 145;
+    
+    const nextHue = hue + 20;
+    progressBar.style.background = `linear-gradient(90deg, hsl(${hue}, 100%, 50%), hsl(${nextHue}, 100%, 60%))`;
+    progressBar.style.transition = "width 0.5s ease, background 0.5s ease";
+    completedState(g);
+  });
+}
+
+function getAvgProgress() {
+   const average = document.querySelector('.avg-progress .count span');
+
+    if (yourGoals.length === 0) {
+      average.textContent = "0%";
+      return;
+    }
+
+    const totalProgress = yourGoals.reduce((sum, goal) => sum + goal.progress, 0);
+    const avgProgress = totalProgress / yourGoals.length;
+
+    average.textContent = `${Number(avgProgress.toFixed(2))}%`;
+}
+
+/*============SORT EVERY GOAL ITEM IN THE LIST============*/
 
 export function sortItem(filtered){
   // sort every time: incomplete first and newest first
@@ -558,10 +586,8 @@ export function sortItem(filtered){
   saveToStorage();
 }
 
-function saveToStorage(){
-  localStorage.setItem('yourGoals', JSON.stringify(yourGoals));
-}
 
+/*============ALL MESSAGE STATE FUNCTION============*/
 function completedState(g){
   if(g.completed){
     // let message = [
@@ -586,23 +612,4 @@ function emptyState(){
       <p class="desc">Time to fill it with awesome goals!</p>
     </div>
   `;
-}
-
-function countGoalCompleted(){
-  const count = document.querySelector('.completed_count');
-  count.innerHTML = yourGoals.filter(g => g.completed).length;
-};
-
-function getAvgProgress() {
-   const average = document.querySelector('.avg-progress .count span');
-
-    if (yourGoals.length === 0) {
-      average.textContent = "0%";
-      return;
-    }
-
-    const totalProgress = yourGoals.reduce((sum, goal) => sum + goal.progress, 0);
-    const avgProgress = totalProgress / yourGoals.length;
-
-    average.textContent = `${Number(avgProgress.toFixed(2))}%`;
 }
