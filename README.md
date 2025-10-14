@@ -63,7 +63,9 @@ You can try the app here:
 **Dhenmark Opana** (aka *emdi*)  
 > A passionate college student aiming to become a magnificent developer in the future.  
 
-📧 Contact me on GitHub: [@emdigemini](https://github.com/emdigemini)
+📧 **Contact Me**  
+- GitHub: [@emdigemini](https://github.com/emdigemini)
+- Instagram: [@emdigemini](https://instagram.com/emdi.gem)
 
 ---
 
