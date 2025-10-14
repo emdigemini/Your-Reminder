@@ -61,7 +61,7 @@ You can try the app here:
 ## 👤 Author  
 
 **Dhenmark Opana** (aka *emdi*)  
-> A passionate college student aiming to become a magnificent developer in the future.  
+> A college student on a journey to become a top-tier developer. Always learning, always building. 
 
 📧 **Contact Me**  
 - GitHub: [@emdigemini](https://github.com/emdigemini)
