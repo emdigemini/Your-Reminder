@@ -15,7 +15,7 @@
 
 .your-note-tab {
   background: #131313;
-  position: relative;
+  position: fixed;
   height: 100dvh;
   width: 100vw;
   border-radius: 30px 30px 0 0;
@@ -82,6 +82,13 @@
   color: #fff;
   padding: 0 20px;
   line-height: 24px;
+  touch-action: pan-y;
+  overflow-y: none;
+  background-image: repeating-linear-gradient(
+    to bottom,
+    transparent, transparent 23px,
+    #ccc 24px
+  );
 }
 
 .your-note-page .textpad:focus {

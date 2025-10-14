@@ -37,6 +37,8 @@ closeBtn.addEventListener('click', closeDashboard)
 function start(){
   buttons.start.addEventListener('click', () => {
     history.pushState({ yourHub: true }, ''); 
+    console.log(window.history);
+
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -117,6 +119,8 @@ cards.reminder.addEventListener('click', () => {
 // notes
 cards.notes.addEventListener('click', () => {
   openNoteApp();
+    console.log(window.history);
+
 });
 
 // goals
@@ -158,47 +162,3 @@ function openSettings(){
 }
 
 start();
-
-function setHeight() {
-  document.querySelector(".container").style.height = window.innerHeight + "px";
-}
-window.addEventListener("resize", setHeight);
-window.addEventListener("orientationchange", setHeight);
-setHeight(); // initial
-
-
-
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const long_weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const short_weekdays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
-const dt = new Date();
-const day = dt.getDate();
-const month = dt.getMonth();
-const year = dt.getFullYear();
-// console.log(day, month, year);
-
-const firstDayOfMonth = new Date(year, month, 1);
-const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-const dateString = firstDayOfMonth.toLocaleDateString('en-us', {
-  weekday: 'short',
-  month: 'numeric',
-  day: 'numeric',
-  year: 'numeric',
-});
-const getIndexOfWeekdays = dateString.split(',')[0];
-
-const paddingDays = short_weekdays.indexOf(getIndexOfWeekdays);
-
-for(let i = 1; i <= paddingDays + daysInMonth; i++){
-  const daySquare = document.createElement('div');
-  daySquare.classList.add('day'); 
-  
-  if(i > paddingDays){
-    daySquare.innerText = i - paddingDays;
-    daySquare.addEventListener('click', () => console.log('click'));
-  } else {
-    daySquare.classList.add('padding');
-  }
-}

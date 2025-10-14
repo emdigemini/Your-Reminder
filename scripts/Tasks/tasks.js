@@ -1,3 +1,8 @@
+const yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+function saveToStorage(){
+  localStorage.setItem('yourTasks', JSON.stringify(yourTasks));
+}
+
 export function openTaskApp(){
   if(!document.querySelector('.tasks-tab')){
   document.body.insertAdjacentHTML('afterbegin', `
@@ -31,30 +36,37 @@ export function openTaskApp(){
         <button><i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i></button>
         <div class="calendar">
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Sun</p>
             <p class="todate">1</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Mon</p>
             <p class="todate">2</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Tue</p>
             <p class="todate">3</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Wed</p>
             <p class="todate">4</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Thu</p>
             <p class="todate">5</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Fri</p>
             <p class="todate">6</p>
           </div>
           <div class="days">
+            <p class="countTask"></p>
             <p class="day">Sat</p>
             <p class="todate">7</p>
           </div>
@@ -70,7 +82,51 @@ export function openTaskApp(){
     </div>
 
     <div class="task-progress">
+      
+      <div class="track-task-progress">
+        
+        <div class="task-progress-header">
+          <p>Task Progress</p>
+          <p class="progress-date">Today</p>
+        </div>
+
+        <div class="task-progress-status">
+          <div>
+            <i class="bi bi-bar-chart-line"></i>  
+            <p class="progress-percent">0%</p>
+          </div>
+          <p>Complete</p>
+        </div>
+          
+        </div>
+      <div class="task-progress-bar">
+        <!--PROGRESS LINE HERE-->
+      </div>
+      <div class="task-overview">
+        <div class="card-overview total">
+          <i class="bi bi-bullseye"></i>
+          <div class="task-total">
+            <p id="totalCount">0</p>
+            <p>Total</p>
+          </div>
+        </div>
+        <div class="card-overview completed">
+          <i class="bi bi-clipboard2-check-fill"></i>
+          <div class="task-completed">
+            <p id="completedCount">0</p>
+            <p>Completed</p>
+          </div>
+        </div>
+        <div class="card-overview pending">
+          <i class="bi bi-clock-history"></i>
+          <div class="task-pending">
+            <p id="pendingCount">0</p>
+            <p>Pending</p>
+          </div>
+        </div>
+      </div>
     </div>
+
     <div class="add-task">
 
       <button id="addTask">
@@ -105,7 +161,7 @@ export function openTaskApp(){
             </label>
             <div class="prior-select">
               <div class="selected">
-                Select Priority
+                <span class="dott low"></span> Low Priority
               </div>
               <ul class="options">
                 <li data-value="low"><span class="dott low"></span> Low Priority</li>
@@ -126,9 +182,9 @@ export function openTaskApp(){
         </div>
     </div>
     <div class="task-list">
-      <div class="task-container">
-        
-      </div>
+
+      <!--GENERATE TASK HERE-->
+
     </div>
   </div>
 
@@ -138,7 +194,7 @@ export function openTaskApp(){
   closeTab();
   navigateDate();
   loadCalendar();
-  addNewTask();
+  toggleAddTaskBox();
 }
 
 function closeTab(){
@@ -159,6 +215,8 @@ let nav = 0;
 let activeDate = new Date();
 let dt = new Date();
 let navDate, currentDay, weekStart, tempDate;
+let selectedDate = '';
+
 
 function navigateDate(){
   const nextBtn = document.getElementById('nextDate');
@@ -185,6 +243,7 @@ function navigateDate(){
 function loadCalendar(){
   const calendar = document.querySelector('.calendar');
   const days = calendar.querySelectorAll('.days');
+  const countTask = calendar.querySelectorAll('.countTask');
   const todate = calendar.querySelectorAll('.todate');
 
   dt = new Date();
@@ -199,11 +258,14 @@ function loadCalendar(){
   tempDate = new Date(weekStart);
   tempDate.setDate(weekStart.getDate() + currentDay);
 
-  todate.forEach(el => {
+  todate.forEach((el, i) => {
     const dayNum = weekStart.getDate();
+    const dayDate = weekStart.toLocaleDateString();
     el.innerHTML = dayNum;
+    days[i].dataset.dateId = dayDate;
     weekStart.setDate(weekStart.getDate() + 1);
   });
+
 
   activeDate = new Date(navDate);
 
@@ -214,6 +276,7 @@ function loadCalendar(){
 
   if(dt.toDateString() === tempDate.toDateString()){
     days[currentDay].classList.add('select');
+    countTask[currentDay].classList.add('select');
     updateSelectedDate();
   }
 
@@ -224,23 +287,29 @@ function loadCalendar(){
   } else {
     days[currentDay].classList.remove('active');
   }
+    selectedDate = activeDate.toLocaleDateString();
 
   document.getElementById('monthDisplay').innerText = 
   `${navDate.toLocaleDateString('en-us', {month: 'long', year: 'numeric'})}`;
+  renderYourTask();
 }
 
 function calendarClickListener(e){
   if(e.target.closest('.days')){
     const date = Array.from(this.querySelectorAll('.days'));
+    const countTask = Array.from(this.querySelectorAll('.countTask'));
     const index = date.indexOf(e.target);
-
+    
     if(e.target.classList.contains('select')){
       return;
     }
 
     date[activeDate.getDay()].classList.remove('select');
+    countTask[activeDate.getDay()].classList.remove('select');
+
     activeDate.setDate(navDate.getDate() - currentDay + index);
     e.target.classList.add('select');
+    countTask[activeDate.getDay()].classList.add('select');
 
     if(!date[currentDay].classList.contains('select') 
       && dt.toDateString() === tempDate.toDateString()
@@ -249,8 +318,11 @@ function calendarClickListener(e){
     } else {
       date[currentDay].classList.remove('active');
     }
+    selectedDate = activeDate.toLocaleDateString();
     
     updateSelectedDate();
+    renderYourTask();
+
   }
 }
 
@@ -262,13 +334,14 @@ function updateSelectedDate(){
     year: 'numeric'
   })}`;
 }
-closeTab();
-navigateDate();
-loadCalendar();
-addNewTask();
+// closeTab();
+// navigateDate();
+// loadCalendar();
+// toggleAddTaskBox();
+// addNewTask();
 
 /*============ADD NEW TASK============*/
-function addNewTask(){
+function toggleAddTaskBox(){
   const addTask = document.getElementById('addTask');
   const createNewTask = document.querySelector('.new-task');
   const cancelBtn = document.getElementById('cancelBtn');
@@ -293,7 +366,8 @@ function addNewTask(){
 
   options.forEach(option => {
     option.addEventListener('click', () => {
-      selected.innerHTML = option.innerHTML;
+       selected.innerHTML = option.innerHTML
+       selectedPriority = selected.textContent;
       selectPrior.classList.remove('active');
     });
   });
@@ -303,4 +377,89 @@ function addNewTask(){
       selectPrior.classList.remove('active');
     }
   });
+}
+
+let selectedPriority = 'Low Priority';
+
+function addNewTask(){
+  document.getElementById('addTaskBtn').addEventListener('click', () => {
+    if(inputValidation())
+    return;
+
+    const titleInput = document.getElementById('titleInput');
+    const title = titleInput.value;
+    
+    yourTasks.push({
+      title, 
+      selectedPriority,
+      selectedDate
+    });
+    console.log(yourTasks);
+    titleInput.value = '';
+    renderYourTask();
+    saveToStorage();
+  });
+}
+
+function inputValidation(){
+  const titleInput = document.getElementById('titleInput');
+  if(titleInput.value === ''){
+    titleInput.classList.add('invalid');
+    titleInput.addEventListener('animationend', () => {
+    titleInput.classList.remove('invalid');
+    });
+    titleInput.focus();
+    return true;  
+  }
+}
+
+  /*================
+======RENDER=TASKS======
+  ================*/
+function renderYourTask(){
+  const taskList = document.querySelector('.task-list');
+  const selectedTask = yourTasks.filter(t => t.selectedDate === selectedDate);
+  const days = Array.from(document.querySelectorAll('.days'));
+  const index = days.findIndex(d => d.dataset.dateId === selectedDate);
+  const counts = document.querySelectorAll('.countTask');
+  if(selectedTask.length > 0){
+    counts[index].innerText = selectedTask.length;
+  } else {
+    counts[index].innerText = '';
+  }
+  const renderTask = selectedTask.map(t => `
+      <div class="task-container">
+        <div class="your-task-header">
+          <div class="your-priority">
+            ${t.selectedPriority}
+          </div>
+          <div class="task-btn-group">
+            <i id="editYourTask" class="bi bi-pencil-square"></i>
+            <i id="trashYourTask" class="bi bi-trash-fill"></i>
+          </div>
+        </div>
+        <div class="content">
+            <div class="checkbox-wrap">
+              <input type="checkbox" id="circleChk" class="circle-checkbox" />
+            </div>
+            <p class="task-title">${t.title}</p>
+        </div>
+      </div>
+    `).join('');
+
+  taskList.innerHTML = renderTask;
+  countTotalTask(selectedTask);
+  countPendingTask(selectedTask);
+}
+
+function countTotalTask(selectedTask){
+  const total = document.getElementById('totalCount');
+  total.innerText = selectedTask.length;
+
+}
+
+function countPendingTask(selectedTask){
+  const counts = document.querySelectorAll('.countTask');
+  const pending = document.getElementById('pendingCount');
+  pending.innerText = selectedTask.length;
 }

@@ -3,6 +3,7 @@
 }
 
 .tasks-tab {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   position: absolute;
   top: 0;
   height: 100%;
@@ -55,10 +56,13 @@
 
 .task-list {
   height: 350px;
+  padding: 0;
+  max-height: max-content;
+  height: 100%;
+  box-shadow: none;
 }
 
 .task-select-date {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   display: flex;
   max-height: 750px;
   height: max-content;
@@ -168,14 +172,33 @@
 
 .days:hover {
   background: #def03936;
-  transform: scale(1.05);
+  transform: scale(1.10);
   margin: 4px 2px 0;
+}
+
+.countTask {
+  position: absolute;
+  top: -3px;
+  right: -3px;
+  color: #fff;
+  font-size: 10px;
+  background: #FA7600;
+  border-radius: 50px;
+  padding: 0 4px;
+  z-index: 2;
+}
+
+.countTask.select {
+  color: #FA7600;
+  background: #fff;
+  font-size: 10px;
+  top: -7px;
 }
 
 .days.select {
   background: #FA7600;
   color: #fff;
-  transform: scale(1.20);
+  transform: scale(1.10);
   margin: 8px 8px 0;
 }
 
@@ -468,7 +491,6 @@
 
 .prior-select {
   position: relative;
-  font-family: 'Poppins', sans-serif;
   user-select: none;
 }
 
@@ -591,10 +613,129 @@
 }
 
 #cancelBtn:hover {
-  background: #262626a2;
+  background: #dfdfdfa2;
+  color: #262626;
 }
 
 #addTaskBtn:active,
 #cancelBtn:active {
-  transform: scale(0.95);
+  transform: scale(0.90);
 }
+
+/*======TASK CONTAINER======*/
+.task-container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: var(--box-padding);
+  border-radius: 20px;
+  box-shadow: 0 0 20px #26262669;
+  transition: .3s ease;
+}
+
+.task-container:hover {
+  transform: scale(1.03);
+}
+
+.your-task-header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.your-priority {
+  background: #ffdca950;
+  color: #ff9800;
+  border: 1px solid #ff9900ae;
+  padding: 4px 8px;
+  border-radius: 15px;
+  font-size: 12px;
+}
+
+.task-btn-group {
+  display: flex;
+  gap: 15px;
+}
+
+#editYourTask, #trashYourTask {
+  cursor: pointer;
+  transition: .2s ease;
+}
+#editYourTask {
+  color: #3b3b3b;
+}
+#editYourTask:hover {
+  color: #5b5b5b;
+}
+#trashYourTask {
+  color: #f44336;
+}
+#trashYourTask:hover {
+  color: #f1685ee0;
+}
+
+.content {
+  display: flex;
+  gap: 6px;
+  font-size: 16px;
+}
+
+.task-title {
+  user-select: none;
+}
+
+.circle-checkbox {
+  appearance: none;
+  width: 20px;
+  height: 20px;
+  border: 2px solid #16a34a; 
+  border-radius: 50%;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.circle-checkbox:hover {
+  border: 2px solid #16a34a; 
+}
+
+.circle-checkbox:checked {
+  background-color: #16a34a;
+  border: 2px solid #16a34a; 
+}
+
+.circle-checkbox:checked::after {
+  content: "✔️";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 15px;
+  width: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff55;
+  font-size: 12 px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+/*======CONTROL WITH JS======*/
+#titleInput.invalid {
+  animation: errorShake .3s ease;
+}
+
+@keyframes errorShake {
+  0% { 
+    transform: translate(0); 
+  }
+  10%, 30%, 50%,  90% { 
+    transform: translateX(-2px); 
+  }
+  20%, 40%, 80% {
+     transform: translateX(2px); 
+    }
+  100% {
+     transform: translate(0); 
+    }
+}
+

@@ -294,7 +294,9 @@ function yourNotesListener() {
 }
 
 /*----------------- Open Note -----------------*/
-let noteEl = {};
+let noteEl = {
+
+};
 
 function openYourNote(noteId) {
   const yourNote = yourNotesList.find(note => note.id === noteId);
@@ -395,7 +397,8 @@ function noteTabEl(){
 const root = document.documentElement;
 
 function openNoteTab() {
-  history.replaceState({ yourNoteTab: true }, "");
+  history.pushState({ yourNoteTab: true }, ""); 
+  console.log(window.history);
   noteEl.mainOverlay.remove();
   noteEl.noteListBox.classList.remove('open');
   noteEl.noteListBox.classList.add('close');
