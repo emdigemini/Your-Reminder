@@ -1,5 +1,14 @@
 :root {
   --box-padding: 20px;
+
+  --prio-bg-low: #88e88b5f;
+  --prio-text1: #1a871d;
+
+  --prio-bg-med: #ffdca950;
+  --prio-text2: #ff9800;
+
+  --prio-bg-high: #f2746b9a;
+  --prio-text3: #9a251c;
 }
 
 .tasks-tab {
@@ -40,7 +49,7 @@
   flex-direction: column;
   height: 350px;
   width: 100%;
-  box-shadow: 0 0 20px #26262669;
+  box-shadow: 0 0 20px #2626263f;
   border-radius: 20px;
   gap: 20px;
   padding: var(--box-padding);
@@ -164,7 +173,8 @@
   align-items: center;
   font-size: 14px;
   border-radius: 8px;
-  padding: 10px 8px;
+  margin: 4px 0;
+  padding: 4px 8px 0px;
   cursor: pointer;
   width: 40px;
   transition: 0.3s ease;
@@ -173,12 +183,12 @@
 .days:hover {
   background: #def03936;
   transform: scale(1.10);
-  margin: 4px 2px 0;
+  margin: 0 2px;
 }
 
 .countTask {
   position: absolute;
-  top: -3px;
+  top: -1px;
   right: -3px;
   color: #fff;
   font-size: 10px;
@@ -192,14 +202,14 @@
   color: #FA7600;
   background: #fff;
   font-size: 10px;
-  top: -7px;
+  top: -4px;
 }
 
 .days.select {
   background: #FA7600;
   color: #fff;
   transform: scale(1.10);
-  margin: 8px 8px 0;
+  margin: 0 2px;
 }
 
 .days.select .day {
@@ -645,7 +655,7 @@
 .your-priority {
   background: #ffdca950;
   color: #ff9800;
-  border: 1px solid #ff9900ae;
+  border: 1px solid #ff9900;
   padding: 4px 8px;
   border-radius: 15px;
   font-size: 12px;
@@ -656,21 +666,25 @@
   gap: 15px;
 }
 
-#editYourTask, #trashYourTask {
+.editYourTask, .trashYourTask {
   cursor: pointer;
   transition: .2s ease;
 }
-#editYourTask {
+.editYourTask {
   color: #3b3b3b;
 }
-#editYourTask:hover {
+.editYourTask:hover {
   color: #5b5b5b;
 }
-#trashYourTask {
-  color: #f44336;
+.trashYourTask {
+  color: #df493ed6;
 }
-#trashYourTask:hover {
-  color: #f1685ee0;
+.trashYourTask:hover {
+  color: #f1685e9e;
+}
+
+.editYourTask.hide {
+  display: none;
 }
 
 .content {
@@ -739,3 +753,55 @@
     }
 }
 
+.your-priority.low {
+  background: var(--prio-bg-low);
+  color: var(--prio-text1);
+  border: 1px solid var(--prio-text1);
+}
+.your-priority.med {
+  background: var(--prio-bg-med);
+  color: var(--prio-text2);
+  border: 1px solid var(--prio-text2);
+}
+.your-priority.high {
+  background: var(--prio-bg-high);
+  color: var(--prio-text3);
+  border: 1px solid var(--prio-text3);
+}
+
+/*EMPTY TASK*/
+.empty-task {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 10px;
+  box-shadow: 0 0 20px #2626261d;
+  padding: var(--box-padding);
+  border-radius: 20px;
+}
+
+.check-square {
+  background-image: linear-gradient(to bottom right,
+  #fff584, 
+  #FA7600, #FA7600);
+  width: max-content;
+  padding: 18px 20px;
+  border-radius: 25px;
+  color: #fff;
+  font-size: 25px;
+}
+
+.empty-task p {
+  color: #262626;
+  font-weight: 600;
+}
+
+.empty-task p:last-child {
+  color: #7549077e;
+  font-weight: 400;
+  font-size: 15px;
+  max-width: 250px;
+  min-width: 150px;
+  width: 100%;
+}

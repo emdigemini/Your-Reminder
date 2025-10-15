@@ -195,6 +195,7 @@ export function openTaskApp(){
   navigateDate();
   loadCalendar();
   toggleAddTaskBox();
+  addNewTask();
 }
 
 function closeTab(){
@@ -210,7 +211,6 @@ function closeTab(){
 }
 
 /*============NAVIGATE CALENDAR============*/
-
 let nav = 0;
 let activeDate = new Date();
 let dt = new Date();
@@ -327,6 +327,26 @@ function calendarClickListener(e){
 }
 
 function updateSelectedDate(){
+  const progressDate = document.querySelector('.progress-date');
+
+  let date1 = new Date(activeDate);
+  let date2 = new Date(dt);
+
+  date1.setHours(0, 0, 0, 0);
+  date2.setHours(0, 0, 0, 0);
+
+  let diffDays = (date1 - date2) / (1000 * 60 * 60 * 24);
+
+  if(diffDays === 0){
+    progressDate.innerText = 'Today';
+  } else if(diffDays === 1){
+    progressDate.innerText = 'Tomorrow';
+  } else if(diffDays === -1){
+    progressDate.innerText = 'Yesterday';
+  } else {
+    progressDate.innerText = activeDate.toDateString();
+  }
+
   document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
     weekday: 'short',
     month: 'short',
@@ -334,11 +354,11 @@ function updateSelectedDate(){
     year: 'numeric'
   })}`;
 }
-// closeTab();
-// navigateDate();
-// loadCalendar();
-// toggleAddTaskBox();
-// addNewTask();
+closeTab();
+navigateDate();
+loadCalendar();
+toggleAddTaskBox();
+addNewTask();
 
 /*============ADD NEW TASK============*/
 function toggleAddTaskBox(){
@@ -388,8 +408,10 @@ function addNewTask(){
 
     const titleInput = document.getElementById('titleInput');
     const title = titleInput.value;
+    const id = crypto.randomUUID();
     
     yourTasks.push({
+      id,
       title, 
       selectedPriority,
       selectedDate
@@ -420,46 +442,120 @@ function renderYourTask(){
   const taskList = document.querySelector('.task-list');
   const selectedTask = yourTasks.filter(t => t.selectedDate === selectedDate);
   const days = Array.from(document.querySelectorAll('.days'));
-  const index = days.findIndex(d => d.dataset.dateId === selectedDate);
   const counts = document.querySelectorAll('.countTask');
-  if(selectedTask.length > 0){
-    counts[index].innerText = selectedTask.length;
-  } else {
-    counts[index].innerText = '';
-  }
+  
+  days.forEach((d, i) => {
+    const tasksCount = yourTasks.filter(t => t.selectedDate === d.dataset.dateId);
+    counts[i].innerText = tasksCount.length || '';
+  });
+
   const renderTask = selectedTask.map(t => `
-      <div class="task-container">
+      <div class="task-container" data-task-id="${t.id}">
         <div class="your-task-header">
-          <div class="your-priority">
+          <div class="your-priority ${priorityColor(t)}">
             ${t.selectedPriority}
           </div>
           <div class="task-btn-group">
-            <i id="editYourTask" class="bi bi-pencil-square"></i>
-            <i id="trashYourTask" class="bi bi-trash-fill"></i>
+            <i class="editYourTask bi bi-pencil-square"></i>
+            <i class="saveIt inactive bi bi-check2"></i>
+            <i class="trashYourTask bi bi-trash-fill"></i>
           </div>
         </div>
         <div class="content">
             <div class="checkbox-wrap">
               <input type="checkbox" id="circleChk" class="circle-checkbox" />
             </div>
-            <p class="task-title">${t.title}</p>
+            <div class="task-title">
+              <p class="current-title">${t.title}</p>
+              <input class="change-title hide" type="text" placeholder="Wanna change task?" 
+              value="${t.title}">
+            </div>
         </div>
       </div>
     `).join('');
 
-  taskList.innerHTML = renderTask;
+  taskList.innerHTML = renderTask || emptyTask();
   countTotalTask(selectedTask);
-  countPendingTask(selectedTask);
+  controlHandler();
 }
 
 function countTotalTask(selectedTask){
   const total = document.getElementById('totalCount');
+  const pending = document.getElementById('pendingCount');
   total.innerText = selectedTask.length;
-
+  pending.innerText = selectedTask.length;
 }
 
-function countPendingTask(selectedTask){
-  const counts = document.querySelectorAll('.countTask');
-  const pending = document.getElementById('pendingCount');
-  pending.innerText = selectedTask.length;
+/*=========CONTROL FUNCTION=========*/
+function controlHandler(){
+  const container = document.querySelector('.task-list');
+
+  container.removeEventListener('click', taskBox);
+  container.addEventListener('click', taskBox);
+}
+
+function taskBox(e){
+  if(e.target.matches('.trashYourTask')){
+    const taskBox = e.target.closest('.task-container');
+    const taskId = taskBox.dataset.taskId;
+    const index = yourTasks.findIndex(t => t.id === taskId);
+    yourTasks.splice(index, 1);
+    saveToStorage();
+    renderYourTask();
+  }
+
+  if(e.target.matches('.editYourTask')){
+    const taskBox = e.target.closest('.task-container');
+    e.target.classList.add('hide');
+    const currentTitle = taskBox.querySelector('.current-title');
+    const newTitle = taskBox.querySelector('.change-title');
+    const saveBtn = taskBox.querySelector('.saveIt');
+
+    currentTitle.classList.add('hide');
+    newTitle.classList.remove('hide');
+    saveBtn.classList.remove('inactive');
+  }
+
+  if(e.target.matches('.saveIt')){
+    const taskBox = e.target.closest('.task-container');
+    const taskId = taskBox.dataset.taskId;
+    const index = yourTasks.findIndex(t => t.id === taskId);
+
+    e.target.classList.add('inactive');
+    const currentTitle = taskBox.querySelector('.current-title');
+    const newTitle = taskBox.querySelector('.change-title');
+    const editBtn = taskBox.querySelector('.editYourTask');
+
+    currentTitle.classList.remove('hide');
+    newTitle.classList.add('hide');
+    editBtn.classList.remove('hide');
+
+    const changeTitle = newTitle.value;
+    yourTasks[index].title = changeTitle;
+    saveToStorage();
+    renderYourTask();
+  }
+}
+
+function priorityColor(t){
+  if(t.selectedPriority.includes('Low')){
+    return 'low';
+  } else if(t.selectedPriority.includes('Med')){
+    return 'med'
+  } else {
+    return 'high'
+  }
+}
+
+/*==========EMPTY STATE==========*/
+function emptyTask(){
+  return `
+    <div class="empty-task">
+      <div class="check-square">
+        <i class="bi bi-check2-square"></i>
+      </div>
+      <p>Ready to be productive today?</p>
+      <p>Add your first task above and start organizing your day effectively.</p>
+    </div>
+  `
 }

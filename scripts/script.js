@@ -37,7 +37,6 @@ closeBtn.addEventListener('click', closeDashboard)
 function start(){
   buttons.start.addEventListener('click', () => {
     history.pushState({ yourHub: true }, ''); 
-    console.log(window.history);
 
     // initial animations
     appHeader.classList.remove('clickk');

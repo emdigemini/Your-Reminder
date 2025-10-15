@@ -422,6 +422,10 @@
   display: none;
 }
 
+.saveIt {
+  cursor: pointer;
+}
+
 .btn-goal {
   display: flex;
   position: relative;
