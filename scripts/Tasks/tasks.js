@@ -1,4 +1,6 @@
 const yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+let currentProgress = 0;
+
 function saveToStorage(){
   localStorage.setItem('yourTasks', JSON.stringify(yourTasks));
 }
@@ -33,7 +35,7 @@ export function openTaskApp(){
       </div>
 
       <div class="choose-date">
-        <button><i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i></button>
+        <button id="backDate"><i class="fa fa-caret-left" aria-hidden="true"></i></button>
         <div class="calendar">
           <div class="days">
             <p class="countTask"></p>
@@ -71,7 +73,7 @@ export function openTaskApp(){
             <p class="todate">7</p>
           </div>
         </div>
-        <button><i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i></button>
+        <button id="nextDate"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
       </div>
       
       <div class="selected-date">
@@ -322,7 +324,6 @@ function calendarClickListener(e){
     
     updateSelectedDate();
     renderYourTask();
-
   }
 }
 
@@ -414,7 +415,8 @@ function addNewTask(){
       id,
       title, 
       selectedPriority,
-      selectedDate
+      selectedDate,
+      completed: false
     });
     console.log(yourTasks);
     titleInput.value = '';
@@ -440,17 +442,24 @@ function inputValidation(){
   ================*/
 function renderYourTask(){
   const taskList = document.querySelector('.task-list');
+
+  sortTask();
+
   const selectedTask = yourTasks.filter(t => t.selectedDate === selectedDate);
   const days = Array.from(document.querySelectorAll('.days'));
   const counts = document.querySelectorAll('.countTask');
-  
+  let countTask = []
   days.forEach((d, i) => {
     const tasksCount = yourTasks.filter(t => t.selectedDate === d.dataset.dateId);
+    countTask.push({tasksCount});
     counts[i].innerText = tasksCount.length || '';
   });
 
   const renderTask = selectedTask.map(t => `
-      <div class="task-container" data-task-id="${t.id}">
+      <div class="task-container 
+        ${t.completed 
+        ? 'completed' : ''}" 
+        data-task-id="${t.id}">
         <div class="your-task-header">
           <div class="your-priority ${priorityColor(t)}">
             ${t.selectedPriority}
@@ -463,7 +472,11 @@ function renderYourTask(){
         </div>
         <div class="content">
             <div class="checkbox-wrap">
-              <input type="checkbox" id="circleChk" class="circle-checkbox" />
+              <input type="checkbox" id="circleChk" class="circle-checkbox" 
+              ${t.completed 
+                ? 'checked'
+                : ''
+              }/>
             </div>
             <div class="task-title">
               <p class="current-title">${t.title}</p>
@@ -474,19 +487,48 @@ function renderYourTask(){
       </div>
     `).join('');
 
-  taskList.innerHTML = renderTask || emptyTask();
+  if(selectedTask.length > 0){
+    taskList.innerHTML = renderTask;
+  } else if(dt > activeDate){
+    taskList.innerHTML = emptyTask().lateDate;
+  } else {
+    taskList.innerHTML = dt.toDateString() === activeDate.toDateString()
+    ? emptyTask().today
+    : emptyTask().anotherDate;
+  }
+
+  // enableClearTasks(selectedTask);
   countTotalTask(selectedTask);
   controlHandler();
+  if(countTask.length > 0)
+    taskProgress(countTask);
 }
 
 function countTotalTask(selectedTask){
+  const notCompleted = selectedTask.filter(t => !t.completed);
+  const completedTask = selectedTask.filter(t => t.completed);
+
   const total = document.getElementById('totalCount');
   const pending = document.getElementById('pendingCount');
+  const completed = document.getElementById('completedCount');
+
   total.innerText = selectedTask.length;
-  pending.innerText = selectedTask.length;
+  pending.innerText = notCompleted.length;
+  completed.innerText = completedTask.length;
 }
 
 /*=========CONTROL FUNCTION=========*/
+// function enableClearTasks(selectedTask){
+//   const clearTask = document.querySelector('.clearTask');
+//   clearTask.classList.add('active');
+//   clearTask.addEventListener('click', () => {
+//     yourTasks = yourTasks.filter(t => t.completed);
+//     renderYourTask();
+//   })
+// }
+
+
+
 function controlHandler(){
   const container = document.querySelector('.task-list');
 
@@ -535,6 +577,22 @@ function taskBox(e){
     saveToStorage();
     renderYourTask();
   }
+
+  if(e.target.matches('.circle-checkbox')){
+    const taskBox = e.target.closest('.task-container');
+    const taskId = taskBox.dataset.taskId;
+    const index = yourTasks.findIndex(t => t.id === taskId);
+
+    if(e.target.checked){
+      yourTasks[index].completed = true;
+      saveToStorage();
+      renderYourTask();
+    } else {
+      yourTasks[index].completed = false;
+      saveToStorage();
+      renderYourTask();
+    }
+  }
 }
 
 function priorityColor(t){
@@ -549,7 +607,7 @@ function priorityColor(t){
 
 /*==========EMPTY STATE==========*/
 function emptyTask(){
-  return `
+  const today = `
     <div class="empty-task">
       <div class="check-square">
         <i class="bi bi-check2-square"></i>
@@ -557,5 +615,86 @@ function emptyTask(){
       <p>Ready to be productive today?</p>
       <p>Add your first task above and start organizing your day effectively.</p>
     </div>
+  `;
+  const anotherDate = `
+    <div class="empty-task">
+      <div class="check-square">
+        <i class="bi bi-check2-square"></i>
+      </div>
+      <p>No tasks planned for 
+      ${activeDate.toLocaleDateString('en-us', {
+        month: 'long',
+        day: 'numeric'
+      })}</p>
+      <p>Add tasks for this date to stay organized and productive.</p>
+    </div>
+  `;
+  const lateDate = `
+   <div class="empty-task">
+    <div class="check-square">
+      <i class="bi bi-check2-square"></i>
+    </div>
+    <p>${activeDate.toLocaleDateString('en-us', { month: 'long', day: 'numeric' })} is gone.</p>
+    <p>You can't plan what's already over. Move on 😌.</p>
+  </div>
+
   `
+
+  return {today, anotherDate, lateDate};
+}
+
+/*===============SORT EVERY TASK===============*/
+function getPriorityValue(priority) {
+  if (priority.includes('High')) return 1;
+  if (priority.includes('Medium')) return 2;
+  return 3; // Low Priority
+}
+
+function sortTask(){
+  yourTasks.sort((a, b) => {
+    if(a.completed - b.completed)
+      return a.completed - b.completed;
+
+    const priorityA = getPriorityValue(a.selectedPriority);
+    const priorityB = getPriorityValue(b.selectedPriority);
+      return priorityA - priorityB;
+  });
+}
+
+/*============CALCULATE TASK PROGRESS============*/
+function taskProgress(countTask){
+  const average = document.querySelector('.progress-percent');
+  const bar = document.querySelector('.metric-bar'); 
+  const root = document.documentElement;
+  bar.style.animation = 'none';
+  bar.offsetHeight;
+  bar.style.animation = 'anim .3s ease forwards'; 
+
+  root.style.setProperty('--current-progress', `${currentProgress}%`);
+
+  let getTask;
+  countTask.forEach((task, i) => {
+    if(task.tasksCount.length > 0){
+      getTask = task.tasksCount.filter(t => t.selectedDate === selectedDate);
+    }
+  });
+  let count;
+  if(getTask){
+    count = getTask.filter(t => t.completed);
+  } else {
+    count = 0;
+  }
+
+  if (count.length === 0 || count === 0) {
+    average.textContent = "0%";
+    root.style.setProperty('--current-progress', '0%');
+    root.style.setProperty('--progress-bar', '0%');
+    return;
+  }
+
+  const countCompleted = count.filter(t => t.completed);
+  const avgProgress = (countCompleted.length / getTask.length) * 100 || 0;
+  average.textContent = `${Number(avgProgress.toFixed(2))}%`;
+  currentProgress = avgProgress;
+  root.style.setProperty('--progress-bar', `${avgProgress}%`);
 }

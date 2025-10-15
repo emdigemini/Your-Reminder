@@ -9,6 +9,9 @@
 
   --prio-bg-high: #f2746b9a;
   --prio-text3: #9a251c;
+
+  --current-progress: 0%;
+  --progress-bar: 0%;
 }
 
 .tasks-tab {
@@ -75,6 +78,7 @@
   display: flex;
   max-height: 750px;
   height: max-content;
+  padding: 20px 10px;
 }
 
 .cal-header {
@@ -115,7 +119,7 @@
 .choose-date {
   position: relative;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-evenly;
   align-items: center;
   width: 100%;
   font-weight: 550;
@@ -174,7 +178,7 @@
   font-size: 14px;
   border-radius: 8px;
   margin: 4px 0;
-  padding: 4px 8px 0px;
+  padding: 4px 4px 0px;
   cursor: pointer;
   width: 40px;
   transition: 0.3s ease;
@@ -182,14 +186,13 @@
 
 .days:hover {
   background: #def03936;
-  transform: scale(1.10);
-  margin: 0 2px;
+  transform: scale(1.05);
 }
 
 .countTask {
   position: absolute;
-  top: -1px;
-  right: -3px;
+  top: -5px;
+  right: -5px;
   color: #fff;
   font-size: 10px;
   background: #FA7600;
@@ -202,14 +205,14 @@
   color: #FA7600;
   background: #fff;
   font-size: 10px;
-  top: -4px;
+  top: -6px;
 }
 
 .days.select {
   background: #FA7600;
   color: #fff;
   transform: scale(1.10);
-  margin: 0 2px;
+  margin: 0 5px;
 }
 
 .days.select .day {
@@ -228,7 +231,7 @@
   width: 100%;
   background: #FA7600;
   border-radius: 20px;
-  top: 5px;
+  top: 2px;
   z-index: 2;
 }
 
@@ -239,7 +242,7 @@
   width: 100%;
   background: #FFFFFF;
   box-shadow: 0 0 2px #2626267D;
-  top: 5px;
+  top: 2px;
 }
 
 .day {
@@ -314,8 +317,10 @@
 }
 
 .task-progress-bar {
+  position: relative;
   height: 12px;
   border-radius: 50px;
+  overflow: hidden;
   background: #a0a0a054;
 }
 
@@ -634,17 +639,19 @@
 
 /*======TASK CONTAINER======*/
 .task-container {
+  position: relative;
   display: flex;
   flex-direction: column;
   gap: 12px;
   padding: var(--box-padding);
   border-radius: 20px;
   box-shadow: 0 0 20px #26262669;
+  overflow: hidden;
   transition: .3s ease;
 }
 
 .task-container:hover {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .your-task-header {
@@ -798,10 +805,83 @@
 }
 
 .empty-task p:last-child {
-  color: #7549077e;
+  color: #442902c1;
   font-weight: 400;
   font-size: 15px;
   max-width: 250px;
   min-width: 150px;
   width: 100%;
 }
+
+/**TASK COMPLETED**/
+.task-container.completed:before {
+  content: '';
+  position: absolute;
+  background-image: linear-gradient(120deg, 
+  rgba(255, 255, 255, 0.050), rgba(0, 0, 0, 0.500));
+  backdrop-filter: blur(2.5px);
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 100%;
+  transition: .3s ease-in;
+}
+
+.task-container.completed:hover::before {
+  backdrop-filter: blur(0.7px);
+}
+
+/**TASK PROGRESS**/
+.metric-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  border-radius: 50px;
+  background: #08e95a;
+  animation: anim 1s ease forwards;
+}
+
+@keyframes anim {
+  0% {
+    width: var(--current-progress);
+  } 100% {
+    width: var(--progress-bar);
+  }
+}
+
+/**CLEAR COMPLETED TASK**/
+.clearTask {
+  display: none;
+}
+.clearTask.active {
+  display: flex;
+  justify-content: center;
+  background: none;
+  padding: 15px;
+  border: none;
+  font-size: 12px;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #2626263f;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.clearTask:hover {
+  background: #f74535;
+  color: #fff;
+}
+.clearTask i {
+  transition: 1s ease;
+}
+/* .clearTask:hover i {
+  animation: bounce 1s infinite;
+}
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+} */

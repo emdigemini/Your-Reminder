@@ -54,7 +54,7 @@
       </div>
 
       <div class="choose-date">
-        <button><i id="backDate" class="fa fa-caret-left" aria-hidden="true"></i></button>
+        <button id="backDate"><i class="fa fa-caret-left" aria-hidden="true"></i></button>
         <div class="calendar">
           <div class="days">
             <p class="countTask"></p>
@@ -92,7 +92,7 @@
             <p class="todate">7</p>
           </div>
         </div>
-        <button><i id="nextDate" class="fa fa-caret-right" aria-hidden="true"></i></button>
+        <button id="nextDate"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
       </div>
       
       <div class="selected-date">
@@ -122,6 +122,7 @@
         </div>
       <div class="task-progress-bar">
         <!--PROGRESS LINE HERE-->
+        <div class="metric-bar"></div>
       </div>
       <div class="task-overview">
         <div class="card-overview total">
@@ -202,16 +203,13 @@
           </div>
         </div>
     </div>
+    <button class="clearTask">
+      <i class="bi bi-trash"></i>
+      Clear 1 Completed Task
+    </button>
     <div class="task-list">
-      <div class="empty-task">
-        <div class="check-square">
-          <i class="bi bi-check2-square"></i>
-        </div>
-        <p>Ready to be productive today?</p>
-        <p>Add your first task above and start organizing your day effectively.</p>
-      </div>
+      
       <!--GENERATE TASK HERE-->
-
       
     </div>
   </div>
