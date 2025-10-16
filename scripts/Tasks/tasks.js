@@ -1,4 +1,5 @@
 const yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+let avgTaskCompleted = [];
 let currentProgress = 0;
 
 function saveToStorage(){
@@ -103,6 +104,7 @@ export function openTaskApp(){
         </div>
       <div class="task-progress-bar">
         <!--PROGRESS LINE HERE-->
+        <div class="metric-bar"></div>
       </div>
       <div class="task-overview">
         <div class="card-overview total">
@@ -183,10 +185,14 @@ export function openTaskApp(){
           </div>
         </div>
     </div>
+    <button class="clearTask">
+      <i class="bi bi-trash"></i>
+      Clear 1 Completed Task
+    </button>
     <div class="task-list">
-
+      
       <!--GENERATE TASK HERE-->
-
+      
     </div>
   </div>
 
@@ -266,8 +272,7 @@ function loadCalendar(){
     el.innerHTML = dayNum;
     days[i].dataset.dateId = dayDate;
     weekStart.setDate(weekStart.getDate() + 1);
-  });
-
+    });
 
   activeDate = new Date(navDate);
 
@@ -329,6 +334,7 @@ function calendarClickListener(e){
 
 function updateSelectedDate(){
   const progressDate = document.querySelector('.progress-date');
+  const newTaskDate = document.querySelector('.new-task-date');
 
   let date1 = new Date(activeDate);
   let date2 = new Date(dt);
@@ -340,20 +346,21 @@ function updateSelectedDate(){
 
   if(diffDays === 0){
     progressDate.innerText = 'Today';
+    newTaskDate.innerText = 'Today';
   } else if(diffDays === 1){
     progressDate.innerText = 'Tomorrow';
+    newTaskDate.innerText = 'Tomorrow';
   } else if(diffDays === -1){
     progressDate.innerText = 'Yesterday';
+    newTaskDate.innerText = 'Yesterday';
   } else {
     progressDate.innerText = activeDate.toDateString();
+    newTaskDate.innerText = activeDate.toDateString();
   }
 
-  document.getElementById('selectedDate').innerText = `${activeDate.toLocaleDateString('en-us', {
-    weekday: 'short',
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric'
-  })}`;
+  document.getElementById('selectedDate').innerText = `${activeDate.toDateString()}`;
+
+  
 }
 closeTab();
 navigateDate();
@@ -440,6 +447,7 @@ function inputValidation(){
   /*================
 ======RENDER=TASKS======
   ================*/
+
 function renderYourTask(){
   const taskList = document.querySelector('.task-list');
 
@@ -660,10 +668,51 @@ function sortTask(){
       return priorityA - priorityB;
   });
 }
+// const numbers = [1, 2, 3, 1, 2, 4];
+
+// const unique = numbers.filter((t, i, self) => {
+//   return i === self.findIndex(o => o === t);
+// });
+
+// console.log(unique); 
+
+// const tasks = [
+//   { id: 1, title: 'Run' },
+//   { id: 2, title: 'Eat' },
+//   { id: 1, title: 'Run again' },
+//   { id: 3, title: 'Sleep' }
+// ];
+
+// const uniqueTasks = tasks.filter((t, i, self) => {
+//   return i === self.findIndex(o => o.id === t.id); 
+// });
+
+// console.log(uniqueTasks);
+
+// const logs = [
+//   { user: 'A', day: 'Mon' },
+//   { user: 'B', day: 'Tue' },
+//   { user: 'A', day: 'Mon' },
+//   { user: 'A', day: 'Tue' },
+// ];
+
+// // TODO: keep only the first unique pair of (user + day)
+// const uniqueLogs = logs.filter((t, i, self) => {
+//   return i === self.findIndex(o => o.user === t.user && o.day === t.day);
+// });
+
+// console.log(uniqueLogs);
+// expected: [
+//   { user: 'A', day: 'Mon' },
+//   { user: 'B', day: 'Tue' },
+//   { user: 'A', day: 'Tue' }
+// ]
 
 /*============CALCULATE TASK PROGRESS============*/
 function taskProgress(countTask){
   const average = document.querySelector('.progress-percent');
+  const days = Array.from(document.querySelectorAll('.days'));
+  const counts = document.querySelectorAll('.countTask');
   const bar = document.querySelector('.metric-bar'); 
   const root = document.documentElement;
   bar.style.animation = 'none';
@@ -672,29 +721,73 @@ function taskProgress(countTask){
 
   root.style.setProperty('--current-progress', `${currentProgress}%`);
 
-  let getTask;
-  countTask.forEach((task, i) => {
-    if(task.tasksCount.length > 0){
-      getTask = task.tasksCount.filter(t => t.selectedDate === selectedDate);
+  countTask.forEach((tasks, i) => {
+    if(tasks.tasksCount.length > 0){
+      avgTaskCompleted.push(...tasks.tasksCount);
+      avgTaskCompleted = avgTaskCompleted.filter(
+        (t, index, self) => index === self.findIndex(o => o.id === t.id)
+      );
     }
   });
-  let count;
-  if(getTask){
-    count = getTask.filter(t => t.completed);
-  } else {
-    count = 0;
-  }
+  // console.log(avgTaskCompleted);
 
-  if (count.length === 0 || count === 0) {
-    average.textContent = "0%";
-    root.style.setProperty('--current-progress', '0%');
-    root.style.setProperty('--progress-bar', '0%');
-    return;
-  }
+  let grouped = avgTaskCompleted.reduce((acc, task) => {
+    const date = task.selectedDate;
+    if (!acc[date]) acc[date] = []; 
+    acc[date].push(task); 
+    return acc
+  }, []);
 
-  const countCompleted = count.filter(t => t.completed);
-  const avgProgress = (countCompleted.length / getTask.length) * 100 || 0;
-  average.textContent = `${Number(avgProgress.toFixed(2))}%`;
-  currentProgress = avgProgress;
-  root.style.setProperty('--progress-bar', `${avgProgress}%`);
+  days.forEach((d, i) => {
+    // console.log(grouped[d.dataset.dateId]);
+    const count = !grouped[d.dataset.dateId] ? '' : grouped[d.dataset.dateId];
+    if(count.length > 0){
+      const countCompleted = count.filter(c => c.completed && c.selectedDate === activeDate.toLocaleDateString());
+      // counts[i].classList.remove('checkMark');
+
+      if (countCompleted.length === 0) {
+        // root.style.setProperty('--current-progress', '0%');
+        average.textContent = "0%";
+        root.style.setProperty('--progress-bar', '0%');
+
+      } else {
+        countCompleted.forEach(t => {
+          if(d.dataset.dateId === t.selectedDate){
+            const avgProgress = (countCompleted.length / count.length) * 100 || 0;
+
+            average.textContent = `${Number(avgProgress.toFixed(2))}%`;
+            root.style.setProperty('--progress-bar', `${avgProgress}%`);
+            console.log('completed:', avgProgress);
+            if(avgProgress === 100){
+              counts[i].classList.add('checkMark');
+              counts[i].innerHTML = '<i class="checkDate bi bi-check"></i>';
+            }
+          } 
+        })
+      }
+    }
+
+    // currentProgress = avgProgress;
+
+    
+  })
+
+  // avgTaskCompleted.forEach(t => {
+  //   if(t.selectedDate === ){
+  //     count = avgTaskCompleted.filter(t => t.completed);
+  //   }
+  // })
+  // else {
+  //   count = 0;
+  // }
+
+  
+
+  
+
+  
+
+
+  
+
 }

@@ -25,7 +25,7 @@
   html, body {
   height: 100dvh;
   width: 100vw;
-  font-family: "Cagliostro", serif;
+  font-family: "Cabin", sans-serif;
   display: flex;
   justify-content: center;
   align-items: center;
