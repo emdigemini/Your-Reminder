@@ -1,4 +1,4 @@
-const yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
+let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
 let avgTaskCompleted = [];
 let currentProgress = 0;
 
@@ -447,7 +447,6 @@ function inputValidation(){
   /*================
 ======RENDER=TASKS======
   ================*/
-
 function renderYourTask(){
   const taskList = document.querySelector('.task-list');
 
@@ -505,11 +504,10 @@ function renderYourTask(){
     : emptyTask().anotherDate;
   }
 
-  // enableClearTasks(selectedTask);
+  enableClearTasks(selectedTask);
   countTotalTask(selectedTask);
+  taskProgress(countTask);
   controlHandler();
-  if(countTask.length > 0)
-    taskProgress(countTask);
 }
 
 function countTotalTask(selectedTask){
@@ -525,18 +523,39 @@ function countTotalTask(selectedTask){
   completed.innerText = completedTask.length;
 }
 
-/*=========CONTROL FUNCTION=========*/
-// function enableClearTasks(selectedTask){
-//   const clearTask = document.querySelector('.clearTask');
-//   clearTask.classList.add('active');
-//   clearTask.addEventListener('click', () => {
-//     yourTasks = yourTasks.filter(t => t.completed);
-//     renderYourTask();
-//   })
-// }
+/*===================
+=TASKS===FUNCTION 
+===================*/
+function enableClearTasks(selectedTask){
+  const clearTaskBtn = document.querySelector('.clearTask');
+  const ifAllCompleted = selectedTask.filter(t => t.completed);
 
+  clearTaskBtn.classList.toggle('active', ifAllCompleted.length > 0);
+  clearTaskBtn.removeEventListener('click', clearTaskHandler);
 
+  if(ifAllCompleted){
+    clearTaskBtn.addEventListener('click', clearTaskHandler);
+  }
 
+  function clearTaskHandler(){
+    clearTask(selectedTask, clearTaskBtn);
+  }
+}
+
+function clearTask(selectedTask, clearTaskBtn){
+  const clearCompleted = selectedTask.filter(t => t.completed);
+  yourTasks = yourTasks.filter(task => 
+    !clearCompleted.some(t => t.id === task.id)
+  );
+  clearTaskBtn.removeEventListener('click', enableClearTasks);
+
+  saveToStorage();
+  renderYourTask();
+}
+
+/*==========================================
+====HANDLER TO PREVENT MULTIPLE LISTENER====
+==========================================*/
 function controlHandler(){
   const container = document.querySelector('.task-list');
 
@@ -650,8 +669,9 @@ function emptyTask(){
 
   return {today, anotherDate, lateDate};
 }
-
+                /*==============*/
 /*===============SORT EVERY TASK===============*/
+/*===============================================*/
 function getPriorityValue(priority) {
   if (priority.includes('High')) return 1;
   if (priority.includes('Medium')) return 2;
@@ -668,46 +688,7 @@ function sortTask(){
       return priorityA - priorityB;
   });
 }
-// const numbers = [1, 2, 3, 1, 2, 4];
-
-// const unique = numbers.filter((t, i, self) => {
-//   return i === self.findIndex(o => o === t);
-// });
-
-// console.log(unique); 
-
-// const tasks = [
-//   { id: 1, title: 'Run' },
-//   { id: 2, title: 'Eat' },
-//   { id: 1, title: 'Run again' },
-//   { id: 3, title: 'Sleep' }
-// ];
-
-// const uniqueTasks = tasks.filter((t, i, self) => {
-//   return i === self.findIndex(o => o.id === t.id); 
-// });
-
-// console.log(uniqueTasks);
-
-// const logs = [
-//   { user: 'A', day: 'Mon' },
-//   { user: 'B', day: 'Tue' },
-//   { user: 'A', day: 'Mon' },
-//   { user: 'A', day: 'Tue' },
-// ];
-
-// // TODO: keep only the first unique pair of (user + day)
-// const uniqueLogs = logs.filter((t, i, self) => {
-//   return i === self.findIndex(o => o.user === t.user && o.day === t.day);
-// });
-
-// console.log(uniqueLogs);
-// expected: [
-//   { user: 'A', day: 'Mon' },
-//   { user: 'B', day: 'Tue' },
-//   { user: 'A', day: 'Tue' }
-// ]
-
+                /*===================*/
 /*============CALCULATE TASK PROGRESS============*/
 function taskProgress(countTask){
   const average = document.querySelector('.progress-percent');
@@ -719,9 +700,9 @@ function taskProgress(countTask){
   bar.offsetHeight;
   bar.style.animation = 'anim .3s ease forwards'; 
 
-  root.style.setProperty('--current-progress', `${currentProgress}%`);
+  // root.style.setProperty('--current-progress', `${currentProgress}%`);
 
-  countTask.forEach((tasks, i) => {
+  countTask.forEach(tasks => {
     if(tasks.tasksCount.length > 0){
       avgTaskCompleted.push(...tasks.tasksCount);
       avgTaskCompleted = avgTaskCompleted.filter(
@@ -729,7 +710,7 @@ function taskProgress(countTask){
       );
     }
   });
-  // console.log(avgTaskCompleted);
+  console.log('first list', countTask);
 
   let grouped = avgTaskCompleted.reduce((acc, task) => {
     const date = task.selectedDate;
@@ -737,57 +718,34 @@ function taskProgress(countTask){
     acc[date].push(task); 
     return acc
   }, []);
+  console.log('second list', grouped);
 
   days.forEach((d, i) => {
-    // console.log(grouped[d.dataset.dateId]);
-    const count = !grouped[d.dataset.dateId] ? '' : grouped[d.dataset.dateId];
+    const count = !grouped[d.dataset.dateId] ? 0 : grouped[d.dataset.dateId];
+
     if(count.length > 0){
-      const countCompleted = count.filter(c => c.completed && c.selectedDate === activeDate.toLocaleDateString());
-      // counts[i].classList.remove('checkMark');
+      const countCompleted = count.filter(c => c.completed);
+      const avgProgress = (countCompleted.length / count.length) * 100 || 0;
 
-      if (countCompleted.length === 0) {
-        // root.style.setProperty('--current-progress', '0%');
-        average.textContent = "0%";
-        root.style.setProperty('--progress-bar', '0%');
-
-      } else {
-        countCompleted.forEach(t => {
-          if(d.dataset.dateId === t.selectedDate){
-            const avgProgress = (countCompleted.length / count.length) * 100 || 0;
-
-            average.textContent = `${Number(avgProgress.toFixed(2))}%`;
-            root.style.setProperty('--progress-bar', `${avgProgress}%`);
-            console.log('completed:', avgProgress);
-            if(avgProgress === 100){
-              counts[i].classList.add('checkMark');
-              counts[i].innerHTML = '<i class="checkDate bi bi-check"></i>';
-            }
-          } 
-        })
+      // if this date is the active one, update the global progress display
+      if (d.dataset.dateId === activeDate.toLocaleDateString()) {
+        average.textContent = `${Number(avgProgress.toFixed(2))}%`;
+        root.style.setProperty('--progress-bar', `${avgProgress}%`);
       }
+      
+      if (avgProgress === 100) {
+        counts[i].classList.add('checkMark');
+        counts[i].innerHTML = '<i class="checkDate bi bi-check"></i>';
+      } else {
+        counts[i].classList.remove('checkMark');
+      }
+    } else if(d.dataset.dateId === activeDate.toLocaleDateString() && count === 0){
+      average.textContent = `0%`;
+      root.style.setProperty('--progress-bar', `0%`);
+      counts[i].classList.remove('checkMark');
+    } else {
+      counts[i].classList.remove('checkMark');
     }
-
-    // currentProgress = avgProgress;
-
-    
   })
-
-  // avgTaskCompleted.forEach(t => {
-  //   if(t.selectedDate === ){
-  //     count = avgTaskCompleted.filter(t => t.completed);
-  //   }
-  // })
-  // else {
-  //   count = 0;
-  // }
-
-  
-
-  
-
-  
-
-
-  
 
 }
