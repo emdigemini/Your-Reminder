@@ -361,7 +361,6 @@ function openYourNote(noteId) {
     const getText = yourNotesList.find(note => note.id === noteId);
 
     const selectedText = getSelectedText();
-      console.log(selectedText);
 
     if(getText.textarea.includes(selectedText)){
       getText.textarea = getText.textarea.replace(selectedText, `<b>${selectedText}</b>`);
@@ -398,7 +397,6 @@ const root = document.documentElement;
 
 function openNoteTab() {
   history.pushState({ yourNoteTab: true }, ""); 
-  console.log(window.history);
   noteEl.mainOverlay.remove();
   noteEl.noteListBox.classList.remove('open');
   noteEl.noteListBox.classList.add('close');

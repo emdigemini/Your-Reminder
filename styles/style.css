@@ -22,7 +22,7 @@
   -webkit-touch-callout: none;    
 }
 
-  html, body {
+html, body {
   height: 100dvh;
   width: 100vw;
   font-family: "Cabin", sans-serif;
@@ -265,7 +265,7 @@
 
 .card p {
   font-size: 10px;
-  margin: 0 15px 30px 0;
+  margin: auto;
   color: #666;
   transition: all 0.8s ease;
 }
@@ -357,4 +357,55 @@ body.light .card p {
 
 body.light .card:hover p {
   color: #8a837c;
+}
+
+
+@media screen and (min-height: 1024px){
+  .start-up-menu {
+    padding: 20px;
+    height: 100%;
+    max-height: 800px;
+    max-width: 400px;
+  }
+  .datetime {
+    width: 350px;
+    font-size: 18px;
+  }
+  .your-clock {
+    font-size: 3.7rem;
+  }
+  .menu {
+    gap: 20px;
+  }
+  .menu li button {
+    width: 80%;
+    padding: 18px;
+    border-radius: 16px;
+    font-size: 1.3rem;
+  }
+
+  .card {
+    width: 190px;
+    height: 180px;
+  }
+  .dashboard {
+    display: flex;
+    max-width: 700px;
+    max-height: 900px;
+    height: 700px;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .tab h3 {
+    font-size: 21px;
+  }
+  .card p {
+    font-size: 13px;
+  }
+  #reminder {
+    width: 400px;
+  }
+  
 }

@@ -1,5 +1,4 @@
 let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
-let avgTaskCompleted = [];
 let currentProgress = 0;
 
 function saveToStorage(){
@@ -147,7 +146,7 @@ export function openTaskApp(){
               <p>New Task</p>
               <div>
                 <i class="fa fa-calendar" aria-hidden="true"></i>
-                <p>Monday, Oct 13, 2025</p>  
+                <p class="new-task-date">Monday, Oct 13, 2025</p>  
               </div>
             </div>
           </div>
@@ -197,13 +196,13 @@ export function openTaskApp(){
   </div>
 
   `);
+    closeTab();
+    navigateDate();
+    loadCalendar();
+    toggleAddTaskBox();
+    addNewTask();
+    renderYourTask();
   };
-
-  closeTab();
-  navigateDate();
-  loadCalendar();
-  toggleAddTaskBox();
-  addNewTask();
 }
 
 function closeTab(){
@@ -362,11 +361,6 @@ function updateSelectedDate(){
 
   
 }
-closeTab();
-navigateDate();
-loadCalendar();
-toggleAddTaskBox();
-addNewTask();
 
 /*============ADD NEW TASK============*/
 function toggleAddTaskBox(){
@@ -384,14 +378,17 @@ function toggleAddTaskBox(){
     createNewTask.classList.remove('active')
   })
 
+  selectPriority();
+}
+
+function selectPriority(){
   const selectPrior = document.querySelector('.prior-select');
   const selected = selectPrior.querySelector('.selected');
   const options = selectPrior.querySelectorAll('.options li');
-
   selected.addEventListener('click', () => {
     selectPrior.classList.toggle('active');
   });
-
+  console.log(selectPrior, selected, options);
   options.forEach(option => {
     option.addEventListener('click', () => {
        selected.innerHTML = option.innerHTML
@@ -425,7 +422,6 @@ function addNewTask(){
       selectedDate,
       completed: false
     });
-    console.log(yourTasks);
     titleInput.value = '';
     renderYourTask();
     saveToStorage();
@@ -455,10 +451,8 @@ function renderYourTask(){
   const selectedTask = yourTasks.filter(t => t.selectedDate === selectedDate);
   const days = Array.from(document.querySelectorAll('.days'));
   const counts = document.querySelectorAll('.countTask');
-  let countTask = []
   days.forEach((d, i) => {
     const tasksCount = yourTasks.filter(t => t.selectedDate === d.dataset.dateId);
-    countTask.push({tasksCount});
     counts[i].innerText = tasksCount.length || '';
   });
 
@@ -506,8 +500,8 @@ function renderYourTask(){
 
   enableClearTasks(selectedTask);
   countTotalTask(selectedTask);
-  taskProgress(countTask);
   controlHandler();
+  taskProgress();
 }
 
 function countTotalTask(selectedTask){
@@ -528,27 +522,31 @@ function countTotalTask(selectedTask){
 ===================*/
 function enableClearTasks(selectedTask){
   const clearTaskBtn = document.querySelector('.clearTask');
-  const ifAllCompleted = selectedTask.filter(t => t.completed);
+  const onlyCompleted = selectedTask.filter(t => t.completed);
 
-  clearTaskBtn.classList.toggle('active', ifAllCompleted.length > 0);
+  clearTaskBtn.classList.toggle('active', onlyCompleted.length > 0);
+  clearTaskBtn.innerHTML = onlyCompleted.length > 0 
+  ? `<i class="bi bi-trash"></i> Clear ${onlyCompleted.length} Completed Task` 
+  : '';
   clearTaskBtn.removeEventListener('click', clearTaskHandler);
 
-  if(ifAllCompleted){
+  if(onlyCompleted.length > 0){
     clearTaskBtn.addEventListener('click', clearTaskHandler);
-  }
-
-  function clearTaskHandler(){
-    clearTask(selectedTask, clearTaskBtn);
   }
 }
 
-function clearTask(selectedTask, clearTaskBtn){
+function clearTaskHandler(){
+  const clearTaskBtn = document.querySelector('.clearTask');
+  const selectedTask = yourTasks.filter(t => t.selectedDate === selectedDate);
+  clearCompletedTasks(selectedTask, clearTaskBtn);
+}
+
+function clearCompletedTasks(selectedTask, clearTaskBtn){
   const clearCompleted = selectedTask.filter(t => t.completed);
   yourTasks = yourTasks.filter(task => 
     !clearCompleted.some(t => t.id === task.id)
   );
   clearTaskBtn.removeEventListener('click', enableClearTasks);
-
   saveToStorage();
   renderYourTask();
 }
@@ -691,6 +689,7 @@ function sortTask(){
                 /*===================*/
 /*============CALCULATE TASK PROGRESS============*/
 function taskProgress(countTask){
+  let tempTasks = [];
   const average = document.querySelector('.progress-percent');
   const days = Array.from(document.querySelectorAll('.days'));
   const counts = document.querySelectorAll('.countTask');
@@ -702,23 +701,14 @@ function taskProgress(countTask){
 
   // root.style.setProperty('--current-progress', `${currentProgress}%`);
 
-  countTask.forEach(tasks => {
-    if(tasks.tasksCount.length > 0){
-      avgTaskCompleted.push(...tasks.tasksCount);
-      avgTaskCompleted = avgTaskCompleted.filter(
-        (t, index, self) => index === self.findIndex(o => o.id === t.id)
-      );
-    }
-  });
-  console.log('first list', countTask);
+      tempTasks = yourTasks;
 
-  let grouped = avgTaskCompleted.reduce((acc, task) => {
+  let grouped = tempTasks.reduce((acc, task) => {
     const date = task.selectedDate;
     if (!acc[date]) acc[date] = []; 
     acc[date].push(task); 
     return acc
   }, []);
-  console.log('second list', grouped);
 
   days.forEach((d, i) => {
     const count = !grouped[d.dataset.dateId] ? 0 : grouped[d.dataset.dateId];

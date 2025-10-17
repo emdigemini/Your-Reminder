@@ -240,7 +240,7 @@
 .days.active::after {
   content: '';
   position: absolute;
-  height: 45px;
+  height: 43px;
   width: 100%;
   background: #FFFFFF;
   box-shadow: 0 0 2px #2626267D;
@@ -698,7 +698,8 @@
 
 .content {
   display: flex;
-  gap: 6px;
+  align-items: center;
+  gap: 8px;
   font-size: 16px;
 }
 
@@ -879,6 +880,7 @@
   border-radius: 15px;
   box-shadow: 0 0 20px #2626263f;
   cursor: pointer;
+  gap: 6px;
   transition: .3s ease;
 }
 
@@ -889,7 +891,7 @@
 .clearTask i {
   transition: 1s ease;
 }
-/* .clearTask:hover i {
+.clearTask:hover i {
   animation: bounce 1s infinite;
 }
 @keyframes bounce {
@@ -897,6 +899,125 @@
     transform: translateY(0);
   }
   50% {
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
-} */
+}
+
+@media screen and (min-height: 1024px) {
+
+  .tasks-tab {
+    min-height: 100vh;
+    overflow-y: auto;
+    touch-action: pan-y
+  }
+
+  .task-progress {
+    height: max-content;
+    font-size: 18px;
+    padding: 25px;
+  }
+
+  .task-progress-bar {
+    height: 16px;
+  }
+
+  .add-task {
+    justify-content: center;  
+    max-height: max-content;
+    border-radius: 30px;
+    height: 100%;
+    padding: 0;
+  }
+
+  .new-task-selected-date {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  #titleInput {
+    font-size: 15px;
+  }
+
+  .prior-select .selected {
+    font-size: 15px;
+  }
+  .prior-select .options {
+    font-size: 15px;
+  }
+
+  .plus-icon {
+    padding: 15px;
+    border-radius: 15px;
+  }
+  .new-task.active {
+    font-size: 18px;
+  }
+
+  #addTask {
+    border-radius: 30px;
+    padding: 25px;
+    font-size: 16px;
+  }
+  .buttons button {
+    font-size: 15px;
+  }
+
+  .task-list {
+    height: 350px;
+    padding: 0;
+    max-height: max-content;
+    height: 100%;
+    box-shadow: none;
+  }
+
+  .task-select-date {
+    max-height: 750px;
+    height: max-content;
+    padding: 20px;
+  }
+
+  .calendar {
+    gap: 15px;
+  }
+
+  .days {
+    font-size: 16px;
+  }
+
+  .task-container {
+    padding: 25px 20px;
+  }
+
+  .empty-task {
+    padding: 30px ;
+  }
+  .check-square {
+    font-size: 30px;
+    padding: 24px 26px;
+  }
+  .empty-task p {
+    font-size: 18px;
+  }
+  .empty-task p:last-child {
+    font-size: 16px;
+  }
+
+  .your-task-header {
+    font-size: 18px;
+  }
+  .your-priority {
+    font-size: 13px;
+  }
+  .content {
+    font-size: 20px;
+  }
+  .change-title {
+    font-size: 20px;
+    padding: 8px 12px;
+    border-radius: 12px;
+  }
+  .checkbox-wrap {
+    display: flex;
+    align-items: center;
+  }
+}

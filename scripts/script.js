@@ -118,8 +118,6 @@ cards.reminder.addEventListener('click', () => {
 // notes
 cards.notes.addEventListener('click', () => {
   openNoteApp();
-    console.log(window.history);
-
 });
 
 // goals

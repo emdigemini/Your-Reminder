@@ -161,3 +161,17 @@ body.light .your-note-page .textpad {
 body.light .drag-btn i:hover {
   color: #833907af;
 }
+
+
+@media screen and (min-height: 1024px) {
+  .your-note-page .textpad {
+    font-size: 19px;
+    line-height: 24px;
+    background-image: repeating-linear-gradient(
+    to bottom,
+    transparent, transparent 20px,
+    #ccc 24px
+  );
+  }
+  
+}
