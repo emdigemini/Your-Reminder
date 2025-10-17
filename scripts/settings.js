@@ -26,8 +26,17 @@ function switchMode(){
   // for text color
   !darkMode ? root.style.setProperty("--card-goal", "#fff8f0") : root.style.setProperty("--card-goal", "#262626");
 
+  // for text color 2
+  !darkMode ? root.style.setProperty("--card-goal", "#262626") : root.style.setProperty("--card-goal", "#fff");
+
+  // for version card
+  !darkMode ? root.style.setProperty("--version-card", "#6d341f") : root.style.setProperty("--version-card", "#fff");
+
   // for card color
 
+  // for about
+  
+  !darkMode ? root.style.setProperty("--text-glass", "#6e3e13de") : root.style.setProperty("--text-glass", "#00FF80");
   
   toggleMode.classList.toggle('dark', darkMode);
   [settings, selectTheme].forEach(el => el.classList.toggle('light', !darkMode));

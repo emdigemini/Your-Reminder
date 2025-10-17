@@ -4,6 +4,8 @@ import { openNoteApp } from './Notes/notes.js';
 import { openReminderApp } from './Reminder/reminder.js';
 import { openGoalApp } from './Goals/goals.js';
 import { openTaskApp } from './Tasks/tasks.js';
+import { toggleContact } from './contact.js';
+import { toggleAbout } from './about.js';
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
@@ -133,6 +135,12 @@ cards.tasks.addEventListener('click', () => {
 //settings
 buttons.settings.addEventListener('click', openSettings);
 cards.settings.addEventListener('click', openSettings);
+
+//contact
+buttons.contact.addEventListener('click', toggleContact);
+
+//about
+buttons.about.addEventListener('click', toggleAbout);
 
 function openSettings(){
   const settings = document.querySelector('.settings');

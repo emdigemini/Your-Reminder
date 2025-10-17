@@ -665,3 +665,19 @@
 .tasks-tab.close {
   animation: closeTab 0.5s ease-in forwards;
 }
+
+.about {
+  animation: openTab .8s ease forwards;
+}
+
+.about.close {
+  animation: closeTab .8s ease forwards;
+}
+
+.contact {
+  animation: openTab .8s ease forwards;
+}
+
+.contact.close {
+  animation: closeTab .8s ease forwards;
+}

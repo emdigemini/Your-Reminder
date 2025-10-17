@@ -23,10 +23,11 @@
   <link rel="stylesheet" href="styles/reminder.css">
   <link rel="stylesheet" href="styles/goals.css">
   <link rel="stylesheet" href="styles/tasks.css">
+  <link rel="stylesheet" href="styles/contact.css">
+  <link rel="stylesheet" href="styles/about.css">
   <title>Your Reminder</title>
 </head>
 <body>
-
   
 
   <div class="app-header">
@@ -136,7 +137,16 @@
 
     </section>
   </div>
-
+  <script type="text/javascript"
+          src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+  </script>
+  <script type="text/javascript">
+    (function(){
+        emailjs.init({
+          publicKey: "T5wd1r2CfabMwgP3p",
+        });
+    })();
+  </script>
   <script type="module" src="scripts/script.js"></script>
 </body>
 </html>
