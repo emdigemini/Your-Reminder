@@ -13,6 +13,8 @@
   --current-progress: 0%;
   --progress-bar: 0%;
 
+  --textBtn-hover: #fff;
+  --addTask-hover: #FA7600; 
   --task-text1: #6d341f;
   --task-text2: #3b3b3b;
   --task-border: none;
@@ -415,6 +417,7 @@
   border-radius: 20px;
   background: none;
   cursor: pointer;
+  color: var(--addTask-hover);
   transition: .3s ease;
 }
 
@@ -428,8 +431,8 @@
 }
 
 .add-task button:hover {
-  color: #fff;
-  background: #FA7600;
+  color: #FFFFFF;
+  background: var(--addTask-hover);
 }
 
 .add-task button:hover i {
@@ -464,7 +467,7 @@
 }
 
 .new-task-selected-date {
-  color: #262626;
+  color: var(--task-text2);
 }
 
 .new-task-selected-date div {
@@ -566,6 +569,7 @@
   transform: translateY(-10px);
   font-size: 12px;
   transition: all 0.2s ease;
+  color: #262626;
   z-index: 99;
 }
 

@@ -40,7 +40,11 @@ function switchMode(){
   : root.style.setProperty("--glass-bg", `linear-gradient(to bottom, rgba(15,15,15,0.9), rgba(25,25,25,0.9), rgba(30,30,30,0.9))`);
 
   // for tasks light mode and darkmode
+
+  !darkMode ? root.style.setProperty("--addTask-hover", "#FA7600") : root.style.setProperty("--addTask-hover", "#00FF80");
   
+  !darkMode ? root.style.setProperty("--textBtn-hover", "#fff") : root.style.setProperty("--textBtn-hover", "#666");
+
   !darkMode ? root.style.setProperty("--task-text1", "#462700af") : root.style.setProperty("--task-text1", "#fff");
 
   !darkMode ? root.style.setProperty("--task-text2", "#3b3b3b") : root.style.setProperty("--task-text2", "#00FF80");
