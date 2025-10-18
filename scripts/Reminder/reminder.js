@@ -7,11 +7,16 @@ export function openReminderApp(){
     document.body.insertAdjacentHTML('afterbegin', `
         <div class="reminder-tab">
           <div class="toggle-tab">
-            <h2>Your Reminder</h2>
             <i class="toggle-btn bi bi-caret-down"></i>
           </div>
           <div class="reminder-header">
-
+            <i class="bi bi-bell"></i>
+            <div class="reminder-text">
+              <h2>Your Reminder</h2>
+              <p>Stay mindful of what matters</p>
+            </div>
+          </div>
+          <div class="create-reminder">
             <div class="reminder-actions">
               <div class="reminder-input-group">
                 <input class="input-reminder" type="text" placeholder="Add a new reminder...">

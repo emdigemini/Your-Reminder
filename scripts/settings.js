@@ -27,14 +27,26 @@ function switchMode(){
   !darkMode ? root.style.setProperty("--card-goal", "#fff8f0") : root.style.setProperty("--card-goal", "#262626");
 
   // for text color 2
-  !darkMode ? root.style.setProperty("--card-goal", "#262626") : root.style.setProperty("--card-goal", "#fff");
+  !darkMode ? root.style.setProperty("--text-glass2", "#262626") : root.style.setProperty("--text-glass2", "#fff");
 
   // for version card
   !darkMode ? root.style.setProperty("--version-card", "#6d341f") : root.style.setProperty("--version-card", "#fff");
 
   // for card color
 
-  // for about
+  // for glassmorphism
+  !darkMode
+  ? root.style.setProperty("--glass-bg", `linear-gradient(to bottom, rgba(184,184,184,0.441), rgba(255,248,240,0.800), rgba(255,248,240,0.800), rgba(255,248,240,0.800))`)
+  : root.style.setProperty("--glass-bg", `linear-gradient(to bottom, rgba(15,15,15,0.9), rgba(25,25,25,0.9), rgba(30,30,30,0.9))`);
+
+  // for tasks light mode and darkmode
+  
+  !darkMode ? root.style.setProperty("--task-text1", "#462700af") : root.style.setProperty("--task-text1", "#fff");
+
+  !darkMode ? root.style.setProperty("--task-text2", "#3b3b3b") : root.style.setProperty("--task-text2", "#00FF80");
+
+  !darkMode ? root.style.setProperty("--task-border", "none") : root.style.setProperty("--task-border", "1px solid #666");
+
   
   !darkMode ? root.style.setProperty("--text-glass", "#6e3e13de") : root.style.setProperty("--text-glass", "#00FF80");
   

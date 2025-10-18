@@ -12,6 +12,10 @@
 
   --current-progress: 0%;
   --progress-bar: 0%;
+
+  --task-text1: #6d341f;
+  --task-text2: #3b3b3b;
+  --task-border: none;
 }
 
 .tasks-tab {
@@ -24,7 +28,8 @@
   display: flex;
   flex-direction: column;
   padding: 10px 20px 30px;
-  background: var(--color-background);
+  background-image: var(--glass-bg);
+  backdrop-filter: blur(150px);
   gap: 20px;
   z-index: 2;
   overflow-y: scroll;
@@ -57,6 +62,7 @@
   border-radius: 20px;
   gap: 20px;
   padding: var(--box-padding);
+  border: var(--task-border);
 }
 
 .task-progress {
@@ -102,7 +108,7 @@
 }
 
 .select-date-text p:nth-child(2) {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .today {
@@ -249,7 +255,7 @@
 }
 
 .day {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .todate,.day {
@@ -272,7 +278,7 @@
 }
 
 .selected-date p:first-child {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 #selectedDate {
@@ -298,11 +304,11 @@
 
 .task-progress-header p:first-child {
   font-weight: 600;
-  color: #3b3b3b;
+  color: var(--task-text2);
 }
 
 .task-progress-header p:last-child {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .task-progress-status div {
@@ -311,16 +317,16 @@
 }
 
 .task-progress-status div i {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .task-progress-status div p:last-child {
-  color: #3b3b3b;
+  color: var(--task-text2);
   font-weight: 550;
 }
 
 .task-progress-status p:last-child {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .task-progress-bar {
@@ -385,7 +391,7 @@
 .task-total p:last-child,
 .task-completed p:last-child,
 .task-pending p:last-child {
-  color: #462700af;
+  color: var(--task-text1);
   font-size: 15px;
 }
 
@@ -464,7 +470,7 @@
 .new-task-selected-date div {
   display: flex;
   gap: 4px;
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 .new-task-title,
@@ -491,12 +497,12 @@
 }
 
 #titleInput::placeholder {
-  color: #462700af;
+  color: var(--task-text1);
 }
 
 #titleInput:focus,
 #selectPrior:focus {
-  box-shadow: 0 0 4px #462700af;
+  box-shadow: 0 0 4px var(--task-text1);
   outline: none;
 }
 
@@ -685,7 +691,7 @@
   transition: .2s ease;
 }
 .editYourTask {
-  color: #3b3b3b;
+  color: var(--task-text2);
 }
 .editYourTask:hover {
   color: #5b5b5b;
@@ -808,12 +814,12 @@
 }
 
 .empty-task p {
-  color: #262626;
+  color: var(--task-text2);
   font-weight: 600;
 }
 
 .empty-task p:last-child {
-  color: #442902c1;
+  color: var(--task-text1);
   font-weight: 400;
   font-size: 15px;
   max-width: 250px;

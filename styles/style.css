@@ -12,6 +12,17 @@
   /*FOR GOAL APP*/
   --card-goal: #262626;
   
+  /*background glass*/
+  --glass-bg: linear-gradient(to bottom, 
+    rgba(184, 184, 184, 0.441),
+    rgba(255, 248, 240, 0.800),
+    rgba(255, 248, 240, 0.800),
+    rgba(255, 248, 240, 0.800)
+  );
+
+  --text-glass: var(--text-glass);
+  --text-glass2: var(--text-glass2);
+  --version-card: var(--version-card);
 }
 
 * {

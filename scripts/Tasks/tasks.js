@@ -388,7 +388,7 @@ function selectPriority(){
   selected.addEventListener('click', () => {
     selectPrior.classList.toggle('active');
   });
-  console.log(selectPrior, selected, options);
+
   options.forEach(option => {
     option.addEventListener('click', () => {
        selected.innerHTML = option.innerHTML
