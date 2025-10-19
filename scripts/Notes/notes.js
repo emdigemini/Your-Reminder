@@ -36,7 +36,6 @@ export function openNoteApp() {
       //--open add note container
       noteEl.addNotes.addEventListener('click', () => {
         if (!document.querySelector('.overlay-box')) {
-          history.pushState({ createYourNotes: true }, '');
           document.body.removeEventListener('click', bodyClick);
           createAddNoteBox(noteEl.overlay, noteEl.container, bodyClick);
         }
@@ -47,7 +46,6 @@ export function openNoteApp() {
 
 /*----------------- Overlay Control -----------------*/
 function openOverlay(overlay, container) {
-  history.pushState({ yourNotes: true }, '');
   overlay.classList.remove('close');
   overlay.classList.add('open');
   container.classList.remove('close');
@@ -63,6 +61,24 @@ function closeOverlay(overlay, container, bodyClick) {
   setTimeout(() => {
     overlay.remove();
   }, 700);
+}
+
+export function closeNotesOverlay(){
+  const overlay = document.querySelector('.overlay');
+  const container = document.querySelector('.notes-container');
+  container.classList.remove('open');
+  container.classList.add('close');
+  overlay.classList.remove('open');
+  overlay.classList.add('close');
+  setTimeout(() => {
+    overlay.remove();
+  }, 700);
+}
+
+export function closeAnotherOverlay(){
+  const overlayBox = document.querySelector('.overlay-box');
+  overlayBox.classList.remove('show');
+  overlayBox.classList.add('close');
 }
 
 /*----------------- Show Main Overlay -----------------*/
@@ -191,6 +207,8 @@ function createAddNoteBox(overlay, container, bodyClick) {
     </div>
   `);
 
+  addState();
+
   //--all elements of create notes container
   const inputDescription = document.getElementById('description');
   const overlayBox = document.querySelector('.overlay-box');
@@ -223,12 +241,6 @@ function createAddNoteBox(overlay, container, bodyClick) {
     document.body.removeEventListener('click', outsideOverlayBox);
     document.body.addEventListener('click', bodyClick);
     overlayBox.remove();
-
-    window.addEventListener('popstate', e => {
-      if (e.state && e.state.yourHub) {
-        closeOverlay(overlay, container, bodyClick);
-      }
-    }, { once: true });
   }
 
   //--title input listener
@@ -291,6 +303,11 @@ function yourNotesListener() {
       renderYourNotes();
     });
   });
+}
+
+function addState(){
+  if(history.state.page === 'goals') return;
+  history.pushState({page: 'createNotes'}, '');
 }
 
 /*----------------- Open Note -----------------*/
@@ -393,10 +410,8 @@ function noteTabEl(){
   return noteEl;
 }
 
-const root = document.documentElement;
-
 function openNoteTab() {
-  history.pushState({ yourNoteTab: true }, ""); 
+  history.pushState({page: 'notes'}, '');
   noteEl.mainOverlay.remove();
   noteEl.noteListBox.classList.remove('open');
   noteEl.noteListBox.classList.add('close');
@@ -414,14 +429,12 @@ function closeNoteTab() {
   }, { once: true });
 }
 
-/*----------------- Popstate Handling -----------------*/
-window.addEventListener('popstate', e => {
-  if (e.state !== null && e.state.yourHub) {
-    closeNoteTab();
-  }
-  if (e.state.home) {
-    closeDashboard();
-  }
-});
-
-history.replaceState({ home: true }, '');
+export function closeNotes(){
+  yourNoteOverlay = document.querySelector('.your-note-tab-overlay');
+  yourNoteTab = document.querySelector('.your-note-tab');
+  yourNoteOverlay.classList.add('close');
+  yourNoteTab.classList.add('close');
+  yourNoteTab.addEventListener('animationend', () => {
+    yourNoteOverlay.remove();
+  }, { once: true });
+}

@@ -217,6 +217,14 @@ function closeTab(){
   })
 }
 
+export function closeTasks(){
+const taskTab = document.querySelector('.tasks-tab');
+taskTab.classList.add('close');
+  taskTab.addEventListener('animationend', () => {
+    taskTab.remove();
+  }, {once: true})
+}
+
 /*============NAVIGATE CALENDAR============*/
 let nav = 0;
 let activeDate = new Date();

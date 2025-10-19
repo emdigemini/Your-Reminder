@@ -70,15 +70,13 @@ export function openReminderApp(){
     const el1 = getElm().create;  
     el1.tabReminder.classList.remove('close')
     el1.tabReminder.classList.add('open');
-    el1.tabReminder.addEventListener('animationend', () => {
-      el1.closeTab.addEventListener('click', () => {
-        el1.tabReminder.classList.add('close')
-        el1.tabReminder.classList.remove('open')
-        el1.tabReminder.addEventListener('animationend', () => {
-          el1.tabReminder.remove();
-        }, {once: true})
+    el1.closeTab.addEventListener('click', () => {
+      el1.tabReminder.classList.add('close')
+      el1.tabReminder.classList.remove('open')
+      el1.tabReminder.addEventListener('animationend', () => {
+        el1.tabReminder.remove();
       }, {once: true})
-    })
+    }, {once: true})
 
     reminderList.length > 0 
     ? allReminderTool()
@@ -98,6 +96,17 @@ export function openReminderApp(){
     return;
   }
 }
+
+export function closeReminder(){
+  console.log('hello');
+  const el1 = getElm().create;  
+  el1.tabReminder.classList.add('close')
+  el1.tabReminder.classList.remove('open')
+  el1.tabReminder.addEventListener('animationend', () => {
+    el1.tabReminder.remove();
+  }, {once: true})
+}
+
 
 function getElm(){
   const create = {

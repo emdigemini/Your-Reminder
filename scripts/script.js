@@ -1,9 +1,9 @@
 import './animation.js';
 import { randomQuotes } from './animation.js'
-import { openNoteApp } from './Notes/notes.js';
-import { openReminderApp } from './Reminder/reminder.js';
-import { openGoalApp } from './Goals/goals.js';
-import { openTaskApp } from './Tasks/tasks.js';
+import { openNoteApp, closeNotesOverlay, closeAnotherOverlay, closeNotes } from './Notes/notes.js';
+import { openReminderApp, closeReminder } from './Reminder/reminder.js';
+import { openGoalApp, closeGoals } from './Goals/goals.js';
+import { openTaskApp, closeTasks } from './Tasks/tasks.js';
 import { toggleContact } from './contact.js';
 import { toggleAbout } from './about.js';
 
@@ -38,7 +38,9 @@ closeBtn.addEventListener('click', closeDashboard)
 
 function start(){
   buttons.start.addEventListener('click', () => {
-    history.pushState({ yourHub: true }, ''); 
+    if(history.state === null){
+      history.pushState({ page: 'dashboard' }, ''); 
+    }
 
     // initial animations
     appHeader.classList.remove('clickk');
@@ -115,22 +117,30 @@ export function closeDashboard(){
 //  reminder
 cards.reminder.addEventListener('click', () => {
   openReminderApp();
-})
+  if(history.state.page === 'reminder') return;
+  history.pushState({page: 'reminder'}, '');
+});
 
 // notes
 cards.notes.addEventListener('click', () => {
   openNoteApp();
+  if(history.state.page === 'notesOverlay') return;
+  history.pushState({page: 'notesOverlay'}, '');
 });
 
 // goals
 cards.goals.addEventListener('click', () => {
   openGoalApp();
-})
+  if(history.state.page === 'goals') return;
+  history.pushState({page: 'goals'}, '');
+});
 
 //tasks
 cards.tasks.addEventListener('click', () => {
   openTaskApp();
-})
+  if(history.state.page === 'tasks') return;
+  history.pushState({page: 'tasks'}, '');
+});
 
 //settings
 buttons.settings.addEventListener('click', openSettings);
@@ -167,3 +177,32 @@ function openSettings(){
 }
 
 start();
+
+
+window.addEventListener('popstate', (e) => {
+  console.log(history.state);
+  if(e.state === null){
+    closeDashboard();
+  }
+  if(e.state !== null){
+    if(e.state.page !== 'reminder' && document.querySelector('.reminder-tab')){
+      closeReminder();
+    }
+    if(e.state.page !== 'notesOverlay' && document.querySelector('.overlay')){
+      closeNotesOverlay();
+    }
+    if(e.state.page !== 'createNotes' && document.querySelector('.overlay-box')){
+      closeAnotherOverlay();
+    }
+    if(e.state.page !== 'notes' && document.querySelector('.your-note-tab-overlay')){
+      closeNotes();
+    }
+    if(e.state.page !== 'goals' && document.querySelector('.goals')){
+      closeGoals();
+    }
+    if(e.state.page !== 'tasks' && document.querySelector('.tasks-tab')){
+      closeTasks();
+    }
+  }
+})
+history.replaceState(null, '');

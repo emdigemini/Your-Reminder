@@ -299,6 +299,14 @@ function closeTab(){
   })
 }
 
+export function closeGoals(){
+const yourTab = document.querySelector('.goals');
+yourTab.classList.add('close');
+  yourTab.addEventListener('animationend', () => {
+    yourTab.remove();
+  }, {once: true})
+}
+
 /*============INPUT BOX LISTENER============*/
 function inputListener(){
   const set = getElm();
