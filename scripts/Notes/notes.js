@@ -52,7 +52,6 @@ function openOverlay(overlay, container) {
 }
 
 function closeOverlay(overlay, container, bodyClick) {
-  history.back();
   container.classList.remove('open');
   container.classList.add('close');
   overlay.classList.remove('open');

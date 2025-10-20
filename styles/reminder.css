@@ -47,10 +47,10 @@
   padding: 20px;
   font-size: 24px;
   background-image: linear-gradient(120deg,
-    #668ae0, #033ab9, #1e439bcc
+    #e4a974, #FA7600, #c6630c
   );
   color: #fff;
-  border-radius: 15px;
+  border-radius: 50%;
 }
 
 .reminder-text {
@@ -59,7 +59,7 @@
 }
 
 .reminder-text h2 {
-  color: #033ab9;
+  color: #fff;
 }
 
 .create-reminder {
