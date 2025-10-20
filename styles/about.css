@@ -79,7 +79,7 @@
 }
 
 /*OUR MISSION*/
-.our-mission {
+.the-purpose {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -89,14 +89,14 @@
   gap: 10px;
 }
 
-.our-mission p:first-child i {
+.the-purpose p:first-child i {
   color: rgb(247, 22, 101);
 }
-.our-mission p:first-child {
+.the-purpose p:first-child {
   font-weight: 600;
   color: var(--text-glass2);
 }
-.our-mission p:last-child {
+.the-purpose p:last-child {
   color: var(--color-accent);
   line-height: 24px;
   font-size: 14px;
@@ -217,7 +217,7 @@
 .whyUs {
   font-weight: 600;
 }
-.why-us {
+.why-this {
   display: flex;
   flex-direction: column;
   box-shadow: 0 0 20px #2626263f;
@@ -226,29 +226,29 @@
   gap: 10px;
 }
 
-.why-us ul {
+.why-this ul {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.why-us ul li {
+.why-this ul li {
   display: flex;
   gap: 10px;
   align-items: center;
   list-style-type: none;
 }
 
-.why-us ul li i {
+.why-this ul li i {
   color: #16cd56;
   font-size: 15px;
 }
 
-.why-us ul li p {
+.why-this ul li p {
   font-weight: 600;
 }
 
-.why-us ul li p span {
+.why-this ul li p span {
   font-weight: 400;
   color: var(--text-glass);
 } 

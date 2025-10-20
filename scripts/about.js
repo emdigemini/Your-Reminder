@@ -16,12 +16,12 @@ export function toggleAbout(){
           Version 1.0.0
         </p>
       </div>
-      <div class="our-mission">
+      <div class="the-purpose">
         <p>
-          <i class="bi bi-heart"></i> Our Mission
+          <i class="bi bi-heart"></i> The Purpose
         </p>
         <p>
-          We believe that task management should be simple, beautiful, and enjoyable. TaskFlow was created to help people organize their daily activities without the complexity and clutter of traditional task apps. Our focus is on providing a clean, intuitive interface that makes productivity feel effortless.
+          I created this app to provide a simple and focused way to manage reminders, notes, goals, and tasks. My intention was to build a tool that helps people stay organized without unnecessary complexity or stress. It's designed for those who value clarity, balance, and ease of use in their daily routine.
         </p>
       </div>
       <div class="key-features">
@@ -95,15 +95,15 @@ export function toggleAbout(){
         </div>
 
       </div>
-      <div class="why-us">
-        <p class="whyUs">What Makes Us Different</p>
+      <div class="why-this">
+        <p class="whyUs">What Makes This App Different</p>
         <ul>
           <li>
             <i class="bi bi-check-circle"></i>
             <p>
               No Account Required:
               <span>
-                Start using TaskFlow immediately without signup or registration.
+                Start organizing your reminders, notes, goals, and tasks instantly with no signup required.
               </span>
             </p>
           </li>
@@ -112,7 +112,7 @@ export function toggleAbout(){
             <p>
               Offline First: 
               <span>
-                All your tasks are stored locally on your device for instant access.
+                Works perfectly even without internet, and your data stays safe on your device.
               </span>
             </p>
           </li>
