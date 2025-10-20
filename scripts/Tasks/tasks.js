@@ -35,7 +35,7 @@ export function openTaskApp(){
       </div>
 
       <div class="choose-date">
-        <button id="backDate"><i class="fa fa-caret-left" aria-hidden="true"></i></button>
+        <button id="backDate"><i class="bi bi-caret-left-fill"></i></button>
         <div class="calendar">
           <div class="days">
             <p class="countTask"></p>
@@ -73,7 +73,7 @@ export function openTaskApp(){
             <p class="todate">7</p>
           </div>
         </div>
-        <button id="nextDate"><i class="fa fa-caret-right" aria-hidden="true"></i></button>
+        <button id="nextDate"><i class="bi bi-caret-right-fill"></i></button>
       </div>
       
       <div class="selected-date">
@@ -207,12 +207,11 @@ export function openTaskApp(){
 
 function closeTab(){
   const taskTab = document.querySelector('.tasks-tab');
-  taskTab.addEventListener('animationend', () => {
-    document.querySelector('.toggle-btn').addEventListener('click', () => {
-      taskTab.classList.add('close');
-      taskTab.addEventListener('animationend', () => {
-        taskTab.remove();
-      }, {once: true})
+  document.querySelector('.toggle-btn').addEventListener('click', () => {
+    history.back();
+    taskTab.classList.add('close');
+    taskTab.addEventListener('animationend', () => {
+      taskTab.remove();
     }, {once: true})
   })
 }
@@ -321,7 +320,9 @@ function calendarClickListener(e){
     date[activeDate.getDay()].classList.remove('select');
     countTask[activeDate.getDay()].classList.remove('select');
 
-    activeDate.setDate(navDate.getDate() - currentDay + index);
+    activeDate = new Date(navDate);
+    activeDate.setDate(navDate.getDate() - navDate.getDay() + index);
+
     e.target.classList.add('select');
     countTask[activeDate.getDay()].classList.add('select');
 
@@ -333,7 +334,7 @@ function calendarClickListener(e){
       date[currentDay].classList.remove('active');
     }
     selectedDate = activeDate.toLocaleDateString();
-    
+
     updateSelectedDate();
     renderYourTask();
   }

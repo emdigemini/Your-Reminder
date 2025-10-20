@@ -292,6 +292,7 @@ function allFunction(){
 function closeTab(){
   const yourTab = document.querySelector('.goals');
   document.querySelector('.toggle-btn').addEventListener('click', () => {
+    history.back();
     yourTab.classList.add('close');
     yourTab.addEventListener('animationend', () => {
       yourTab.remove();

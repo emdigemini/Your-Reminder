@@ -71,6 +71,7 @@ export function openReminderApp(){
     el1.tabReminder.classList.remove('close')
     el1.tabReminder.classList.add('open');
     el1.closeTab.addEventListener('click', () => {
+      history.back();
       el1.tabReminder.classList.add('close')
       el1.tabReminder.classList.remove('open')
       el1.tabReminder.addEventListener('animationend', () => {
@@ -98,7 +99,6 @@ export function openReminderApp(){
 }
 
 export function closeReminder(){
-  console.log('hello');
   const el1 = getElm().create;  
   el1.tabReminder.classList.add('close')
   el1.tabReminder.classList.remove('open')

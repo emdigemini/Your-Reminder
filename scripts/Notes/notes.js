@@ -1,6 +1,5 @@
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
 import { darkMode } from "../settings.js";
-import { closeDashboard } from '../script.js';
 import '../settings.js';
 
 /**----------For NOTES----------**/
@@ -37,7 +36,7 @@ export function openNoteApp() {
       noteEl.addNotes.addEventListener('click', () => {
         if (!document.querySelector('.overlay-box')) {
           document.body.removeEventListener('click', bodyClick);
-          createAddNoteBox(noteEl.overlay, noteEl.container, bodyClick);
+          createAddNoteBox(bodyClick);
         }
       });
     }, { once: true });
@@ -53,6 +52,7 @@ function openOverlay(overlay, container) {
 }
 
 function closeOverlay(overlay, container, bodyClick) {
+  history.back();
   container.classList.remove('open');
   container.classList.add('close');
   overlay.classList.remove('open');
@@ -190,7 +190,7 @@ function renderYourNotes() {
 }
 
 /*----------------- Create Add Note Box -----------------*/
-function createAddNoteBox(overlay, container, bodyClick) {
+function createAddNoteBox(bodyClick) {
   document.body.insertAdjacentHTML("beforeend", `
     <div class="overlay-box">
       <div class="create-notes ${!darkMode ? 'light' : ''}">
@@ -223,6 +223,7 @@ function createAddNoteBox(overlay, container, bodyClick) {
   overlayBox.addEventListener('animationend', () => {
     const outsideOverlayBox = (e) => {
       if (!createNotesBox.contains(e.target)) {
+        history.back();
         removeCreateNotesBox(outsideOverlayBox);
       }
     };
@@ -411,7 +412,9 @@ function noteTabEl(){
 }
 
 function openNoteTab() {
-  history.pushState({page: 'notes'}, '');
+  if(!noteEl.yourNoteOverlay){
+    history.pushState({page: 'notes'}, '');
+  }
   noteEl.mainOverlay.remove();
   noteEl.noteListBox.classList.remove('open');
   noteEl.noteListBox.classList.add('close');
@@ -422,6 +425,7 @@ function openNoteTab() {
 }
 
 function closeNoteTab() {
+  history.back();
   noteEl.yourNoteOverlay.classList.add('close');
   noteEl.yourNoteTab.classList.add('close');
   noteEl.yourNoteTab.addEventListener('animationend', () => {
@@ -430,8 +434,8 @@ function closeNoteTab() {
 }
 
 export function closeNotes(){
-  yourNoteOverlay = document.querySelector('.your-note-tab-overlay');
-  yourNoteTab = document.querySelector('.your-note-tab');
+  const yourNoteOverlay = document.querySelector('.your-note-tab-overlay');
+  const yourNoteTab = document.querySelector('.your-note-tab');
   yourNoteOverlay.classList.add('close');
   yourNoteTab.classList.add('close');
   yourNoteTab.addEventListener('animationend', () => {

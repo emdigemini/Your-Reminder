@@ -41,7 +41,6 @@ function start(){
     if(history.state === null){
       history.pushState({ page: 'dashboard' }, ''); 
     }
-
     // initial animations
     appHeader.classList.remove('clickk');
     appHeader.classList.add('click');
@@ -58,8 +57,10 @@ function start(){
     [buttons.settings, buttons.about].forEach(el => el.classList.remove('slideInRight'));
     [buttons.start, buttons.contact].forEach(el => el.classList.add('slideLeft'));
     [buttons.settings, buttons.about].forEach(el => el.classList.add('slideRight'));
-
+    
     buttons.start.addEventListener('animationend', () => {
+      dashboard.classList.remove('hide');
+      startUpMenu.classList.add('hide');
       startUpMenu.style.display = 'none';
       dashboard.style.display = 'flex';
 
@@ -79,7 +80,8 @@ function start(){
   });
 }
 
-export function closeDashboard(){
+function closeDashboard(){
+    if(!startUpMenu.classList.contains('hide')) return;
     // profile + close button
     [yourProfile, closeBtn].forEach(el => el.classList.remove('click'));
     [yourProfile, closeBtn].forEach(el => el.classList.add('clickk'));
@@ -102,6 +104,8 @@ export function closeDashboard(){
     dateTime.classList.add('popIn');
 
     cards.reminder.addEventListener('animationend', () => {
+      dashboard.classList.add('hide');
+      startUpMenu.classList.remove('hide');
       dashboard.style.display = 'none';
       startUpMenu.style.display = 'flex';
 
@@ -117,28 +121,28 @@ export function closeDashboard(){
 //  reminder
 cards.reminder.addEventListener('click', () => {
   openReminderApp();
-  if(history.state.page === 'reminder') return;
+  if(history.state?.page === 'reminder') return;
   history.pushState({page: 'reminder'}, '');
 });
 
 // notes
 cards.notes.addEventListener('click', () => {
   openNoteApp();
-  if(history.state.page === 'notesOverlay') return;
+  if(history.state?.page === 'notesOverlay') return;
   history.pushState({page: 'notesOverlay'}, '');
 });
 
 // goals
 cards.goals.addEventListener('click', () => {
   openGoalApp();
-  if(history.state.page === 'goals') return;
+  if(history.state?.page === 'goals') return;
   history.pushState({page: 'goals'}, '');
 });
 
 //tasks
 cards.tasks.addEventListener('click', () => {
   openTaskApp();
-  if(history.state.page === 'tasks') return;
+  if(history.state?.page === 'tasks') return;
   history.pushState({page: 'tasks'}, '');
 });
 
@@ -180,29 +184,29 @@ start();
 
 
 window.addEventListener('popstate', (e) => {
-  console.log(history.state);
   if(e.state === null){
     closeDashboard();
-  }
-  if(e.state !== null){
+  } else if(e.state !== null){
     if(e.state.page !== 'reminder' && document.querySelector('.reminder-tab')){
       closeReminder();
-    }
-    if(e.state.page !== 'notesOverlay' && document.querySelector('.overlay')){
+    } else if(e.state.page !== 'notesOverlay' && document.querySelector('.overlay')){
       closeNotesOverlay();
-    }
-    if(e.state.page !== 'createNotes' && document.querySelector('.overlay-box')){
+    } else if(e.state.page !== 'createNotes' && document.querySelector('.overlay-box')){
       closeAnotherOverlay();
-    }
-    if(e.state.page !== 'notes' && document.querySelector('.your-note-tab-overlay')){
+    } else if(e.state.page !== 'notes' && document.querySelector('.your-note-tab-overlay')){
       closeNotes();
-    }
-    if(e.state.page !== 'goals' && document.querySelector('.goals')){
+    } else if(e.state.page !== 'goals' && document.querySelector('.goals')){
       closeGoals();
-    }
-    if(e.state.page !== 'tasks' && document.querySelector('.tasks-tab')){
+    } else if(e.state.page !== 'tasks' && document.querySelector('.tasks-tab')){
       closeTasks();
     }
   }
 })
 history.replaceState(null, '');
+
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("./service-worker.js")
+    .then(() => console.log("Service Worker registered successfully"))
+    .catch(err => console.log("Service Worker registration failed:", err));
+}

@@ -1,5 +1,5 @@
 import { loadDate } from './clock.js';
-import { quotes } from '../quotes generator/quotes.js';
+import { quotes } from '../quotes-generator/quotes.js';
 
 // generate random quotes
 
@@ -77,10 +77,3 @@ randomQuotes();
 quotesAnimation();
 dateAndTime();
 setInterval(dateAndTime, 1000);
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js')
-      .then(reg => console.log('SW registered:', reg.scope))
-      .catch(err => console.log('SW failed:', err));
-  });
-}
