@@ -93,9 +93,7 @@ export function openReminderApp(){
     document.getElementById('all').innerHTML = `All (${renderReminder().allReminder})`;
     document.getElementById('active').innerHTML = `Active (${renderReminder().activeReminder})`;
     document.getElementById('completed').innerHTML = `Completed (${renderReminder().completedReminder})`;
-  } else {
-    return;
-  }
+  } 
 }
 
 export function closeReminder(){

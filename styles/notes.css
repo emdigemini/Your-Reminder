@@ -259,6 +259,12 @@
   flex-direction: column;
 }
 
+.add-description #description {
+  border-radius: 8px;
+  padding: 8px;
+  border: none;
+}
+
 .description-box {
   height: 120px;
   background: #2a2a2a;

@@ -51,7 +51,7 @@ export class Goal{
         <p>Progress</p>
         <div class="progress">
           <p class="percentage">${this.progress}%</p>
-          <p class="points">(${this.points}/${ifUnitsMoney(this.target, this.unit)})</p>
+          <p class="points">(${ifUnitsMoney(this.points, this.unit)}/${ifUnitsMoney(this.target, this.unit)})</p>
         </div>
         <div class="progress-bar">
           <div class="your_progress"></div>
@@ -100,140 +100,136 @@ export class Goal{
 }
 
 export function openGoalApp(){
-  if(!document.querySelector('.goals')){
-    document.body.insertAdjacentHTML('afterbegin', `
-      <div class="goals">
-        <div class="goals-tab">
-          <div class="goals-logo-circle">
-            <div class="pr-icon-circle">
+  document.body.insertAdjacentHTML('afterbegin', `
+    <div class="goals">
+      <div class="goals-tab">
+        <div class="goals-logo-circle">
+          <div class="pr-icon-circle">
+            <div class="square-1"></div>
+            <div class="square-2"></div>
+            <div class="square-3"></div>
+            <div class="square-4"></div>
+          </div>
+          <div class="title">
+            <h2>Your Goals</h2>
+            <p>Achieve greatness daily</p>
+            <i class="toggle-btn bi bi-caret-down"></i>
+          </div>
+        </div>
+
+        <div class="progress-card">
+          <div class="avg-progress">
+            <i class="bi bi-bar-chart-steps"></i>
+            <div class="count">
+              <span class="avg_progress">0%</span>
+              <p>Avg Progress</p>
+            </div>
+          </div>
+          <div class="completed-goal">
+            <i class="bi bi-award-fill"></i>
+            <div class="count">
+              <span class="completed_count">0</span>
+              <p>Completed</p>
+            </div>
+          </div>
+        </div>
+
+        <!--INPUT BOX-->
+        <div class="set-goal">
+          <div class="goals-logo-square">
+            <div class="pr-icon-square">
               <div class="square-1"></div>
               <div class="square-2"></div>
               <div class="square-3"></div>
               <div class="square-4"></div>
+              <div class="dot"></div>
             </div>
-            <div class="title">
-              <h2>Your Goals</h2>
-              <p>Achieve greatness daily</p>
-              <i class="toggle-btn bi bi-caret-down"></i>
-            </div>
+            <h2>Set Your Goal</h2>
           </div>
 
-          <div class="progress-card">
-            <div class="avg-progress">
-              <i class="bi bi-bar-chart-steps"></i>
-              <div class="count">
-                <span class="avg_progress">0%</span>
-                <p>Avg Progress</p>
+          <p>
+          Transform your dreams into achievable milestones. 
+          Set clear targets and track your progress toward what matters most.
+          </p>
+
+          <div class="input-box">
+            <input type="text" id="setGoal" 
+            placeholder="What do you want to achieve?" 
+            autocomplete="off">
+            <div class="input-box-2">
+              <div class="category-box">
+                <label for="category">Category</label>
+                <select name="category" id="category">
+                  <option value="" hidden>Pick your goal area</option>
+                  <option value="✨Personal">✨Personal Growth</option>
+                  <option value="🔋Health">🔋Health & Fitness</option>
+                  <option value="💼Career">💼Career & Skills</option>
+                  <option value="💰Financial">💰Financial Goals</option>
+                </select>
+              </div>
+
+              <div class="target-track">
+                <label for="target">Target</label>
+                <input type="number" id="target" 
+                placeholder="100" autocomplete="off">
               </div>
             </div>
-            <div class="completed-goal">
-              <i class="bi bi-award-fill"></i>
-              <div class="count">
-                <span class="completed_count">0</span>
-                <p>Completed</p>
+
+            <div class="input-box-3">
+              <div class="unit">
+                🔢
+                <label for="unit">Unit</label>
+                <input id="unit" type="text" placeholder="kg, hours, money...">
+              </div>
+              <div class="deadline">
+                📅
+                <label for="deadline">Deadline</label>
+                <input id="deadline" type="date">
               </div>
             </div>
-          </div>
 
-          <!--INPUT BOX-->
-          <div class="set-goal">
-            <div class="goals-logo-square">
-              <div class="pr-icon-square">
-                <div class="square-1"></div>
-                <div class="square-2"></div>
-                <div class="square-3"></div>
-                <div class="square-4"></div>
-                <div class="dot"></div>
+            <div class="btn-group">
+              <div class="toggle-input-box-3">
+                <i id="setDeadline" class="bi bi-calendar2"></i>
+                <i id="closeInputBox3" class="bi bi-x-lg"></i>
               </div>
-              <h2>Set Your Goal</h2>
-            </div>
-
-            <p>
-            Transform your dreams into achievable milestones. 
-            Set clear targets and track your progress toward what matters most.
-            </p>
-
-            <div class="input-box">
-              <input type="text" id="setGoal" 
-              placeholder="What do you want to achieve?" 
-              autocomplete="off">
-              <div class="input-box-2">
-                <div class="category-box">
-                  <label for="category">Category</label>
-                  <select name="category" id="category">
-                    <option value="" hidden>Pick your goal area</option>
-                    <option value="✨Personal">✨Personal Growth</option>
-                    <option value="🔋Health">🔋Health & Fitness</option>
-                    <option value="💼Career">💼Career & Skills</option>
-                    <option value="💰Financial">💰Financial Goals</option>
-                  </select>
-                </div>
-
-                <div class="target-track">
-                  <label for="target">Target</label>
-                  <input type="number" id="target" 
-                  placeholder="100" autocomplete="off">
-                </div>
-              </div>
-
-              <div class="input-box-3">
-                <div class="unit">
-                  🔢
-                  <label for="unit">Unit</label>
-                  <input id="unit" type="text" placeholder="kg, hours, money...">
-                </div>
-                <div class="deadline">
-                  📅
-                  <label for="deadline">Deadline</label>
-                  <input id="deadline" type="date">
-                </div>
-              </div>
-
-              <div class="btn-group">
-                <div class="toggle-input-box-3">
-                  <i id="setDeadline" class="bi bi-calendar2"></i>
-                  <i id="closeInputBox3" class="bi bi-x-lg"></i>
-                </div>
-                <button id="createGoal" class="disabled">+ Create Goal</button>
-              </div>
+              <button id="createGoal" class="disabled">+ Create Goal</button>
             </div>
           </div>
-          <!--END OF INPUT BOX-->
-
-          <!--CONTROL BOX-->
-          <div class="goal-control-box">
-            <div class="goal-controls-button">
-              <button id="allGoal" class="goal-filter active">🎯All (0)</button>
-              <button id="activeGoal" class="goal-filter">⚡Active (0)</button>
-              <button id="completedGoal" class="goal-filter">✨Completed (0)</button>
-            </div>
-
-            <div class="goal-categories">
-              <p>Categories</p>
-              <div class="first-line">
-                <button id="health" value="🔋Health">Health</button>
-                <button id="career" value="💼Career">Career</button>
-              </div>
-              <div class="second-line">
-                <button id="personal" value="✨Personal"></button>
-                <button id="financial" value="💰Financial"></button>
-              </div>
-            </div>
-          </div>
-          <!--END OF CONTROL BOX-->
-
-          <!--GOAL LIST-->
-          <div class="your-goal-list">
-            <!--GENERATE GOAL LIST HERE-->
-          </div>
-          <!--END OF GOAL LIST-->
         </div>
+        <!--END OF INPUT BOX-->
+
+        <!--CONTROL BOX-->
+        <div class="goal-control-box">
+          <div class="goal-controls-button">
+            <button id="allGoal" class="goal-filter active">🎯All (0)</button>
+            <button id="activeGoal" class="goal-filter">⚡Active (0)</button>
+            <button id="completedGoal" class="goal-filter">✨Completed (0)</button>
+          </div>
+
+          <div class="goal-categories">
+            <p>Categories</p>
+            <div class="first-line">
+              <button id="health" value="🔋Health">Health</button>
+              <button id="career" value="💼Career">Career</button>
+            </div>
+            <div class="second-line">
+              <button id="personal" value="✨Personal"></button>
+              <button id="financial" value="💰Financial"></button>
+            </div>
+          </div>
+        </div>
+        <!--END OF CONTROL BOX-->
+
+        <!--GOAL LIST-->
+        <div class="your-goal-list">
+          <!--GENERATE GOAL LIST HERE-->
+        </div>
+        <!--END OF GOAL LIST-->
       </div>
-    `);
-    allFunction();
-  } else {
-    return;
-  }
+    </div>
+  `);
+  allFunction();
 }
 
 export function getElm(){

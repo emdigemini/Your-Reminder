@@ -1,86 +1,63 @@
-import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
+import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js';
 import { darkMode } from "../settings.js";
 import '../settings.js';
 
-/**----------For NOTES----------**/
+/**---------- STORAGE ----------**/
 const yourNotesList = JSON.parse(localStorage.getItem('yourNotesList')) || [];
 
-/*----------------- Save to Storage -----------------*/
 function saveToStorage() {
   localStorage.setItem('yourNotesList', JSON.stringify(yourNotesList));
 }
 
-/*----------------- Open Notes Feature -----------------*/
-export function openNoteApp() {
-  if (!document.querySelector('.overlay')) {
-    const noteEl = showMainOverlay();
-    openOverlay(noteEl.overlay, noteEl.container);
-    searchYourNotes(noteEl.searchNotes);
-
-    noteEl.container.addEventListener('animationend', () => {
-      const bodyClick = (e) => {
-        if (!noteEl.container.contains(e.target)) {
-          closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
-        }
-      };
-
-      //--close note overlay when clicking outside
-      document.body.addEventListener('click', bodyClick);
-      window.addEventListener('popstate', e => {
-        if (e.state && e.state.yourHub) {
-          closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
-        }
-      }, { once: true });
-
-      //--open add note container
-      noteEl.addNotes.addEventListener('click', () => {
-        if (!document.querySelector('.overlay-box')) {
-          document.body.removeEventListener('click', bodyClick);
-          createAddNoteBox(bodyClick);
-        }
-      });
-    }, { once: true });
-  }
-}
-
-/*----------------- Overlay Control -----------------*/
+/**---------- OVERLAY UTILITIES ----------**/
 function openOverlay(overlay, container) {
-  overlay.classList.remove('close');
   overlay.classList.add('open');
-  container.classList.remove('close');
   container.classList.add('open');
 }
 
-function closeOverlay(overlay, container, bodyClick) {
-  container.classList.remove('open');
-  container.classList.add('close');
-  overlay.classList.remove('open');
-  overlay.classList.add('close');
-  document.body.removeEventListener('click', bodyClick);
-  setTimeout(() => {
-    overlay.remove();
-  }, 700);
+function closeOverlay(overlay, container, callback) {
+  container.classList.replace('open', 'close');
+  overlay.classList.replace('open', 'close');
+  if (callback) document.body.removeEventListener('click', callback);
+  setTimeout(() => overlay.remove(), 700);
 }
 
-export function closeNotesOverlay(){
+export function closeNotesOverlay() {
   const overlay = document.querySelector('.overlay');
   const container = document.querySelector('.notes-container');
-  container.classList.remove('open');
-  container.classList.add('close');
-  overlay.classList.remove('open');
-  overlay.classList.add('close');
-  setTimeout(() => {
-    overlay.remove();
-  }, 700);
+  closeOverlay(overlay, container);
 }
 
-export function closeAnotherOverlay(){
+export function closeAnotherOverlay() {
   const overlayBox = document.querySelector('.overlay-box');
-  overlayBox.classList.remove('show');
-  overlayBox.classList.add('close');
+  overlayBox?.classList.replace('show', 'close');
 }
 
-/*----------------- Show Main Overlay -----------------*/
+/**---------- MAIN NOTES APP ----------**/
+export function openNoteApp() {
+  if (document.querySelector('.overlay')) return;
+
+  const noteEl = showMainOverlay();
+  openOverlay(noteEl.overlay, noteEl.container);
+  attachSearchListener(noteEl.searchNotes);
+
+  noteEl.container.addEventListener('animationend', () => {
+    const bodyClick = e => !noteEl.container.contains(e.target) && closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
+    document.body.addEventListener('click', bodyClick);
+
+    window.addEventListener('popstate', e => {
+      if (e.state?.yourHub) closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
+    }, { once: true });
+
+    noteEl.addNotes.addEventListener('click', () => {
+      if (!document.querySelector('.overlay-box')) {
+        document.body.removeEventListener('click', bodyClick);
+        createAddNoteBox(bodyClick);
+      }
+    });
+  }, { once: true });
+}
+
 function showMainOverlay() {
   document.body.insertAdjacentHTML("beforeend", `
     <div class="overlay">
@@ -90,354 +67,248 @@ function showMainOverlay() {
           <i id="add" class="bi bi-plus-lg"></i>
         </div>
         <div class="notes-list">
-          ${yourNotesList.length ? getYourNotes() : 'No notes yet.'}
-          <!--Generate Notes Here-->
+          ${yourNotesList.length ? getNotesHTML() : 'No notes yet.'}
         </div>
       </div>
     </div>
   `);
 
-  yourNotesListener();
+  attachNotesListener();
 
   return {
-    addNotes:     document.getElementById('add'),
-    searchNotes:  document.getElementById('search-notes'),
-    yourNotes:    document.querySelectorAll('.your-notes'),
-    overlay:      document.querySelector('.overlay'),
-    container:    document.querySelector('.notes-container')
+    addNotes: document.getElementById('add'),
+    searchNotes: document.getElementById('search-notes'),
+    overlay: document.querySelector('.overlay'),
+    container: document.querySelector('.notes-container'),
   };
 }
 
-/*----------------- Search Notes -----------------*/
-function searchYourNotes(searchNotes) {
-  searchNotes.addEventListener('input', () => {
-    const search = searchNotes.value;
-    const findNotes = yourNotesList.filter(n => n.title.toLowerCase().includes(search.toLowerCase()));
-
-    const renderFoundNotes = findNotes.map(note => `
-      <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
-        <div class="notes-action-bar">
-          <div class="notes-title"><h4>${note.title}</h4></div>
-          <div class="notes-action ${!darkMode ? 'light' : ''}">
-            <i class="edit bi-pencil-square"></i>
-            <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
-            <i class="trash bi-trash"></i>
-          </div>
-        </div>
-        <div class="description"><textarea class="description-box" readonly>${note.description}</textarea></div>
-        <div class="date-created">${note.date}</div>
-      </div>
-    `).join('');
-
-    document.querySelector('.notes-list').innerHTML = renderFoundNotes || 'No notes found.';
-    yourNotesListener();
+/**---------- SEARCH ----------**/
+function attachSearchListener(searchInput) {
+  searchInput.addEventListener('input', () => {
+    const filteredNotes = yourNotesList.filter(note => note.title.toLowerCase().includes(searchInput.value.toLowerCase()));
+    document.querySelector('.notes-list').innerHTML = filteredNotes.length ? filteredNotes.map(note => getNoteHTML(note)).join('') : 'No notes found.';
+    attachNotesListener();
   });
 }
 
-/*----------------- Save Your Notes -----------------*/
-function saveYourNotes(inputTitle, inputDescription) {
-  const title = inputTitle.value;
-  const description = inputDescription.value.trim().length > 1
-    ? inputDescription.value
-    : 'No description provided.';
-
+/**---------- NOTES MANAGEMENT ----------**/
+function saveYourNotes(titleInput, descInput) {
+  const title = titleInput.value.trim();
+  const description = descInput.value.trim() || 'No description provided.';
   const date = dayjs().format('MMM D, YYYY');
+  const id = crypto.randomUUID();
 
-  function generateId() {
-    return crypto.randomUUID();
-  };
+  yourNotesList.unshift({ id, title, description, date, bookmark: false, textarea: 'Add your notes here...' });
 
-  const id = generateId();
-  yourNotesList.unshift({
-    id,
-    title,
-    description,
-    date,
-    bookmark: false,
-    textarea: 'Add your notes here...'
-  });
-
-  inputTitle.value = '';
-  inputDescription.value = '';
+  titleInput.value = '';
+  descInput.value = '';
   saveToStorage();
-  renderYourNotes();
+  renderNotes();
 }
 
-/*----------------- Get Notes -----------------*/
-function getYourNotes() {
-  return yourNotesList.map(note => `
+function getNotesHTML() {
+  return yourNotesList.map(note => getNoteHTML(note)).join('');
+}
+
+function getNoteHTML(note) {
+  return `
     <div data-note-id="${note.id}" class="your-notes ${!darkMode ? 'light' : ''}">
       <div class="notes-action-bar">
         <div class="notes-title"><h4>${note.title}</h4></div>
         <div class="notes-action ${!darkMode ? 'light' : ''}">
           <i class="edit bi-pencil-square"></i>
-          <i data-bookmark-id="${note.id}" class="save bi-bookmark${!note.bookmark ? '' : '-fill'}"></i>
+          <i data-bookmark-id="${note.id}" class="save bi-bookmark${note.bookmark ? '-fill' : ''}"></i>
           <i class="trash bi-trash"></i>
         </div>
       </div>
       <div class="description"><textarea class="description-box" readonly>${note.description}</textarea></div>
       <div class="date-created">${note.date}</div>
     </div>
-  `).join('');
+  `;
 }
 
-/*----------------- Render Notes -----------------*/
-function renderYourNotes() {
-  const notesHTML = getYourNotes();
-  document.querySelector('.notes-list').innerHTML = notesHTML || 'No notes yet.';
-  yourNotesListener();
+function renderNotes() {
+  document.querySelector('.notes-list').innerHTML = getNotesHTML() || 'No notes yet.';
+  attachNotesListener();
 }
 
-/*----------------- Create Add Note Box -----------------*/
+/**---------- ADD NOTE BOX ----------**/
 function createAddNoteBox(bodyClick) {
   document.body.insertAdjacentHTML("beforeend", `
     <div class="overlay-box">
       <div class="create-notes ${!darkMode ? 'light' : ''}">
-        <div class="add-title">
-          <label for="title">Title:</label>
-          <input type="text" id="title" spellcheck="false" placeholder="Title">
-        </div>
-        <div class="add-description">
-          <label for="description">Description:</label>
-          <textarea id="description" class="description-box ${!darkMode ? 'light' : ''}" spellcheck="false" placeholder="Description"></textarea>
-        </div>
+        <div class="add-title"><label for="title">Title:</label><input type="text" id="title" placeholder="Title"></div>
+        <div class="add-description"><label for="description">Description:</label><textarea id="description" class="${!darkMode ? 'light' : ''}" placeholder="Description"></textarea></div>
         <button class="add-btn" id="addBtn">Add</button>
       </div>
     </div>
   `);
 
-  addState();
-
-  //--all elements of create notes container
-  const inputDescription = document.getElementById('description');
   const overlayBox = document.querySelector('.overlay-box');
-  const inputTitle = document.getElementById('title');
+  const titleInput = document.getElementById('title');
+  const descInput = document.getElementById('description');
+  const addBtn = document.getElementById('addBtn');
   const createNotesBox = document.querySelector('.create-notes');
 
-  //--add animation when opening
-  overlayBox.classList.remove('close');
   overlayBox.classList.add('show');
+  pushHistoryState();
 
-  //--close animation
   overlayBox.addEventListener('animationend', () => {
-    const outsideOverlayBox = (e) => {
-      if (!createNotesBox.contains(e.target)) {
-        history.back();
-        removeCreateNotesBox(outsideOverlayBox);
-      }
-    };
-    document.body.addEventListener('click', outsideOverlayBox);
-
-    window.addEventListener('popstate', e => {
-      if (e.state && e.state.yourNotes) {
-        removeCreateNotesBox(outsideOverlayBox);
-      }
-    });
+    const outsideClick = e => !createNotesBox.contains(e.target) && removeAddNoteBox(outsideClick);
+    document.body.addEventListener('click', outsideClick);
+    window.addEventListener('popstate', e => e.state?.yourNotes && removeAddNoteBox(outsideClick));
   }, { once: true });
 
-  function removeCreateNotesBox(outsideOverlayBox) {
-    overlayBox.classList.remove('show');
-    overlayBox.classList.add('close');
-    document.body.removeEventListener('click', outsideOverlayBox);
+  titleInput.addEventListener('input', () => {
+    if (titleInput.value.trim().length > 44) {
+      titleInput.value = titleInput.value.slice(0, 45);
+      titleInput.classList.add('error');
+    } else {
+      titleInput.classList.remove('error');
+    }
+  });
+
+  addBtn.addEventListener('click', () => {
+    if (titleInput.value.trim() && titleInput.value.length <= 44) saveYourNotes(titleInput, descInput);
+  });
+
+  function removeAddNoteBox(listener) {
+    overlayBox.classList.replace('show', 'close');
+    document.body.removeEventListener('click', listener);
     document.body.addEventListener('click', bodyClick);
     overlayBox.remove();
   }
+}
 
-  //--title input listener
-  inputTitle.addEventListener('input', function () {
-    if (this.value.trim().length > 44) {
-      this.classList.add('error');
-      this.value = this.value.slice(0, 45);
-    } else {
-      this.classList.remove('error');
-    }
-  });
+function pushHistoryState() {
+  if (history.state?.page !== 'goals') history.pushState({ page: 'createNotes' }, '');
+}
 
-  //--add button listener
-  document.getElementById('addBtn').addEventListener('click', () => {
-    if (inputTitle.value.length > 44) {
-      inputTitle.focus();
-      return;
-    }
-    if (inputTitle.value !== '') saveYourNotes(inputTitle, inputDescription);
+/**---------- NOTES EVENT LISTENERS ----------**/
+function attachNotesListener() {
+  document.querySelectorAll('.trash').forEach(trash => trash.addEventListener('click', deleteNote));
+  document.querySelectorAll('.save').forEach(save => save.addEventListener('click', toggleBookmark));
+
+  document.addEventListener('click', e => {
+    const target = e.target.closest('.edit, .save, .notes-title, .notes-action, .description, .date-created');
+    if (!target || document.querySelector('.your-note-tab-overlay')) return;
+    openYourNote(target.closest('.your-notes').dataset.noteId);
   });
 }
 
-/*----------------- Notes Listener -----------------*/
-function yourNotesListener() {
-  const edit = document.querySelectorAll('.bi-pencil-square');
-  const bookmarkBtn = document.querySelectorAll('.save');
-  const trashBtn = document.querySelectorAll('.bi-trash');
-
-  //--listener to open notes
-  document.addEventListener('click', function (e) {
-    const open = e.target.closest('.edit, .save, .notes-title, .notes-action, .description, .date-created');
-    if (!open) return;
-    const note = open.closest('.your-notes');
-    const noteId = note.dataset.noteId;
-    if (document.querySelector('.your-note-tab-overlay')) return;
-    openYourNote(noteId);
-  });
-
-  //--listener to delete notes
-  trashBtn.forEach(trash => {
-    trash.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const note = trash.closest('.your-notes');
-      const noteId = note.dataset.noteId;
-      const noteIndex = yourNotesList.findIndex(note => note.id === noteId);
-      yourNotesList.splice(noteIndex, 1);
-      saveToStorage();
-      renderYourNotes();
-    });
-  });
-
-  //--listener to save notes
-  bookmarkBtn.forEach(bookmark => {
-    bookmark.addEventListener('click', (e) => {
-      e.stopPropagation();
-      const bookmarkId = e.target.dataset.bookmarkId;
-      const updateNotes = yourNotesList.find(note => note.id === bookmarkId);
-      if (updateNotes) updateNotes.bookmark = !updateNotes.bookmark;
-      saveToStorage();
-      renderYourNotes();
-    });
-  });
+function deleteNote(e) {
+  e.stopPropagation();
+  const noteId = e.target.closest('.your-notes').dataset.noteId;
+  const index = yourNotesList.findIndex(note => note.id === noteId);
+  if (index > -1) {
+    yourNotesList.splice(index, 1);
+    saveToStorage();
+    renderNotes();
+  }
 }
 
-function addState(){
-  if(history.state.page === 'goals') return;
-  history.pushState({page: 'createNotes'}, '');
+function toggleBookmark(e) {
+  e.stopPropagation();
+  const noteId = e.target.dataset.bookmarkId;
+  const note = yourNotesList.find(note => note.id === noteId);
+  if (note) {
+    note.bookmark = !note.bookmark;
+    saveToStorage();
+    renderNotes();
+  }
 }
 
-/*----------------- Open Note -----------------*/
-let noteEl = {
-
-};
+/**---------- OPEN AND EDIT INDIVIDUAL NOTE ----------**/
+let noteEl = {};
 
 function openYourNote(noteId) {
-  const yourNote = yourNotesList.find(note => note.id === noteId);
-  notepad();
+  const note = yourNotesList.find(n => n.id === noteId);
+  if (!note) return;
 
-  function notepad() {
-    document.body.insertAdjacentHTML("beforeend", `
-      <div class="your-note-tab-overlay">
-        <div class="your-note-tab" data-note-id="${yourNote.id}">
-          <div class="drag-btn"><i class="bi bi-caret-down-fill"></i></div>
-          <div class="your-note-title"><h1>${yourNote.title}</h1></div>
-          <div class="your-note-page">
-            <div class="note-tools">
-              <i class="bi bi-alphabet-uppercase toggle-tool"></i>
-              <ul>
-                <li>
-                  <a>H1</a>
-                </li>
-                <li>
-                  <a>H2</a>        
-                </li>
-                <li>
-                  <a>H3</a>
-                </li>
-                <li>  
-                  <a class="bold">B</a>        
-                </li>
-                <li>
-                  <a>U</a>
-                </li>
-                <li>
-                  <a>I</a>
-                </li>
-              </ul>
-            </div>
-            <div class="textpad" contenteditable="true" name="">${yourNote.textarea}</div>
-          </div>
-        </div>
-      </div>
-    `);
-  }
-  noteEl = noteTabEl();
+  insertNoteTabHTML(note);
+  noteEl = getNoteTabElements();
   openNoteTab();
-  
-  function getSelectedText(){
-    return window.getSelection().toString();
-  }
 
-  noteEl.toggleTool.addEventListener('click', function(){
-    if(noteEl.noteTools.classList.contains('active')){
-      noteEl.noteTools.classList.remove('active')
-      noteEl.noteTools.classList.add('close')
-    } else {
-      noteEl.noteTools.classList.remove('close');
-      noteEl.noteTools.classList.add('active');
-    }
-  })
+  noteEl.toggleTool.addEventListener('click', toggleTools);
+  document.querySelector('.bold').addEventListener('click', () => applyBold(note));
 
-  document.querySelector('.bold').addEventListener('click', function(){
-    const container = this.closest('.your-note-tab');
-    const noteId = container.dataset.noteId;
-    const getText = yourNotesList.find(note => note.id === noteId);
-
-    const selectedText = getSelectedText();
-
-    if(getText.textarea.includes(selectedText)){
-      getText.textarea = getText.textarea.replace(selectedText, `<b>${selectedText}</b>`);
-    }
-  });
-
-  
   noteEl.textpad.addEventListener('input', () => {
-    const getText = noteEl.textpad.innerHTML;
-    yourNote.textarea = getText;
+    note.textarea = noteEl.textpad.innerHTML;
     saveToStorage();
   });
 
-  const closeBtn = document.querySelector('.drag-btn');
-  closeBtn.addEventListener('click', () => {
-    closeNoteTab();
-  });
+  document.querySelector('.drag-btn').addEventListener('click', closeNoteTab);
 }
 
-function noteTabEl(){
-  const noteEl = {
-    mainOverlay:     document.querySelector('.overlay'),
-    noteListBox:     document.querySelector('.notes-container'),
+function insertNoteTabHTML(note) {
+  document.body.insertAdjacentHTML("beforeend", `
+    <div class="your-note-tab-overlay">
+      <div class="your-note-tab" data-note-id="${note.id}">
+        <div class="drag-btn"><i class="bi bi-caret-down-fill"></i></div>
+        <div class="your-note-title"><h1>${note.title}</h1></div>
+        <div class="your-note-page">
+          <div class="note-tools">
+            <i class="bi bi-alphabet-uppercase toggle-tool"></i>
+            <ul>
+              <li><a>H1</a></li>
+              <li><a>H2</a></li>
+              <li><a>H3</a></li>
+              <li><a class="bold">B</a></li>
+              <li><a>U</a></li>
+              <li><a>I</a></li>
+            </ul>
+          </div>
+          <div class="textpad" contenteditable="true">${note.textarea}</div>
+        </div>
+      </div>
+    </div>
+  `);
+}
+
+function getNoteTabElements() {
+  return {
+    mainOverlay: document.querySelector('.overlay'),
+    noteListBox: document.querySelector('.notes-container'),
     yourNoteOverlay: document.querySelector('.your-note-tab-overlay'),
-    yourNoteTab:     document.querySelector('.your-note-tab'),
-    textpad:         document.querySelector('.textpad'),
-    toggleTool:      document.querySelector('.toggle-tool'),
-    noteTools:       document.querySelector('.note-tools')
+    yourNoteTab: document.querySelector('.your-note-tab'),
+    textpad: document.querySelector('.textpad'),
+    toggleTool: document.querySelector('.toggle-tool'),
+    noteTools: document.querySelector('.note-tools'),
+  };
+}
+
+function toggleTools() {
+  noteEl.noteTools.classList.toggle('active');
+  noteEl.noteTools.classList.toggle('close');
+}
+
+function applyBold(note) {
+  const selectedText = window.getSelection().toString();
+  if (selectedText && note.textarea.includes(selectedText)) {
+    note.textarea = note.textarea.replace(selectedText, `<b>${selectedText}</b>`);
   }
-  return noteEl;
 }
 
 function openNoteTab() {
-  if(!noteEl.yourNoteOverlay){
-    history.pushState({page: 'notes'}, '');
-  }
-  noteEl.mainOverlay.remove();
-  noteEl.noteListBox.classList.remove('open');
-  noteEl.noteListBox.classList.add('close');
-  noteEl.yourNoteOverlay.classList.remove('close');
-  noteEl.yourNoteTab.classList.remove('close');
-  noteEl.yourNoteOverlay.classList.add('open');
-  noteEl.yourNoteTab.classList.add('open');
+  if (!noteEl.yourNoteOverlay) history.pushState({ page: 'notes' }, '');
+  noteEl.mainOverlay?.remove();
+  noteEl.noteListBox?.classList.replace('open', 'close');
+  noteEl.yourNoteOverlay?.classList.add('open');
+  noteEl.yourNoteTab?.classList.add('open');
 }
 
 function closeNoteTab() {
   history.back();
-  noteEl.yourNoteOverlay.classList.add('close');
-  noteEl.yourNoteTab.classList.add('close');
-  noteEl.yourNoteTab.addEventListener('animationend', () => {
-    noteEl.yourNoteOverlay.remove();
-  }, { once: true });
+  noteEl.yourNoteOverlay?.classList.add('close');
+  noteEl.yourNoteTab?.classList.add('close');
+  noteEl.yourNoteTab?.addEventListener('animationend', () => noteEl.yourNoteOverlay?.remove(), { once: true });
 }
 
-export function closeNotes(){
-  const yourNoteOverlay = document.querySelector('.your-note-tab-overlay');
-  const yourNoteTab = document.querySelector('.your-note-tab');
-  yourNoteOverlay.classList.add('close');
-  yourNoteTab.classList.add('close');
-  yourNoteTab.addEventListener('animationend', () => {
-    yourNoteOverlay.remove();
-  }, { once: true });
+export function closeNotes() {
+  const overlay = document.querySelector('.your-note-tab-overlay');
+  const tab = document.querySelector('.your-note-tab');
+  overlay?.classList.add('close');
+  tab?.classList.add('close');
+  tab?.addEventListener('animationend', () => overlay?.remove(), { once: true });
 }

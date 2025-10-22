@@ -1,79 +1,85 @@
 export function toggleContact(){
-  if(!document.querySelector('.contact')){
-    document.body.insertAdjacentHTML('beforeend', `
-      <div class="contact">
-      <div class="close-btn">
-        <p>Close</p>
-        <i class="close-contact fas fa-chevron-down"></i>
+  document.body.insertAdjacentHTML('beforeend', `
+    <div class="contact">
+    <div class="close-btn">
+      <p>Close</p>
+      <i class="close-contact fas fa-chevron-down"></i>
+    </div>
+    <div class="contact-header">
+      <div class="mail-icon"><i class="bi bi-envelope-paper-fill"></i></div>
+      <p>Contact Me</p>
+      <p>Have questions or feedback? I'd love to hear from you. Send a message and I'll respond as soon as possible.</p>
+    </div>
+    <div class="contact-box">
+      <div class="box-input">
+        <label for="name">
+          <i class="bi bi-person"></i>
+          Your Name
+        </label>
+        <input id="name" type="text" placeholder="John Cena">
       </div>
-      <div class="contact-header">
-        <div class="mail-icon"><i class="bi bi-envelope-paper-fill"></i></div>
-        <p>Contact Me</p>
-        <p>Have questions or feedback? I'd love to hear from you. Send a message and I'll respond as soon as possible.</p>
+      <div class="box-input">
+        <label for="email">
+          <i class="bi bi-envelope"></i>
+          Email Address
+        </label>
+        <input id="email" type="email" placeholder="johnsee@example.com">
       </div>
-      <div class="contact-box">
-        <div class="box-input">
-          <label for="name">
-            <i class="bi bi-person"></i>
-            Your Name
-          </label>
-          <input id="name" type="text" placeholder="John Cena">
-        </div>
-        <div class="box-input">
-          <label for="email">
-            <i class="bi bi-envelope"></i>
-            Email Address
-          </label>
-          <input id="email" type="email" placeholder="johnsee@example.com">
-        </div>
-        <div class="box-input">
-          <label for="subject">
-            <i class="bi bi-chat-right"></i>
-            Subject
-          </label>
-          <input id="subject" type="text" placeholder="What is this about?">
-        </div>
-        <div class="box-input">
-          <label for="message">
-            <i class="bi bi-chat-right"></i>
-            Message
-          </label>
-          <input id="message" type="text" placeholder="Leave your message here...">
-        </div>
-        <button id="sendMsg"><i class="bi bi-send"></i> Send Message</button>
+      <div class="box-input">
+        <label for="subject">
+          <i class="bi bi-chat-right"></i>
+          Subject
+        </label>
+        <input id="subject" type="text" placeholder="What is this about?">
       </div>
-      <div class="other-card">
-        <p>Other Ways to Reach Me</p>
-        <div class="acc-card" id="igAcc">
-          <i class="bi bi-instagram"></i>
-          <div class="card-acc">
-            <p>Instagram</p>
-            <p>@emdi.gem</p>
-          </div>
+      <div class="box-input">
+        <label for="message">
+          <i class="bi bi-chat-right"></i>
+          Message
+        </label>
+        <input id="message" type="text" placeholder="Leave your message here...">
+      </div>
+      <button id="sendMsg"><i class="bi bi-send"></i> Send Message</button>
+    </div>
+    <div class="other-card">
+      <p>Other Ways to Reach Me</p>
+      <div class="acc-card" id="igAcc">
+        <i class="bi bi-instagram"></i>
+        <div class="card-acc">
+          <p>Instagram</p>
+          <p>@emdi.gem</p>
         </div>
-        <div class="acc-card">
-          <i class="bi bi-chat-right-dots"></i>
-          <div class="card-acc">
-            <p>Response Time</p>
-            <p>Usually within 24 hours</p>
-          </div>
+      </div>
+      <div class="acc-card">
+        <i class="bi bi-chat-right-dots"></i>
+        <div class="card-acc">
+          <p>Response Time</p>
+          <p>Usually within 24 hours</p>
         </div>
       </div>
     </div>
-    `);
-    closeContact();
-    sendMessage();
-    goToIg();
-  }
+  </div>
+  `);
+  closeTab();
+  sendMessage();
+  goToIg();
 }
 
-function closeContact(){
+function closeTab(){
   const contactTab = document.querySelector('.contact');
   document.querySelector('.close-btn').addEventListener('click', () => {
     contactTab.classList.add('close');
     contactTab.addEventListener('animationend', () => {
       contactTab.remove();
-    })
+    });
+  })
+}
+
+export function closeContact(){
+  const contactTab = document.querySelector('.contact');
+  contactTab.classList.add('close');
+  contactTab.addEventListener('animationend', () => {
+    contactTab.remove();
   })
 }
 

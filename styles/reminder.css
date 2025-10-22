@@ -9,6 +9,7 @@
   height: 100%;
   z-index: 3;
   display: none;
+  padding: 20px 0;
   flex-direction: column;
   color: var(--color-accent);
   overflow-y: scroll;
