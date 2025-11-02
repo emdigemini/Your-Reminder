@@ -15,17 +15,20 @@ function openOverlay(overlay, container) {
   container.classList.add('open');
 }
 
-function closeOverlay(overlay, container, callback) {
+function closeOverlay(overlay, container, bodyClick) {
   container.classList.replace('open', 'close');
   overlay.classList.replace('open', 'close');
-  if (callback) document.body.removeEventListener('click', callback);
+  if (bodyClick) document.body.removeEventListener('click', bodyClick);
+  else return null;
   setTimeout(() => overlay.remove(), 700);
+  history.back();
 }
 
 export function closeNotesOverlay() {
   const overlay = document.querySelector('.overlay');
   const container = document.querySelector('.notes-container');
-  closeOverlay(overlay, container);
+  container.classList.replace('open', 'close');
+  overlay.classList.replace('open', 'close');
 }
 
 export function closeAnotherOverlay() {
@@ -44,10 +47,6 @@ export function openNoteApp() {
   noteEl.container.addEventListener('animationend', () => {
     const bodyClick = e => !noteEl.container.contains(e.target) && closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
     document.body.addEventListener('click', bodyClick);
-
-    window.addEventListener('popstate', e => {
-      if (e.state?.yourHub) closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
-    }, { once: true });
 
     noteEl.addNotes.addEventListener('click', () => {
       if (!document.querySelector('.overlay-box')) {
