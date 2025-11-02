@@ -29,11 +29,20 @@ export function closeNotesOverlay() {
   const container = document.querySelector('.notes-container');
   container.classList.replace('open', 'close');
   overlay.classList.replace('open', 'close');
+  setTimeout(() => overlay.remove(), 700);
+  if (bodyClick) document.body.removeEventListener('click', bodyClick);
 }
 
 export function closeAnotherOverlay() {
   const overlayBox = document.querySelector('.overlay-box');
   overlayBox?.classList.replace('show', 'close');
+}
+
+function bodyClick(e){
+  const overlay = document.querySelector('.overlay');
+  const container = document.querySelector('.notes-container');
+  console.log(e.target);
+  !container.contains(e.target) && closeOverlay(overlay, container, bodyClick);
 }
 
 /**---------- MAIN NOTES APP ----------**/
@@ -45,7 +54,7 @@ export function openNoteApp() {
   attachSearchListener(noteEl.searchNotes);
 
   noteEl.container.addEventListener('animationend', () => {
-    const bodyClick = e => !noteEl.container.contains(e.target) && closeOverlay(noteEl.overlay, noteEl.container, bodyClick);
+    
     document.body.addEventListener('click', bodyClick);
 
     noteEl.addNotes.addEventListener('click', () => {

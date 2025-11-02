@@ -193,7 +193,6 @@ start();
 
 
 window.addEventListener('popstate', (e) => {
-  console.log(e.state);
   if(e.state === null){ 
     closeDashboard();
   } else if(e.state !== null){
