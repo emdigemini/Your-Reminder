@@ -263,6 +263,12 @@
   border-radius: 8px;
   padding: 8px;
   border: none;
+  resize: none;
+}
+
+#description {
+  max-height: 250px;
+  height: 100%;
 }
 
 .description-box {

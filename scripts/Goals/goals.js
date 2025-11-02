@@ -358,10 +358,9 @@ function toggleThird_inputBox(){
     setDeadlineBox.classList.add('active');
   })
   close.addEventListener('click', function(){
-    console.log('click');
     this.classList.remove('active');
-    btn.classList.remove('active');
     setDeadlineBox.classList.remove('active');
+    toggleDeadlineBox.classList.remove('active');
   })
 }
 
