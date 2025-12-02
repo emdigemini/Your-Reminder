@@ -1,3 +1,176 @@
+.menu-page {
+  position: relative;
+  display: flex;
+  flex-direction: column; 
+  gap: 20px;
+}
+
+.notes-menu {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.listCard {
+  display: flex;
+  flex-direction: column;
+  border-radius: 15px;
+  padding: 20px;
+  gap: 6px;
+  font-size: 18px;
+}
+
+.listCard__name {
+  display: flex;
+  justify-content: space-between;
+  font-size: 15px;
+}
+
+.listCard__icon {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #fff;
+  width: max-content;
+  border-radius: 50px;
+  height: 35px;
+  width: 35px;
+}
+
+.listCard-today {
+  background: var(--today);
+}
+
+.listCard-today .listCard__icon {
+  color: var(--today-i);
+}
+
+.listCard-scheduled {
+  background: var(--scheduled);
+}
+
+.listCard-scheduled .listCard__icon {
+  color: var(--scheduled-i);
+}
+
+.listCard-all {
+  background: var(--all);
+}
+
+.listCard-all .listCard__icon {
+  color: var(--all-i);
+}
+
+.listCard-overdue {
+  background: var(--overdue);
+}
+
+.listCard-overdue .listCard__icon {
+  color: var(--overdue-i);
+}
+
+.add-task {
+  position: fixed;
+  right: 0;
+  bottom: 40px;
+  display: flex;
+  justify-content: flex-end;
+  padding: 10px 30px;
+  gap: 10px;
+  width: 100%;
+}
+
+.add-task__btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 40px;
+  width: 40px;
+  padding: 8px;
+  font-size: 1.5rem;
+  background: var(--add-btn);
+  border-radius: 30px;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  transition: .3s ease;
+}
+
+.add-task__btn:hover {
+  background: #276ace;
+}
+
+.add-task__btn:active {
+  transform: scale(0.95);
+}
+
+.task-input-box.hide {
+  display: none;
+}
+
+.task-input-box {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: end;
+  flex-direction: column;
+  background: #f6f6f6;
+  box-shadow: 0 -6px 20px #2626266b;
+  padding: 10px 20px;
+  border-radius: 20px 20px 0 0;
+  height: 500px;
+  width: 100%;
+  gap: 10px;
+  z-index: 2;
+  animation: fadeInUp .5s ease-in forwards;
+}
+
+.task-input-box input {
+  background: #fff;
+  border: none;
+  padding: 6px;
+  width: 100%;
+  border-radius: 8px;
+}
+
+.task-input-box input:focus {
+  border: none;
+  outline: none;
+}
+
+.create-task {
+  background: #276ace;
+  color: #fff;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 6px;
+}
+
+/*======ANIMATION IN======*/
+@keyframes fadeInUp {
+  0% {
+    height: -10px;
+  } 100% {
+    height: 500px;
+  }
+}
+
+/*======ANIMATION OUT======*/
+.menu-page.fade-out {
+  animation: fadeOutUp .4s ease-in forwards;
+}
+
+@keyframes fadeOutUp {
+  0% {
+    top: 0;
+    opacity: 1;
+  } 100% {
+    top: -50vh;
+    opacity: 0;
+  }
+}
+
 /*--------LIGHT MODE--------*/
 .notes-container.light {
       background: #ede0d4;

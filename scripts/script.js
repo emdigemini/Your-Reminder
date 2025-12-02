@@ -1,6 +1,6 @@
 import './animation.js';
+import './settings.js';
 import { randomQuotes } from './animation.js'
-import { openNoteApp, closeNotesOverlay, closeAnotherOverlay, closeNotes } from './Notes/notes.js';
 import { openReminderApp, closeReminder } from './Reminder/reminder.js';
 import { openGoalApp, closeGoals } from './Goals/goals.js';
 import { openTaskApp, closeTasks } from './Tasks/tasks.js';
@@ -127,9 +127,7 @@ cards.reminder.addEventListener('click', () => {
 
 // notes
 cards.notes.addEventListener('click', () => {
-  if(history.state?.page === 'notesOverlay') return;
-  history.pushState({page: 'notesOverlay'}, '');
-  openNoteApp();
+  alert("This feature is currently under reconstruction.");
 });
 
 // goals
@@ -143,7 +141,6 @@ cards.goals.addEventListener('click', () => {
 cards.tasks.addEventListener('click', () => {
   if(document.querySelector('.tasks-tab')) return;
   history.pushState({page: 'tasks'}, '');
-  console.log('hek');
   openTaskApp();
 });
 
@@ -201,13 +198,13 @@ window.addEventListener('popstate', (e) => {
       closeReminder();
     } 
 
-    if(e.state.page !== 'notesOverlay' && document.querySelector('.overlay')){
-      closeNotesOverlay();
-    } else if(e.state.page !== 'createNotes' && document.querySelector('.overlay-box')){
-      closeAnotherOverlay();
-    } else if(e.state.page !== 'notes' && document.querySelector('.your-note-tab-overlay')){
-      closeNotes();
-    } 
+    // if(e.state.page !== 'notesOverlay' && document.querySelector('.overlay')){
+    //   closeNotesOverlay();
+    // } else if(e.state.page !== 'createNotes' && document.querySelector('.overlay-box')){
+    //   closeAnotherOverlay();
+    // } else if(e.state.page !== 'notes' && document.querySelector('.your-note-tab-overlay')){
+    //   closeNotes();
+    // } 
 
     if(e.state.page !== 'goals' && document.querySelector('.goals')){
       closeGoals();

@@ -30,6 +30,17 @@
   --error: #e63946;
   --empty-state: #262626B5;
 
+  /*FOR NOTE APP*/
+  --today: #b4c4fe;
+  --today-i: #7c88b3;
+  --scheduled: #fff580;
+  --scheduled-i: #bab363;
+  --all: #d0f4ea;
+  --all-i: #84b4a6;
+  --overdue: #ffc0f5;
+  --overdue-i: #b97faf;
+  --add-btn: #2c80ff;
+
   /*FOR GOAL APP*/
   --card-goal: #262626;
   

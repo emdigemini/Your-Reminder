@@ -34,7 +34,7 @@ function switchMode(){
 
   // for card color
 
-  // for glassmorphism
+  // for glassmorphism style
   !darkMode
   ? root.style.setProperty("--glass-bg", `linear-gradient(to bottom, rgba(184,184,184,0.441), rgba(255,248,240,0.800), rgba(255,248,240,0.800), rgba(255,248,240,0.800))`)
   : root.style.setProperty("--glass-bg", `linear-gradient(to bottom, rgba(15,15,15,0.9), rgba(25,25,25,0.9), rgba(30,30,30,0.9))`);
@@ -60,6 +60,6 @@ function switchMode(){
 }
 
 function theme(){
-  
+  /*will work on theme soon!*/
 }
 
