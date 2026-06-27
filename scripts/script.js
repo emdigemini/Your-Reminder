@@ -126,7 +126,6 @@ function closeDashboard(){
 
 //  reminder
 cards.reminder.addEventListener('click', () => {
-  // if(document.querySelector('.reminder-tab')) return;
   if (isTabOpen) return;
   history.pushState({page: 'reminder'}, '');
   openReminderApp();
@@ -141,7 +140,6 @@ cards.notes.addEventListener('click', () => {
 
 // goals
 cards.goals.addEventListener('click', () => {
-  // if(document.querySelector('.goals')) return;
   if (isTabOpen) return;
   history.pushState({page: 'goals'}, '');
   openGoalApp();
@@ -150,7 +148,7 @@ cards.goals.addEventListener('click', () => {
 
 //tasks
 cards.tasks.addEventListener('click', () => {
-  // if(document.querySelector('.tasks-tab')) return;
+  if (isTabOpen) return;
   history.pushState({page: 'tasks'}, '');
   openTaskApp();
   setIsTabOpen(true);
