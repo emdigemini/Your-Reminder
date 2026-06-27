@@ -1,5 +1,6 @@
 import { filterState, filterGoal, filterCategory, applyFilters, updateGoalCounts, updateCategoryCounts, countGoalCompleted } from "./filter.js";
 import { ifUnitsMoney } from "./utils/goal.js";
+import { setIsTabOpen } from "../script.js";
 
 export const yourGoals = JSON.parse(localStorage.getItem('yourGoals')) || [];
 // localStorage.clear() 
@@ -291,6 +292,7 @@ function closeTab(){
     history.back();
     yourTab.classList.add('close');
     yourTab.addEventListener('animationend', () => {
+      setIsTabOpen(false);
       yourTab.remove();
     }, {once: true})
   })

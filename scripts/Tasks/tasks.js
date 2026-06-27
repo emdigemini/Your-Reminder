@@ -1,3 +1,5 @@
+import { setIsTabOpen } from '../script.js';
+
 let yourTasks = JSON.parse(localStorage.getItem('yourTasks')) || [];
 let currentProgress = 0;
 
@@ -209,6 +211,7 @@ function closeTab(){
     history.back();
     taskTab.classList.add('close');
     taskTab.addEventListener('animationend', () => {
+      setIsTabOpen(false);
       taskTab.remove();
     }, {once: true})
   })
@@ -218,6 +221,7 @@ export function closeTasks(){
 const taskTab = document.querySelector('.tasks-tab');
 taskTab.classList.add('close');
   taskTab.addEventListener('animationend', () => {
+    setIsTabOpen(false);
     taskTab.remove();
   }, {once: true})
 }

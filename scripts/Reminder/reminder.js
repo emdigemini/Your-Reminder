@@ -1,4 +1,5 @@
 import dayjs from 'https://unpkg.com/supersimpledev@8.5.0/dayjs/esm/index.js'
+import { setIsTabOpen } from '../script.js';
 
 const reminderList = JSON.parse(localStorage.getItem('reminderList')) || [];
 
@@ -67,15 +68,25 @@ export function openReminderApp(){
         </div>
       `);
       
-    const el1 = getElm().create;  
-    el1.tabReminder.classList.remove('close')
-    el1.tabReminder.classList.add('open');
-    el1.closeTab.addEventListener('click', () => {
+    const { 
+      tabReminder, closeTab, 
+      dateNtime, dateSet, 
+      timeSet, inputBar, 
+      addReminder, setDate, 
+      startTime, endTime, 
+      reminderFilter, allFilter, 
+      activeFilter, completedFilter
+    } = getElm().create;  
+
+    tabReminder.classList.remove('close')
+    tabReminder.classList.add('open');
+    closeTab.addEventListener('click', () => {
       history.back();
-      el1.tabReminder.classList.add('close')
-      el1.tabReminder.classList.remove('open')
-      el1.tabReminder.addEventListener('animationend', () => {
-        el1.tabReminder.remove();
+      tabReminder.classList.add('close')
+      tabReminder.classList.remove('open')
+      tabReminder.addEventListener('animationend', () => {
+        setIsTabOpen(false);
+        tabReminder.remove();
       }, {once: true})
     }, {once: true})
 
@@ -83,11 +94,11 @@ export function openReminderApp(){
     ? allReminderTool()
     : null;
 
-    toggleDateNTimeSet(el1.dateNtime, el1.dateSet, el1.timeSet);
+    toggleDateNTimeSet(dateNtime, dateSet, timeSet);
     reminderListeners(
-      el1.inputBar, el1.addReminder, el1.setDate, 
-      el1.startTime, el1.endTime, el1.reminderFilter,
-      el1.allFilter, el1.activeFilter, el1.completedFilter
+      inputBar, addReminder, setDate, 
+      startTime, endTime, reminderFilter,
+      allFilter, activeFilter, completedFilter
     );
   } else if(document.querySelector('.reminder-tab')){
     document.getElementById('all').innerHTML = `All (${renderReminder().allReminder})`;
@@ -97,11 +108,12 @@ export function openReminderApp(){
 }
 
 export function closeReminder(){
-  const el1 = getElm().create;  
-  el1.tabReminder.classList.add('close')
-  el1.tabReminder.classList.remove('open')
-  el1.tabReminder.addEventListener('animationend', () => {
-    el1.tabReminder.remove();
+  const { tabReminder } = getElm().create;  
+  tabReminder.classList.add('close')
+  tabReminder.classList.remove('open')
+  tabReminder.addEventListener('animationend', () => {
+    setIsTabOpen(false);
+    tabReminder.remove();
   }, {once: true})
 }
 

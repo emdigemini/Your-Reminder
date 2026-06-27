@@ -7,6 +7,12 @@ import { openTaskApp, closeTasks } from './Tasks/tasks.js';
 import { toggleContact, closeContact } from './contact.js';
 import { toggleAbout, closeAbout } from './about.js';
 
+let isTabOpen;
+
+export function setIsTabOpen(value){
+  isTabOpen = value;
+}
+
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
 const appName     = document.querySelector('.app-name');
@@ -120,28 +126,34 @@ function closeDashboard(){
 
 //  reminder
 cards.reminder.addEventListener('click', () => {
-  if(document.querySelector('.reminder-tab')) return;
+  // if(document.querySelector('.reminder-tab')) return;
+  if (isTabOpen) return;
   history.pushState({page: 'reminder'}, '');
   openReminderApp();
+  setIsTabOpen(true);
 });
 
 // notes
 cards.notes.addEventListener('click', () => {
+  if (isTabOpen) return;
   alert("This feature is currently under reconstruction.");
 });
 
 // goals
 cards.goals.addEventListener('click', () => {
-  if(document.querySelector('.goals')) return;
+  // if(document.querySelector('.goals')) return;
+  if (isTabOpen) return;
   history.pushState({page: 'goals'}, '');
   openGoalApp();
+  setIsTabOpen(true);
 });
 
 //tasks
 cards.tasks.addEventListener('click', () => {
-  if(document.querySelector('.tasks-tab')) return;
+  // if(document.querySelector('.tasks-tab')) return;
   history.pushState({page: 'tasks'}, '');
   openTaskApp();
+  setIsTabOpen(true);
 });
 
 //settings
@@ -163,6 +175,8 @@ buttons.about.addEventListener('click', () => {
 });
 
 function openSettings(){
+  if (isTabOpen) return;
+  setIsTabOpen(true);
   const settings = document.querySelector('.settings');
   const settingsOverlay = document.querySelector('.settings-overlay');
 
@@ -183,6 +197,7 @@ function openSettings(){
     settings.classList.add('close');
     settingsOverlay.classList.remove('open');
     document.body.removeEventListener('click', settingsBox);
+    setIsTabOpen(false);
   }
 }
 
