@@ -1,7 +1,7 @@
 const toggleMode = document.querySelector('.switch');
 const appContainer = document.querySelector('.container');
 const settings = document.querySelector('.settings');
-const selectTheme = document.querySelector('.select-theme');
+// const selectTheme = document.querySelector('.select-theme');
 const appHeader   = document.querySelector('.app-header');
 const root = document.documentElement;
 
@@ -55,7 +55,7 @@ function switchMode(){
   !darkMode ? root.style.setProperty("--text-glass", "#6e3e13de") : root.style.setProperty("--text-glass", "#00FF80");
   
   toggleMode.classList.toggle('dark', darkMode);
-  [settings, selectTheme].forEach(el => el.classList.toggle('light', !darkMode));
+  [settings].forEach(el => el.classList.toggle('light', !darkMode));
   document.body.classList.toggle('light', !darkMode);
 }
 

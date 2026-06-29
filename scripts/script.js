@@ -6,6 +6,7 @@ import { openGoalApp, closeGoals } from './Goals/goals.js';
 import { openTaskApp, closeTasks } from './Tasks/tasks.js';
 import { toggleContact, closeContact } from './contact.js';
 import { toggleAbout, closeAbout } from './about.js';
+import Notes from './Notes/notes.js';
 
 let isTabOpen;
 
@@ -124,6 +125,12 @@ function closeDashboard(){
     }, { once: true });
 }
 
+function openTab(tabName){
+  if(isTabOpen) return;
+  history.pushState({page: tabName}, '');
+  setIsTabOpen(true);
+}
+
 //  reminder
 cards.reminder.addEventListener('click', () => {
   if (isTabOpen) return;
@@ -135,6 +142,9 @@ cards.reminder.addEventListener('click', () => {
 // notes
 cards.notes.addEventListener('click', () => {
   if (isTabOpen) return;
+  const notes = Notes();
+  console.log(notes);
+  document.body.insertAdjacentHTML('beforeend', notes);
   alert("This feature is currently under reconstruction.");
 });
 
