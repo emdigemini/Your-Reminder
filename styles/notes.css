@@ -1,152 +1,212 @@
-.menu-page {
-  position: relative;
-  display: flex;
-  flex-direction: column; 
-  gap: 20px;
+.notes-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  display: none;
+  flex-direction: column;
+  padding: 1.5rem;
+  background-color: var(--color-background);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  color: #333;
+  z-index: 4;
+  overflow-y: auto;
 }
 
-.notes-menu {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
+/* 1. Header Name */
+.notes-header {
+  margin-bottom: 1.5rem;
+  border-bottom: 1px solid #eaeaea;
+  padding-bottom: 1rem;
 }
 
-.listCard {
+.notes-header h2 {
+  font-size: 1.8rem;
+  color: #1a1a1a;
+  margin: 0 0 0.25rem 0;
+}
+
+.notes-header p {
+  color: #666;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* 2. Create Notes Bar */
+.create-notes-bar {
   display: flex;
   flex-direction: column;
-  border-radius: 15px;
-  padding: 20px;
-  gap: 6px;
-  font-size: 18px;
+  gap: 0.5rem;
+  background-color: #f8f9fa;
+  background-color: var(--color-background);
+  padding: 1rem;
+  border-radius: 8px;
+  margin-bottom: 1.5rem;
+  border: 1px solid #e9ecef;
 }
 
-.listCard__name {
+.note-input-title, 
+.note-input-body {
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.note-input-body {
+  min-height: 60px;
+  font-size: 0.85rem;
+}
+
+.note-input-title:focus, 
+.note-input-body:focus {
+  border-color: #4a90e2;
+}
+
+.note-input-title {
+  font-weight: 600;
+}
+
+.note-input-body {
+  resize: vertical;
+}
+
+.btn-add {
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  align-self: flex-end;
+  transition: background-color 0.2s;
+}
+
+.btn-add:hover {
+  background-color: #357abd;
+}
+
+/* 3. Action Notes Bar */
+.action-notes-bar {
   display: flex;
   justify-content: space-between;
-  font-size: 15px;
-}
-
-.listCard__icon {
-  display: flex;
-  justify-content: center;
   align-items: center;
-  background: #fff;
-  width: max-content;
-  border-radius: 50px;
-  height: 35px;
-  width: 35px;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
 }
 
-.listCard-today {
-  background: var(--today);
-}
-
-.listCard-today .listCard__icon {
-  color: var(--today-i);
-}
-
-.listCard-scheduled {
-  background: var(--scheduled);
-}
-
-.listCard-scheduled .listCard__icon {
-  color: var(--scheduled-i);
-}
-
-.listCard-all {
-  background: var(--all);
-}
-
-.listCard-all .listCard__icon {
-  color: var(--all-i);
-}
-
-.listCard-overdue {
-  background: var(--overdue);
-}
-
-.listCard-overdue .listCard__icon {
-  color: var(--overdue-i);
-}
-
-.add-task {
-  position: fixed;
-  right: 0;
-  bottom: 40px;
-  display: flex;
-  justify-content: flex-end;
-  padding: 10px 30px;
-  gap: 10px;
-  width: 100%;
-}
-
-.add-task__btn {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  width: 40px;
-  padding: 8px;
-  font-size: 1.5rem;
-  background: var(--add-btn);
-  border-radius: 30px;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-  transition: .3s ease;
-}
-
-.add-task__btn:hover {
-  background: #276ace;
-}
-
-.add-task__btn:active {
-  transform: scale(0.95);
-}
-
-.task-input-box.hide {
-  display: none;
-}
-
-.task-input-box {
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  display: flex;
-  align-items: end;
-  flex-direction: column;
-  background: #f6f6f6;
-  box-shadow: 0 -6px 20px #2626266b;
-  padding: 10px 20px;
-  border-radius: 20px 20px 0 0;
-  height: 500px;
-  width: 100%;
-  gap: 10px;
-  z-index: 2;
-  animation: fadeInUp .5s ease-in forwards;
-}
-
-.task-input-box input {
-  background: #fff;
-  border: none;
-  padding: 6px;
-  width: 100%;
-  border-radius: 8px;
-}
-
-.task-input-box input:focus {
-  border: none;
-  outline: none;
-}
-
-.create-task {
-  background: #276ace;
-  color: #fff;
-  border: none;
-  padding: 6px 20px;
+.note-search {
+  padding: 0.5rem 0.75rem;
+  border: 1px solid #dee2e6;
   border-radius: 6px;
+  font-size: 0.9rem;
+  width: 200px;
 }
 
+.action-filters {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.sort-select {
+  padding: 0.5rem;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background-color: #fff;
+  color: #495057;
+}
+
+.btn-save {
+  background: transparent;
+  border: 1px solid #35addc;
+  color: #35addc;
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s;
+}
+
+.btn-save:hover {
+  background-color: #1aa8e0;
+  color: white;
+}
+
+/* 4. Notes List */
+.notes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.note-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 1rem;
+  background: var(--glass-bg);
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.note-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+}
+
+.note-content h3 {
+  margin: 0 0 0.4rem 0;
+  font-size: 1.1rem;
+  color: #222;
+}
+
+.note-content p {
+  margin: 0 0 0.5rem 0;
+  color: #555;
+  font-size: 0.95rem;
+  line-height: 1.4;
+}
+
+.note-date {
+  font-size: 0.8rem;
+  color: #999;
+  display: block;
+}
+
+.note-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.btn-icon {
+  background: none;
+  border: none;
+  padding: 0.4rem;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.btn-icon:hover {
+  background-color: #f0f0f0;
+}
+
+.btn-icon.delete:hover {
+  background-color: #ffeef0;
+}
+/* 
 /*======ANIMATION IN======*/
 @keyframes fadeInUp {
   0% {
@@ -171,7 +231,7 @@
   }
 }
 
-/*--------LIGHT MODE--------*/
+/*--------LIGHT MODE--------
 .notes-container.light {
       background: #ede0d4;
     }
@@ -213,7 +273,7 @@
       color: #5c3a21;
 }
 
-/* overlay background */
+/* overlay background 
 .overlay {
   position: fixed;
   top: 0;
@@ -371,7 +431,7 @@
 /*NOTES ACTION*/
 
 
-/*CREATE NOTES BOX*/
+/*CREATE NOTES BOX
 .overlay-box {
   position: fixed;
   background: rgba(0, 0, 0, 0.2);
@@ -476,4 +536,4 @@
 
 .add-btn:active {
   transform: scale(0.95);
-}
+} */

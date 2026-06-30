@@ -142,10 +142,8 @@ cards.reminder.addEventListener('click', () => {
 // notes
 cards.notes.addEventListener('click', () => {
   if (isTabOpen) return;
-  const notes = Notes();
-  console.log(notes);
-  document.body.insertAdjacentHTML('beforeend', notes);
-  alert("This feature is currently under reconstruction.");
+  Notes();
+  // alert("This feature is currently under reconstruction."); 
 });
 
 // goals

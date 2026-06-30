@@ -1,4 +1,4 @@
-:root {
+/* :root {
   --offset-y: 0px;
   --drag-y: 0px;
 }
@@ -174,4 +174,4 @@ body.light .drag-btn i:hover {
   );
   }
   
-}
+} 

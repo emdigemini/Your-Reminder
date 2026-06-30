@@ -416,7 +416,7 @@
   }
 }
 
-.notes-container.open {
+.note-tab.open {
   display: flex;
   animation: openNotes 0.6s ease-in-out forwards;  
 }
@@ -447,7 +447,7 @@
   }
 }
 
-.notes-container.close {
+.note-tab.close {
   display: flex;
   animation: closeNotes 0.6s ease-in-out forwards;  
 }
@@ -517,11 +517,12 @@
 }
 
 /*--------NOTE TAB ANIMATION--------*/
-.your-note-tab-overlay.open {
+.notes-container.open {
   display: flex;
+  flex-direction: column;
 }
 
-.your-note-tab.open {
+.notes-container.open {
   transform: translateY(100%);
   animation: openNoteTab 0.8s ease forwards;
 }
@@ -535,8 +536,8 @@
   }
 }
 
-.your-note-tab.close {
-  transform: translateY(var(--offset-y));
+.notes-container.close {
+  transform: translateY(0);
   animation: closeNoteTab 0.8s ease forwards;
 }
 
