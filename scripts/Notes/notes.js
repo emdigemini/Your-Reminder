@@ -117,8 +117,8 @@ function functionalityNotes() {
       const isJustCreated = Date.now(n.createdAt) === Date.now(n.updatedAt);
       const now = Date.now();
 
-      const diffMs = now - n.createdAt;
-      const diffMinutes = Math.floor(diffMs / (1000 * 60));
+      const createdText = getTimeText(n.createdAt, "Created");
+      const updatedText = getTimeText(n.updatedAt, "Updated");
 
       return (
         `
@@ -127,15 +127,7 @@ function functionalityNotes() {
             <h3>${n.title}</h3>
             <p>${n.content}</p>
             <span class="note-date">
-              ${isJustCreated
-                  ? `
-                    ${diffMinutes < 1 
-                      ? 'Just created' 
-                      : `Created ${diffMinutes} ${diffMinutes > 1 ? 'mins' : 'min'} ago`
-                    }
-                  `
-                  : 'Updated 1 min ago'
-              }
+              ${isJustCreated ? createdText : updatedText}
             </span>
           </div>
           <div class="note-actions">
@@ -183,6 +175,27 @@ function functionalityNotes() {
   }
 
   renderNotes();
+}
+
+function getTimeText(timestamp, action) {
+  const diffMs = Date.now() - timestamp;
+  const diffMinutes = Math.floor(diffMs / (1000 * 60));
+  const diffHours = Math.floor(diffMinutes / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffMinutes < 1) {
+    return `Just ${action.toLowerCase()}`;
+  }
+
+  if (diffMinutes < 60) {
+    return `${action} ${diffMinutes} ${diffMinutes === 1 ? "min" : "mins"} ago`;
+  }
+
+  if (diffHours < 24) {
+    return `${action} ${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
+  }
+
+  return `${action} ${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
 }
 
 
