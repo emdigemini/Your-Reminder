@@ -1,5 +1,5 @@
 import { setIsTabOpen } from "../script.js";
-import { getNotes, createNote } from "../database/db.js";
+import { getNotes, createNote, deleteNote } from "../database/db.js";
 
 // const getNotes = () => {
 //   return JSON.parse(localStorage.getItem('yourNotes')) || [];
@@ -16,7 +16,7 @@ function Notes() {
       </header>
       
       <div class="close-notes">
-        <i class="toggle-btn bi bi-caret-down"></i>
+        <i data-lucide="panel-bottom-close"></i>
       </div>
 
       <!-- 2. Create Notes Bar -->
@@ -69,13 +69,13 @@ function openNotesTab() {
 }
 
 function functionalityNotes() {
+  const notesContainer = document.querySelector('.notes-container'); 
   const closeNotesBtn = document.querySelector('.close-notes');
   const notesList = document.querySelector('.notes-list');
   const addNoteBtn = document.querySelector('.btn-add');
 
   // close note tab
   closeNotesBtn.addEventListener('click', () => {
-    const notesContainer = document.querySelector('.notes-container');
     notesContainer.classList.add('close');
 
     notesContainer.addEventListener('animationend', () => { 
@@ -107,6 +107,7 @@ function functionalityNotes() {
   addNoteBtn.addEventListener('click', newNotes);
 
 
+  renderNotes();
   async function renderNotes() {
     const notes = await getNotes();
     const sortNotes = notes.sort((a, b) => 
@@ -117,22 +118,25 @@ function functionalityNotes() {
       const isJustCreated = Date.now(n.createdAt) === Date.now(n.updatedAt);
       const now = Date.now();
 
-      const createdText = getTimeText(n.createdAt, "Created");
-      const updatedText = getTimeText(n.updatedAt, "Updated");
+      const createdText = getTimeText(n.createdAt, "created");
+      const updatedText = getTimeText(n.updatedAt, "updated");
 
       return (
         `
         <li class="note-item">
           <div class="note-content">
             <h3>${n.title}</h3>
-            <p>${n.content}</p>
             <span class="note-date">
               ${isJustCreated ? createdText : updatedText}
             </span>
           </div>
           <div class="note-actions">
-            <button class="btn-icon">✏️</button>
-            <button class="btn-icon delete">🗑️</button>
+            <button class="btn-icon">
+              <i data-lucide="bookmark"></i>
+            </button>
+            <button class="btn-icon delete">
+              <i data-lucide="trash"></i>
+            </button>
           </div>
         </li>
         `
@@ -172,9 +176,50 @@ function functionalityNotes() {
 
     notesList.innerHTML = lists?.length > 0 
       ? lists : emptyList ;
-  }
+      
+    lucide.createIcons();
+    document.querySelectorAll('.delete').forEach((btn, index) => {
+      btn.addEventListener('click', () => {
+        notesContainer.insertAdjacentHTML('afterbegin', deleteModal());
+        const cancelDeleteBtn = document.querySelector('.btn-cancel');
+        const confirmDeleteBtn = document.querySelector('.btn-delete');
 
-  renderNotes();
+        cancelDeleteBtn.addEventListener('click', closeModal);
+        confirmDeleteBtn.addEventListener('click', () => {
+          const noteId = sortNotes[index].id;
+          deleteNote(noteId);
+          renderNotes();
+          closeModal();
+        });
+      });
+    });
+  }
+}
+
+function deleteModal() {
+  return `
+    <div class="modal-overlay" id="deleteModal">
+      <div class="modal-box">
+        <div class="modal-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px" fill="#ea4335">
+            <path d="M280-120q-33 0-56.5-23.5T200-200v-520h-40v-80h200v-40h240v40h200v80h-40v520q0 33-23.5 56.5T680-120H280Zm400-600H280v520h400v-520ZM360-280h80v-360h-80v360Zm160 0h80v-360h-80v360Z"/>
+          </svg>
+        </div>
+        
+        <h3>Delete Note?</h3>
+        <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+        
+        <div class="modal-actions">
+          <button class="btn-cancel">Cancel</button>
+          <button class="btn-delete">Delete</button>
+        </div>
+      </div>
+    </div>
+  `
+}
+
+function closeModal() {
+  document.getElementById('deleteModal').remove();
 }
 
 function getTimeText(timestamp, action) {
@@ -184,7 +229,7 @@ function getTimeText(timestamp, action) {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffMinutes < 1) {
-    return `Just ${action.toLowerCase()}`;
+    return `Just ${action}`;
   }
 
   if (diffMinutes < 60) {

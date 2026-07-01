@@ -161,7 +161,7 @@ html, body {
   display: none;
 }
 
-.bi-x-square {
+.close-x-btn {
   font-size: 20px;     
   color: #fff;         
   cursor: pointer;     
@@ -169,7 +169,7 @@ html, body {
   display: none;
 }
 
-.bi-x-square:hover {
+.close-x-btn:hover {
   color: var(--color-accent);
   transform: scale(1.1);
 }
@@ -356,10 +356,10 @@ body.light .app-name {
   color: #5c3a21;
 }
 
-body.light .bi-x-square {
+body.light .close-x-btn {
   color: #a67c52;
 }
-body.light .bi-x-square:hover {
+body.light .close-x-btn:hover {
   color: #b18b66;
 }
 

@@ -10,7 +10,9 @@ function saveToStorage(){
 export function openTaskApp(){
 document.body.insertAdjacentHTML('afterbegin', `
   <div class="tasks-tab">
-  <i class="toggle-btn bi bi-caret-down"></i>
+  <div class="toggle-btn" >
+    <i data-lucide="panel-bottom-close"></i>
+  </div>
   <div class="task-header">
     <i class="bi bi-list-check"></i>
     <div class="title">

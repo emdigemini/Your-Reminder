@@ -35,6 +35,16 @@
   font-size: 0.95rem;
 }
 
+.close-notes {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  cursor: pointer;
+  font-size: 1.2rem;
+  color: #999;
+  transition: color 0.2s;
+}
+
 /* 2. Create Notes Bar */
 .create-notes-bar {
   display: flex;
@@ -171,13 +181,6 @@
   color: #222;
 }
 
-.note-content p {
-  margin: 0 0 0.5rem 0;
-  color: #555;
-  font-size: 0.95rem;
-  line-height: 1.4;
-}
-
 .note-date {
   font-size: 0.8rem;
   color: #999;
@@ -206,6 +209,105 @@
 .btn-icon.delete:hover {
   background-color: #ffeef0;
 }
+
+/* Overlay na tatakip sa buong screen */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.4); /* Malabong itim na background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+/* Ang mismong white box ng modal */
+.modal-box {
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 380px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  animation: fadeIn 0.2s ease-out;
+}
+
+/* Icon container */
+.modal-icon {
+  margin-bottom: 15px;
+}
+
+/* Title ng Modal */
+.modal-box h3 {
+  margin: 0 0 10px 0;
+  color: #333333;
+  font-size: 1.4rem;
+  font-weight: 600;
+}
+
+/* Deskripsyon o Babala */
+.modal-box p {
+  margin: 0 0 25px 0;
+  color: #666666;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Container para sa mga buttons */
+.modal-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* Base style para sa mga buttons */
+.modal-actions button {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Cancel Button (Kaparehong kulay ng Add Note button mo) */
+.btn-cancel {
+  background-color: #f0f4f9;
+  color: #4486e4;
+}
+
+.btn-cancel:hover {
+  background-color: #e2ecf8;
+}
+
+/* Delete Button (Kulay Pula para sa Warning) */
+.btn-delete {
+  background-color: #ea4335;
+  color: #ffffff;
+}
+
+.btn-delete:hover {
+  background-color: #dc3545;
+}
+
+/* Konting animation para swabe ang paglitaw */
+@keyframes fadeIn {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
 /* 
 /*======ANIMATION IN======*/
 @keyframes fadeInUp {

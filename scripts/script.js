@@ -1,3 +1,4 @@
+lucide.createIcons();
 import './animation.js';
 import './settings.js';
 import { randomQuotes } from './animation.js'
@@ -12,13 +13,14 @@ let isTabOpen;
 
 export function setIsTabOpen(value){
   isTabOpen = value;
+  lucide.createIcons();
 }
 
 // header + core sections
 const appHeader   = document.querySelector('.app-header');
 const appName     = document.querySelector('.app-name');
 const yourProfile = document.querySelector('.your-profile');
-const closeBtn    = document.querySelector('.bi-x-square');
+const closeBtn    = document.querySelector('.close-x-btn');
 const startUpMenu = document.querySelector('.start-up-menu');
 const dashboard     = document.querySelector('.dashboard');
 const dateTime    = document.querySelector('.datetime');
@@ -143,6 +145,7 @@ cards.reminder.addEventListener('click', () => {
 cards.notes.addEventListener('click', () => {
   if (isTabOpen) return;
   Notes();
+  lucide.createIcons();
   // alert("This feature is currently under reconstruction."); 
 });
 

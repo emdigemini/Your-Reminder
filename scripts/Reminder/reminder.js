@@ -8,7 +8,9 @@ export function openReminderApp(){
     document.body.insertAdjacentHTML('afterbegin', `
         <div class="reminder-tab">
           <div class="toggle-tab">
-            <i class="toggle-btn bi bi-caret-down"></i>
+            <div class="toggle-btn" >
+              <i data-lucide="panel-bottom-close"></i>
+            </div>
           </div>
           <div class="reminder-header">
             <i class="bi bi-bell"></i>

@@ -124,7 +124,7 @@ function updateNote(note) {
   };
 }
 
-function deleteNote(id) {
+export function deleteNote(id) {
   if (!id) {
     throw new Error("Failed to delete note.");
     return;

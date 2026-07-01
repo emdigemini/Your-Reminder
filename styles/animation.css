@@ -12,7 +12,7 @@
   animation: profileSlideIn 0.8s ease forwards;
 }
 
-.bi-x-square.click {
+.close-x-btn.click {
   display: flex;
   animation: closeSlideIn 0.8s ease forwards;
 }
@@ -68,7 +68,7 @@
   animation: profileSlideOut 0.8s ease forwards;
 }
 
-.bi-x-square.clickk {
+.close-x-btn.clickk {
   animation: closeSlideOut 0.8s ease forwards;
 }
 

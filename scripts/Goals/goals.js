@@ -114,7 +114,9 @@ export function openGoalApp(){
           <div class="title">
             <h2>Your Goals</h2>
             <p>Achieve greatness daily</p>
-            <i class="toggle-btn bi bi-caret-down"></i>
+            <div class="toggle-btn" >
+              <i data-lucide="panel-bottom-close"></i>
+            </div>
           </div>
         </div>
 
