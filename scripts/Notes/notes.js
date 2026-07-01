@@ -118,8 +118,8 @@ function functionalityNotes() {
       const isJustCreated = Date.now(n.createdAt) === Date.now(n.updatedAt);
       const now = Date.now();
 
-      const createdText = getTimeText(n.createdAt, "created");
-      const updatedText = getTimeText(n.updatedAt, "updated");
+      const createdText = getTimeText(n.createdAt, "Created");
+      const updatedText = getTimeText(n.updatedAt, "Updated");
 
       return (
         `
@@ -229,7 +229,7 @@ function getTimeText(timestamp, action) {
   const diffDays = Math.floor(diffHours / 24);
 
   if (diffMinutes < 1) {
-    return `Just ${action}`;
+    return `Just ${action.toLowerCase()}`;
   }
 
   if (diffMinutes < 60) {
