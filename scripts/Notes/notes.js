@@ -228,6 +228,12 @@ function getTimeText(timestamp, action) {
   const diffMinutes = Math.floor(diffMs / (1000 * 60));
   const diffHours = Math.floor(diffMinutes / 60);
   const diffDays = Math.floor(diffHours / 24);
+  const diffWeeks = Math.floor(diffDays / 7);
+  const date = new Date(timestamp).toLocaleDateString("en-PH", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
 
   if (diffMinutes < 1) {
     return `Just ${action.toLowerCase()}`;
@@ -241,7 +247,11 @@ function getTimeText(timestamp, action) {
     return `${action} ${diffHours} ${diffHours === 1 ? "hour" : "hours"} ago`;
   }
 
-  return `${action} ${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
+  if (diffDays < 7) {
+    return `${action} ${diffDays} ${diffDays === 1 ? "day" : "days"} ago`;
+  }
+
+  return `${action} on ${date}`;
 }
 
 
