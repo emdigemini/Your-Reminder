@@ -1,5 +1,5 @@
 import { setIsTabOpen } from "../script.js";
-import { getNotes, createNote, deleteNote } from "../database/db.js";
+import { getNotes, getNote, createNote, updateNote, deleteNote } from "../database/db.js";
 
 // const getNotes = () => {
 //   return JSON.parse(localStorage.getItem('yourNotes')) || [];
@@ -179,22 +179,73 @@ function functionalityNotes() {
       ? lists : emptyList ;
       
     lucide.createIcons();
-    document.querySelectorAll('.delete').forEach((btn, index) => {
-      btn.addEventListener('click', () => {
-        notesContainer.insertAdjacentHTML('afterbegin', deleteModal(sortNotes[index].title));
-        const cancelDeleteBtn = document.querySelector('.btn-cancel');
-        const confirmDeleteBtn = document.querySelector('.btn-delete');
+    const deleteButtons = document.querySelectorAll('.delete');
+    const noteItems = document.querySelectorAll('.note-item');
 
-        cancelDeleteBtn.addEventListener('click', closeModal);
-        confirmDeleteBtn.addEventListener('click', () => {
-          const noteId = sortNotes[index].id;
-          deleteNote(noteId);
-          renderNotes();
-          closeModal();
+    function openNoteItem() {
+      noteItems.forEach((item, index) => {
+        item.addEventListener('click', async (event) => {
+          if (event.target.classList.contains('note-actions') || event.target.closest('.btn-icon')) return;
+
+          const note = sortNotes[index];
+          const noteData = await getNote(note.id);
+          const noteId = noteData.id;
+          const noteTitle = noteData.title;
+          const noteContent = noteData.content;
+
+          document.body.insertAdjacentHTML('afterbegin', yourNotes(noteTitle, noteContent));
+
+          if (document.querySelector('.your-notes')) {
+            const yourNotesContainer = document.querySelector('.your-notes');
+            const textarea = yourNotesContainer.querySelector('.edit-content');
+            yourNotesContainer.classList.remove('close');
+            yourNotesContainer.classList.add('open');
+            
+            textarea.addEventListener('input', (e) => {
+              const updatedContent = e.target.value;
+              const newNoteData = {
+                ...noteData,
+                content: updatedContent,
+                updatedAt: new Date()
+              }
+              updateNote(newNoteData);
+              renderNotes();
+            });
+          }
+        })
+      })
+    }
+
+    function deleteNote(){
+      deleteButtons.forEach((btn, index) => {
+        btn.addEventListener('click', () => {
+          notesContainer.insertAdjacentHTML('afterbegin', deleteModal(sortNotes[index].title));
+          const cancelDeleteBtn = document.querySelector('.btn-cancel');
+          const confirmDeleteBtn = document.querySelector('.btn-delete');
+
+          cancelDeleteBtn.addEventListener('click', closeModal);
+          confirmDeleteBtn.addEventListener('click', () => {
+            const noteId = sortNotes[index].id;
+            deleteNote(noteId);
+            renderNotes();
+            closeModal();
+          });
         });
       });
-    });
+    }
+
+    openNoteItem();
+    deleteNote();
   }
+}
+
+function yourNotes(title, content) {
+  return `
+    <div class="your-notes">
+      <h3>${title}</h3>
+      <textarea class="edit-content">${content}</textarea>
+    </div>
+  `
 }
 
 function deleteModal(title) {
@@ -253,7 +304,5 @@ function getTimeText(timestamp, action) {
 
   return `${action} on ${date}`;
 }
-
-
 
 export default Notes;

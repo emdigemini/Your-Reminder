@@ -63,24 +63,26 @@ export function getNotes() {
   });
 }
 
-function getNote(id) {
-  if (!id) {
-    throw new Error("No selected note.");
-    return;
-  }
-  const transaction = db.transaction("notes", "readonly");
+export function getNote(id) {
+  return new Promise((resolve, reject) => {
+    if (!id) {
+      throw new Error("No selected note.");
+      return;
+    }
+    const transaction = db.transaction("notes", "readonly");
 
-  const store = transaction.objectStore("notes");
+    const store = transaction.objectStore("notes");
 
-  const request = store.get(id);
+    const request = store.get(id);
 
-  request.onsuccess = () => {
-    console.log(request.result);
-  };
+    request.onsuccess = () => {
+      resolve(request.result);
+    };
 
-  request.onerror = (event) => {
-    console.log(event.target.error);
-  };
+    request.onerror = (event) => {
+      reject(event.target.error);
+    };
+  });
 }
 
 export function createNote(note) {
@@ -104,7 +106,7 @@ export function createNote(note) {
   };
 }
 
-function updateNote(note) {
+export function updateNote(note) {
   if (!note) {
     throw new Error("Failed to update note.");
     return;
