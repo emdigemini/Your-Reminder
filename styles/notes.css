@@ -175,10 +175,28 @@
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
+.note-content {
+  flex: 1;
+  min-width: 0;
+  margin-right: 1rem;
+}
+
 .note-content h3 {
   margin: 0 0 0.4rem 0;
   font-size: 1.1rem;
   color: #222;
+}
+
+.note-content p {
+  display: -webkit-box;
+  line-clamp: 1;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  margin: 0 0 0.4rem 0;
+  font-size: 0.95rem;
+  color: #444;
+  overflow: hidden; 
+  word-wrap: break-word;
 }
 
 .note-date {
@@ -190,6 +208,7 @@
 .note-actions {
   display: flex;
   gap: 0.25rem;
+  flex-shrink: 0;
 }
 
 .btn-icon {

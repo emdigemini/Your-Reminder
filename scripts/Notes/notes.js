@@ -126,6 +126,7 @@ function functionalityNotes() {
         <li class="note-item">
           <div class="note-content">
             <h3>${n.title}</h3>
+            <p>${n.content}</p>
             <span class="note-date">
               ${isJustCreated ? createdText : updatedText}
             </span>
@@ -180,7 +181,7 @@ function functionalityNotes() {
     lucide.createIcons();
     document.querySelectorAll('.delete').forEach((btn, index) => {
       btn.addEventListener('click', () => {
-        notesContainer.insertAdjacentHTML('afterbegin', deleteModal());
+        notesContainer.insertAdjacentHTML('afterbegin', deleteModal(sortNotes[index].title));
         const cancelDeleteBtn = document.querySelector('.btn-cancel');
         const confirmDeleteBtn = document.querySelector('.btn-delete');
 
@@ -196,7 +197,7 @@ function functionalityNotes() {
   }
 }
 
-function deleteModal() {
+function deleteModal(title) {
   return `
     <div class="modal-overlay" id="deleteModal">
       <div class="modal-box">
@@ -207,7 +208,7 @@ function deleteModal() {
         </div>
         
         <h3>Delete Note?</h3>
-        <p>Are you sure you want to delete this note? This action cannot be undone.</p>
+        <p>Are you sure you want to delete "<strong>${title}</strong>"? This action cannot be undone.</p>
         
         <div class="modal-actions">
           <button class="btn-cancel">Cancel</button>
